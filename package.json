@@ -1,0 +1,32 @@
+{
+  "name": "presidi-distretti-asp-messina",
+  "version": "1.0.0",
+  "description": "Mappa interattiva dei distretti sanitari, comuni e presidi sanitari dell'ASP 5 Messina",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "geocode": "node process-presidi.js",
+    "generate": "node generate-presidi-from-csv.js",
+    "process-data": "node process-data.js"
+  },
+  "keywords": [
+    "asp",
+    "messina",
+    "sanità",
+    "presidi",
+    "distretti",
+    "mappa",
+    "geojson",
+    "leaflet"
+  ],
+  "author": "Ing. Roberto De Domenico",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deduzzo/personale-convenzionato-presidi"
+  }
+}
