@@ -340,7 +340,7 @@
         .stats-badge {
             position: fixed;
             top: 10px;
-            right: 10px;
+            left: 10px;
             background: rgba(255, 255, 255, 0.95);
             padding: 10px 14px;
             border-radius: 8px;
@@ -492,8 +492,14 @@
         fetch('/api/stats')
             .then(r => r.json())
             .then(stats => {
-                document.getElementById('stats-missing').textContent =
-                    `❌ ${stats.missing} presidi non geolocalizzati`;
+                const missingElement = document.getElementById('stats-missing');
+                if (stats.missing === 0) {
+                    // Hide missing count if all are geocoded
+                    missingElement.style.display = 'none';
+                } else {
+                    missingElement.textContent =
+                        `❌ ${stats.missing} presidi non geolocalizzati`;
+                }
                 document.getElementById('stats-success').textContent =
                     `✓ ${stats.percentage}% geolocalizzati (${stats.geocoded}/${stats.total})`;
             })

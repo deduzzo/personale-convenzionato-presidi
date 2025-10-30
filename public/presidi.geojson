@@ -324,6 +324,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Roccavaldina Valdina (ME)",
+        "indirizzo": "Via Collegio, 5 - Roccavaldina (ME)",
+        "distretto": "Milazzo",
+        "comune": "Roccavaldina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.3706757,
+          38.1819389
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Pace del Mela (ME)",
         "indirizzo": "Via Libertà, 78 - Pace del Mela (ME)",
         "distretto": "Milazzo",
@@ -334,6 +350,118 @@
         "coordinates": [
           15.3164689,
           38.2009526
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Monforte San Giorgio (ME)",
+        "indirizzo": "Via Ingegnere A. Calogero - Monforte San Giorgio (ME)",
+        "distretto": "Milazzo",
+        "comune": "Monforte San Giorgio"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.3780666,
+          38.1571352
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Milazzo (ME)",
+        "indirizzo": "Via G.B Impallomeni, 45 - Milazzo (ME)",
+        "distretto": "Milazzo",
+        "comune": "Milazzo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.2386912,
+          38.2265396
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Venetico (ME)",
+        "indirizzo": "Via Roma ex Municipio - Venetico (ME)",
+        "distretto": "Milazzo",
+        "comune": "Venetico"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.3632136,
+          38.2184975
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Mazzarà Sant’Andrea (ME)",
+        "indirizzo": "Via Principe Umberto c/o Municipio - Mazzarrà Sant'Andrea ME",
+        "distretto": "Barcellona P.G.",
+        "comune": "Mazzarrà Sant'Andrea"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.1335813,
+          38.0898331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Furnari (ME)",
+        "indirizzo": "Piazza Municipio - Furnari (ME)",
+        "distretto": "Barcellona P.G.",
+        "comune": "Furnari"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.1251424,
+          38.1041637
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Fondachelli Fantina (ME)",
+        "indirizzo": "Via E. Badolato,19 - Fondachelli Fantina (ME)",
+        "distretto": "Barcellona P.G.",
+        "comune": "Fondachelli-Fantina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.1757058,
+          37.980504
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Falcone (ME)",
+        "indirizzo": "Piazza Romeo, Falcone ME",
+        "distretto": "Barcellona P.G.",
+        "comune": "Falcone"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.0795232,
+          38.1173644
         ]
       }
     },
@@ -388,6 +516,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Tripi (ME)",
+        "indirizzo": "Via F. Todaro - Tripi (ME)",
+        "distretto": "Barcellona P.G.",
+        "comune": "Tripi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.0963288,
+          38.0489719
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Terme Vigliatore (ME)",
         "indirizzo": "Via Nazionale San Biagio,152 - Terme Vigliatore (ME)",
         "distretto": "Barcellona P.G.",
@@ -398,6 +542,38 @@
         "coordinates": [
           15.1465343,
           38.1297416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Rodì Milici (ME)",
+        "indirizzo": "Via Dante Alighieri - Rodì Milici (ME)",
+        "distretto": "Barcellona P.G.",
+        "comune": "Rodì Milici"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.1686808,
+          38.1058681
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Novara di Sicilia (ME)",
+        "indirizzo": "Via F. Calcagni - Novara di Sicilia (ME)",
+        "distretto": "Barcellona P.G.",
+        "comune": "Novara di Sicilia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.1236402,
+          38.0147516
         ]
       }
     },
@@ -532,6 +708,38 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Oliveri (ME)",
+        "indirizzo": "Via Lord Baden Pawel - Oliveri (ME)",
+        "distretto": "Patti",
+        "comune": "Oliveri"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.06027774971793,
+          38.126963198957746
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Librizzi (ME)",
+        "indirizzo": "Via Salita Toselli, 98064 Librizzi ME",
+        "distretto": "Patti",
+        "comune": "Librizzi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.95877854733944,
+          38.09677693163406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Gioiosa Marea (ME)",
         "indirizzo": "Via Ragusa, 1 - Gioiosa Marea (ME)",
         "distretto": "Patti",
@@ -596,6 +804,38 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Naso (ME)",
+        "indirizzo": "Via Contrada Convento, 2 - Naso (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Naso"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.789113550331827,
+          38.12493628354717
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Mirto (ME)",
+        "indirizzo": "Via San Rocco, 6 - Mirto (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Mirto"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.751582276947223,
+          38.08569628019963
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Militello Rosmarino (ME)",
         "indirizzo": "Via Umberto I,5 - Militello Rosmarino (ME)",
         "distretto": "Sant’Agata di Militello",
@@ -612,6 +852,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Longi (ME)",
+        "indirizzo": "Via G. Matteotti - Longi (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Longi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.752709919902928,
+          38.027425063700385
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Galati Mamertino (ME)",
         "indirizzo": "Via Cavour - Galati Mamertino (ME)",
         "distretto": "Sant’Agata di Militello",
@@ -620,8 +876,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          14.7717242,
-          38.0323602
+          14.771970733043762,
+          38.03243091198052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Castell’ Umberto (ME)",
+        "indirizzo": "Zona Industriale C/da Morello - Castell'Umberto (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Castell'Umberto"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.807029369442711,
+          38.08440194597589
         ]
       }
     },
@@ -676,6 +948,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Tortorici (ME)",
+        "indirizzo": "Via R. Livatino - Tortorici (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Tortorici"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.824492135440966,
+          38.03157961039208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Torrenova (ME)",
         "indirizzo": "Via Meli - Torrenova (ME)",
         "distretto": "Sant’Agata di Militello",
@@ -724,6 +1012,38 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – San Fratello (ME)",
+        "indirizzo": "Via Leanza, 23 - San Fratello (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "San Fratello"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.59744471061553,
+          38.013174479058165
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Rocca di Capri Leone (ME)",
+        "indirizzo": "Via Monsignor Ficarra - Rocca di Capri Leone (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Capri Leone"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.706846804351596,
+          38.10794041586089
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Tusa (ME)",
         "indirizzo": "Via Roma, 3 - Tusa (ME)",
         "distretto": "Mistretta",
@@ -734,6 +1054,38 @@
         "coordinates": [
           14.2362897,
           37.9810444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Santo Stefano di Camastra (ME)",
+        "indirizzo": "Via L. Grassi, 1 - Santo Stefano di Camastra (ME)",
+        "distretto": "Mistretta",
+        "comune": "Santo Stefano di Camastra"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.35176970612925,
+          38.00850602058154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Pettineo (ME)",
+        "indirizzo": "Via A. Pedevillano - Pettineo (ME)",
+        "distretto": "Mistretta",
+        "comune": "Pettineo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.293479438325274,
+          37.966796867727716
         ]
       }
     },
@@ -756,6 +1108,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Castel di Lucio (ME)",
+        "indirizzo": "Via Santa Lucia, 1 - Castel di Lucio (ME)",
+        "distretto": "Mistretta",
+        "comune": "Castel di Lucio"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.310560715725018,
+          37.882919801233236
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Savoca (ME)",
         "indirizzo": "Via Borgo - Savoca (ME)",
         "distretto": "Taormina",
@@ -772,6 +1140,70 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Sant’Alessio Siculo - Santa Teresa di Riva (ME)",
+        "indirizzo": "Contrada Siena - Sant'Alessio Siculo (ME)",
+        "distretto": "Taormina",
+        "comune": "Sant'Alessio Siculo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.355045032917172,
+          37.931934878192294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Roccella Valdemone (ME)",
+        "indirizzo": "Via A.De Gasperi 1 - Roccella Valdemone (ME)",
+        "distretto": "Taormina",
+        "comune": "Roccella Valdemone"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.009974897289197,
+          37.933887442173386
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Motta Camastra (ME)",
+        "indirizzo": "Via Piazza Regina Margherita - Motta Camastra (ME)",
+        "distretto": "Taormina",
+        "comune": "Motta Camastra"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.172341682771101,
+          37.895738980000594
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Mongiuffi",
+        "indirizzo": "Piazza San Nicolò - Monciuffi Melia",
+        "distretto": "Taormina",
+        "comune": "Mongiuffi Melia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.275229447862957,
+          37.904397793822454
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Mojo Alcantara (ME)",
         "indirizzo": "Via Torre,1 - Mojo Alcantara (ME)",
         "distretto": "Taormina",
@@ -782,6 +1214,22 @@
         "coordinates": [
           15.0500987,
           37.8996375
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Malvagna (ME)",
+        "indirizzo": "Via III Traversa Manganelli, 2 - Malvagna (ME)",
+        "distretto": "Taormina",
+        "comune": "Malvagna"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.053759847773643,
+          37.91729928953275
         ]
       }
     },
@@ -820,6 +1268,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Giardini Naxos (ME)",
+        "indirizzo": "Via Degli Agrumai 1, Giardini Naxos (ME)",
+        "distretto": "Taormina",
+        "comune": "Giardini-Naxos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.270158637905462,
+          37.8334977091598
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Gallodoro (ME)",
         "indirizzo": "Via V. Bellini, 1 - Gallodoro (ME)",
         "distretto": "Taormina",
@@ -836,6 +1300,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Gaggi (ME)",
+        "indirizzo": "Via Berlinguer - Gaggi (ME)",
+        "distretto": "Taormina",
+        "comune": "Gaggi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.220282060426841,
+          37.86079504735825
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Francavilla di Sicilia (ME)",
         "indirizzo": "Via Mulini, 4 - Francavilla di Sicilia (ME)",
         "distretto": "Taormina",
@@ -846,6 +1326,38 @@
         "coordinates": [
           15.1395694,
           37.9010393
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Forza D’Agrò (ME)",
+        "indirizzo": "Via Rimembranza - Forza D'Agrò (ME)",
+        "distretto": "Taormina",
+        "comune": "Forza d'Agrò"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.335752511045284,
+          37.9151688827644
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Cesarò (ME)",
+        "indirizzo": "Piazzale Papa Giovanni XIII, 1 - Cesarò (ME)",
+        "distretto": "Taormina",
+        "comune": "Cesarò"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.713473828974152,
+          37.84429690329457
         ]
       }
     },
