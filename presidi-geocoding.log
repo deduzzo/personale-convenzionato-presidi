@@ -1,0 +1,510 @@
+Lettura file presidi.csv...
+Trovati 95 presidi
+
+Lettura file distretti-detailed.geojson...
+Caricati 112 features dei distretti
+
+Geocoding degli indirizzi...
+
+[1/95] Messina
+   Indirizzo: Indirizzo
+   Coordinate: 45.7465589, 8.5556107
+   ⚠ Fuori dai confini dei distretti
+
+[2/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Villafranca Tirrena (ME)
+   Indirizzo: Via Principe di Castelnuovo, 71 Villafranca Tirrena (ME)
+   Coordinate: 38.2396418, 15.4324964
+   ✓ Distretto: Messina
+   ✓ Comune: Villafranca Tirrena
+
+[3/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Saponara (ME)
+   Indirizzo: Via J.F Kennedy - Saponara (ME)
+   ✗ Geocoding fallito
+
+[4/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Rometta (ME)
+   Indirizzo: Via Don G. Mento Visalli, 5 - Rometta (ME)
+   ✗ Geocoding fallito
+
+[5/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Roccalumera (ME)
+   Indirizzo: Via Torrente Sciglio, 20 - Roccalumera (ME)
+   Coordinate: 37.9822631, 15.3955882
+   ✓ Distretto: Messina
+   ✓ Comune: Roccalumera
+
+[6/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Pagliara (ME)
+   Indirizzo: Via Vallone Rinaldo, 1 - Pagliara (ME)
+   ✗ Geocoding fallito
+
+[7/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Nizza di Sicilia (ME)
+   Indirizzo: Via Comandante Todaro,70 Nizza di Sicilia (ME)
+   Coordinate: 37.9931255, 15.4114813
+   ✓ Distretto: Messina
+   ✓ Comune: Nizza di Sicilia
+
+[8/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Sud
+   Indirizzo: Via Sacra Famiglia, 7 Messina
+   Coordinate: 38.1534618, 15.5296155
+   ✓ Distretto: Messina Città
+   ✓ Comune: Messina - II CIRCOSCRIZIONE
+
+[9/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Centro
+   Indirizzo: Via Garibaldi, 240/242 - Messina (ME)
+   Coordinate: 38.1865928, 15.5560614
+   ✓ Distretto: Messina Città
+   ✓ Comune: Messina - IV CIRCOSCRIZIONE
+
+[10/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Nord
+   Indirizzo: Via Risorgimento 22 - Messina (ME)
+   Coordinate: 38.2207858, 15.2377915
+   ✓ Distretto: Milazzo
+   ✓ Comune: Milazzo
+
+[11/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Mandanici (ME)
+   Indirizzo: Via SS. Trinità - Mandanici (ME)
+   Coordinate: 38.0005305, 15.3192653
+   ✓ Distretto: Messina
+   ✓ Comune: Mandanici
+
+[12/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Furci Siculo (ME)
+   Indirizzo: Via Spinelli, 58 - Furci Siculo (ME)
+   Coordinate: 37.9645524, 15.3830214
+   ✓ Distretto: Messina
+   ✓ Comune: Furci Siculo
+
+[13/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Fiumedinisi (ME)
+   Indirizzo: Corso Bottari - Fiumedinisi (ME)
+   Coordinate: 38.0258893, 15.3824852
+   ✓ Distretto: Messina
+   ✓ Comune: Fiumedinisi
+
+[14/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Alì Terme (ME)
+   Indirizzo: Via Mastro Guglielmo - Alì Terme (ME)
+   ✗ Geocoding fallito
+
+[15/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Alì (ME)
+   Indirizzo: Via Spirito Santo, 8 Alì (ME)
+   Coordinate: 38.0277011, 15.4161273
+   ✓ Distretto: Messina
+   ✓ Comune: Alì
+
+[16/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Itala (ME)
+   Indirizzo: Via Salita Itala Superiore, 98025 Itala (ME
+   ✗ Geocoding fallito
+
+[17/95] Presidio Continuità Assistenziale – Torregrotta (ME)
+   Indirizzo: Via Giovanni Verga - Torregrotta (ME)
+   Coordinate: 38.2003694, 15.3506666
+   ✓ Distretto: Milazzo
+   ✓ Comune: Torregrotta
+
+[18/95] Presidio Continuità Assistenziale – Spadafora (ME)
+   Indirizzo: Via Galleano - Spadafora (ME)
+   Coordinate: 38.2246236, 15.3823304
+   ✓ Distretto: Milazzo
+   ✓ Comune: Spadafora
+
+[19/95] Presidio Continuità Assistenziale – Santa Lucia del Mela (ME)
+   Indirizzo: Via Pietro Nenni - Santa Lucia del Mela (ME)
+   Coordinate: 38.1404542, 15.2788416
+   ✓ Distretto: Milazzo
+   ✓ Comune: Santa Lucia del Mela
+
+[20/95] Presidio Continuità Assistenziale – San Pier Niceto (ME)
+   Indirizzo: Via S. Bolivar, 12 -San Pier Niceto (ME)
+   ✗ Geocoding fallito
+
+[21/95] Presidio Continuità Assistenziale – San Filippo del Mela (ME)
+   Indirizzo: Via Serro,10 - San Filippo del Mela (ME)
+   ✗ Geocoding fallito
+
+[22/95] Presidio Continuità Assistenziale – Roccavaldina, Valdina (ME)
+   Indirizzo: Via Collegio, 5 - Roccavaldina (ME)
+   ✗ Geocoding fallito
+
+[23/95] Presidio Continuità Assistenziale – Pace del Mela (ME)
+   Indirizzo: Via Libertà, 78 - Pace del Mela (ME)
+   Coordinate: 38.2009526, 15.3164689
+   ✓ Distretto: Milazzo
+   ✓ Comune: Pace del Mela
+
+[24/95] Presidio Continuità Assistenziale – Monforte San Giorgio (ME)
+   Indirizzo: Via Ingegnere A. Calogero - Monforte San Giorgio (ME)
+   ✗ Geocoding fallito
+
+[25/95] Presidio Continuità Assistenziale – Milazzo (ME)
+   Indirizzo: Via G.B Impallomeni, 45 - Milazzo (ME)
+   ✗ Geocoding fallito
+
+[26/95] Presidio Continuità Assistenziale – Gualtieri Sicaminò, Condrò (ME)
+   Indirizzo: Via Nuova, 12 - Gualtieri Sicaminò (ME)
+   Coordinate: 38.1678467, 15.3199218
+   ✓ Distretto: Milazzo
+   ✓ Comune: Gualtieri Sicaminò
+
+[27/95] Presidio Continuità Assistenziale – Venetico (ME)
+   Indirizzo: Via Roma ex Municipio - Venetico (ME)
+   ✗ Geocoding fallito
+
+[28/95] Presidio Continuità Assistenziale – Mazzarà Sant’Andrea (ME)
+   Indirizzo: Via Principe Umberto c/o Municipio - Mazzarrà Sant'Andrea ME
+   ✗ Geocoding fallito
+
+[29/95] Presidio Continuità Assistenziale – Furnari (ME)
+   Indirizzo: Piazza Municipio - Furnari (ME)
+   ✗ Geocoding fallito
+
+[30/95] Presidio Continuità Assistenziale – Fondachelli Fantina (ME)
+   Indirizzo: Via E. Badolato,19 - Fondachelli Fantina (ME)
+   ✗ Geocoding fallito
+
+[31/95] Presidio Continuità Assistenziale – Falcone (ME)
+   Indirizzo: Piazza Romeo, Falcone ME
+   ✗ Geocoding fallito
+
+[32/95] Presidio Continuità Assistenziale – Castroreale (ME)
+   Indirizzo: Corso Umberto I, 8 - Castroreale (ME)
+   Coordinate: 38.0986812, 15.2105523
+   ✓ Distretto: Barcellona P.G.
+   ✓ Comune: Castroreale
+
+[33/95] Presidio Continuità Assistenziale – Basicò (ME)
+   Indirizzo: Via Vittorio Emanuele III, 206 - Basicò (ME)
+   Coordinate: 38.0614136, 15.0670253
+   ✓ Distretto: Barcellona P.G.
+   ✓ Comune: Basicò
+
+[34/95] Presidio Continuità Assistenziale – Barcellona Pozzo di Gotto (ME)
+   Indirizzo: Via Risorgimento,10 - Barcellona Pozzo di Gotto (ME)
+   Coordinate: 38.1494537, 15.2320684
+   ✓ Distretto: Barcellona P.G.
+   ✓ Comune: Barcellona Pozzo di Gotto
+
+[35/95] Presidio Continuità Assistenziale – Tripi (ME)
+   Indirizzo: Via F. Todaro - Tripi (ME)
+   ✗ Geocoding fallito
+
+[36/95] Presidio Continuità Assistenziale – Terme Vigliatore (ME)
+   Indirizzo: Via Nazionale San Biagio,152 - Terme Vigliatore (ME)
+   Coordinate: 38.1297416, 15.1465343
+   ✓ Distretto: Barcellona P.G.
+   ✓ Comune: Terme Vigliatore
+
+[37/95] Presidio Continuità Assistenziale – Rodì Milici (ME)
+   Indirizzo: Via Dante Alighieri - Rodì Milici (ME)
+   ✗ Geocoding fallito
+
+[38/95] Presidio Continuità Assistenziale – Novara di Sicilia (ME)
+   Indirizzo: Via F. Calcagni - Novara di Sicilia (ME)
+   ✗ Geocoding fallito
+
+[39/95] Presidio Continuità Assistenziale – Montalbano Elicona (ME)
+   Indirizzo: Via Giardino, 34 - Montalbano Elicona (ME)
+   Coordinate: 38.0245966, 15.0127868
+   ✓ Distretto: Barcellona P.G.
+   ✓ Comune: Montalbano Elicona
+
+[40/95] Presidio Continuità Assistenziale – Merì (ME)
+   Indirizzo: Via Longano, 43 - Merì (ME)
+   Coordinate: 38.1672675, 15.2535549
+   ✓ Distretto: Barcellona P.G.
+   ✓ Comune: Merì
+
+[41/95] Presidio Continuità Assistenziale – Ucria (ME)
+   Indirizzo: Via Rosario Baratta, 159 - Ucria (ME)
+   Coordinate: 38.0456802, 14.8811356
+   ✓ Distretto: Patti
+   ✓ Comune: Ucria
+
+[42/95] Presidio Continuità Assistenziale – Sinagra (ME)
+   Indirizzo: Via Piersanti Mattarella, 56 - Sinagra (ME)
+   Coordinate: 38.0800109, 14.8499081
+   ✓ Distretto: Patti
+   ✓ Comune: Sinagra
+
+[43/95] Presidio Continuità Assistenziale – Sant’ Angelo di Brolo (ME)
+   Indirizzo: Via Trento n. 99 - Sant'Angelo di Brolo (ME)
+   Coordinate: 38.114933, 14.8819169
+   ✓ Distretto: Patti
+   ✓ Comune: Sant'Angelo di Brolo
+
+[44/95] Presidio Continuità Assistenziale – San Piero Patti (ME)
+   Indirizzo: Via Professor Profeta, 26 - San Piero Patti (ME)
+   Coordinate: 38.0517333, 14.9689728
+   ✓ Distretto: Patti
+   ✓ Comune: San Piero Patti
+
+[45/95] Presidio Continuità Assistenziale – Raccuja (ME)
+   Indirizzo: Via Gramsci, 18 - Raccuja (ME)
+   Coordinate: 38.0554153, 14.9124492
+   ✓ Distretto: Patti
+   ✓ Comune: Raccuja
+
+[46/95] Presidio Continuità Assistenziale – Piraino (ME)
+   Indirizzo: Via Roma, 72 - Piraino (ME)
+   Coordinate: 38.1614513, 14.8610109
+   ✓ Distretto: Patti
+   ✓ Comune: Piraino
+
+[47/95] Presidio Continuità Assistenziale – Oliveri (ME)
+   Indirizzo: Via Lord Baden Pawel - Oliveri (ME)
+   ✗ Geocoding fallito
+
+[48/95] Presidio Continuità Assistenziale – Montagnareale, Patti (ME)
+   Indirizzo: Via Carlo Cattaneo - Patti (ME)
+   Coordinate: 38.1413836, 14.967157
+   ✓ Distretto: Patti
+   ✓ Comune: Patti
+
+[49/95] Presidio Continuità Assistenziale – Librizzi (ME)
+   Indirizzo: Via Salita Toselli, 98064 Librizzi ME
+   ✗ Geocoding fallito
+
+[50/95] Presidio Continuità Assistenziale – Gioiosa Marea (ME)
+   Indirizzo: Via Ragusa, 1 - Gioiosa Marea (ME)
+   Coordinate: 38.1751124, 14.8991222
+   ✓ Distretto: Patti
+   ✓ Comune: Gioiosa Marea
+
+[51/95] Presidio Continuità Assistenziale – Floresta (ME)
+   Indirizzo: Via Mazzeo, 19 - Floresta (ME)
+   Coordinate: 37.9875809, 14.9113555
+   ✓ Distretto: Patti
+   ✓ Comune: Floresta
+
+[52/95] Presidio Continuità Assistenziale – Ficarra (ME)
+   Indirizzo: Vico IV Giuseppe Garibaldi, 9 - Ficarra (ME)
+   Coordinate: 38.1080186, 14.8303969
+   ✓ Distretto: Patti
+   ✓ Comune: Ficarra
+
+[53/95] Presidio Continuità Assistenziale – Brolo (ME)
+   Indirizzo: Via Kennedy, 1 - Brolo (ME)
+   Coordinate: 38.1549984, 14.8289752
+   ✓ Distretto: Patti
+   ✓ Comune: Brolo
+
+[54/95] Presidio Continuità Assistenziale – Naso (ME)
+   Indirizzo: Via Contrada Convento, 2 - Naso (ME)
+   ✗ Geocoding fallito
+
+[55/95] Presidio Continuità Assistenziale – Mirto (ME)
+   Indirizzo: Via San Rocco, 6 - Mirto (ME)
+   ✗ Geocoding fallito
+
+[56/95] Presidio Continuità Assistenziale – Militello Rosmarino (ME)
+   Indirizzo: Via Umberto I,5 - Militello Rosmarino (ME)
+   Coordinate: 38.047185, 14.6743646
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: Militello Rosmarino
+
+[57/95] Presidio Continuità Assistenziale – Longi (ME)
+   Indirizzo: Via G. Matteotti - Longi (ME)
+   ✗ Geocoding fallito
+
+[58/95] Presidio Continuità Assistenziale – Galati Mamertino (ME)
+   Indirizzo: Via Cavour - Galati Mamertino (ME)
+   Coordinate: 38.0323602, 14.7717242
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: Galati Mamertino
+
+[59/95] Presidio Continuità Assistenziale – Castell’ Umberto (ME)
+   Indirizzo: Zona Industriale C/da Morello - Castell'Umberto (ME)
+   ✗ Geocoding fallito
+
+[60/95] Presidio Continuità Assistenziale – Caronia (ME)
+   Indirizzo: Via Luciano Orlando - Caronia (ME)
+   Coordinate: 38.0247184, 14.4420623
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: Caronia
+
+[61/95] Presidio Continuità Assistenziale – Capo D’Orlando (ME)
+   Indirizzo: Via Piave, 122 Capo d’Orlando (ME)
+   Coordinate: 38.159117, 14.7437145
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: Capo d'Orlando
+
+[62/95] Presidio Continuità Assistenziale – Acquedolci, Sant’Agata di Militello (ME)
+   Indirizzo: Piazza Federico II - Acquedolci (ME)
+   Coordinate: 38.0569449, 14.5906409
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: Acquedolci
+
+[63/95] Presidio Continuità Assistenziale -Alcara Li Fusi (ME)
+   Indirizzo: Via Circonvallazione Sud - Alcara Li Fusi (ME)
+   Coordinate: 38.022431, 14.6979964
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: Alcara li Fusi
+
+[64/95] Presidio Continuità Assistenziale – Tortorici (ME)
+   Indirizzo: Via R. Livatino - Tortorici (ME)
+   ✗ Geocoding fallito
+
+[65/95] Presidio Continuità Assistenziale – Torrenova (ME)
+   Indirizzo: Via Meli - Torrenova (ME)
+   Coordinate: 38.0925682, 14.6785049
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: Torrenova
+
+[66/95] Presidio Continuità Assistenziale – San Salvatore di Fitalia (ME)
+   Indirizzo: Via Caduti sul Lavoro - San Salvatore di Fitalia (ME)
+   Coordinate: 38.070496, 14.7780977
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: San Salvatore di Fitalia
+
+[67/95] Presidio Continuità Assistenziale – San Marco D’Alunzio (ME)
+   Indirizzo: Via Risorgimento - San Marco D'Alunzio (ME)
+   Coordinate: 38.071953, 14.6997657
+   ✓ Distretto: Sant’Agata di Militello
+   ✓ Comune: San Marco d'Alunzio
+
+[68/95] Presidio Continuità Assistenziale – San Fratello (ME)
+   Indirizzo: Via Leanza, 23 - San Fratello (ME)
+   ✗ Geocoding fallito
+
+[69/95] Presidio Continuità Assistenziale – Rocca di Capri Leone (ME)
+   Indirizzo: Via Monsignor Ficarra - Rocca di Capri Leone (ME)
+   ✗ Geocoding fallito
+
+[70/95] Presidio Continuità Assistenziale – Tusa (ME)
+   Indirizzo: Via Roma, 3 - Tusa (ME)
+   Coordinate: 37.9810444, 14.2362897
+   ✓ Distretto: Mistretta
+   ✓ Comune: Tusa
+
+[71/95] Presidio Continuità Assistenziale – Santo Stefano di Camastra (ME)
+   Indirizzo: Via L. Grassi, 1 - Santo Stefano di Camastra (ME)
+   ✗ Geocoding fallito
+
+[72/95] Presidio Continuità Assistenziale – Pettineo (ME)
+   Indirizzo: Via A. Pedevillano - Pettineo (ME)
+   ✗ Geocoding fallito
+
+[73/95] Presidio Continuità Assistenziale – Motta d’Affermo (ME)
+   Indirizzo: Via Kennedy, 11 Motta D' Affermo (ME)
+   Coordinate: 37.97975, 14.3008839
+   ✓ Distretto: Mistretta
+   ✓ Comune: Pettineo
+
+[74/95] Presidio Continuità Assistenziale – Mistretta, Reitano (ME)
+   Indirizzo: Villaggio San Giuseppe, 6 - Reitano (ME)
+   Coordinate: 37.9723661, 14.3421219
+   ✓ Distretto: Mistretta
+   ✓ Comune: Reitano
+
+[75/95] Presidio Continuità Assistenziale – Castel di Lucio (ME)
+   Indirizzo: Via Santa Lucia, 1 - Castel di Lucio (ME)
+   ✗ Geocoding fallito
+
+[76/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Savoca (ME)
+   Indirizzo: Via Borgo - Savoca (ME)
+   Coordinate: 37.955411, 15.3396124
+   ✓ Distretto: Taormina
+   ✓ Comune: Savoca
+
+[77/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Sant’Alessio Siculo, Santa Teresa di Riva (ME)
+   Indirizzo: Contrada Siena - Sant'Alessio Siculo (ME)
+   ✗ Geocoding fallito
+
+[78/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Roccella Valdemone (ME)
+   Indirizzo: Via A.De Gasperi 1 - Roccella Valdemone (ME)
+   ✗ Geocoding fallito
+
+[79/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Motta Camastra (ME)
+   Indirizzo: Via Piazza Regina Margherita - Motta Camastra (ME)
+   ✗ Geocoding fallito
+
+[80/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Mongiuffi
+   Indirizzo: Piazza San Nicolò - Monciuffi Melia
+   ✗ Geocoding fallito
+
+[81/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Mojo Alcantara (ME)
+   Indirizzo: Via Torre,1 - Mojo Alcantara (ME)
+   Coordinate: 37.8996375, 15.0500987
+   ✓ Distretto: Taormina
+   ✓ Comune: Moio Alcantara
+
+[82/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Malvagna (ME)
+   Indirizzo: Via III Traversa Manganelli, 2 - Malvagna (ME)
+   ✗ Geocoding fallito
+
+[83/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Limina, Roccafiorita (ME)
+   Indirizzo: Via Leonardo Da Vinci - Limina (ME)
+   Coordinate: 37.9414154, 15.2726688
+   ✓ Distretto: Taormina
+   ✓ Comune: Limina
+
+[84/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Letojanni (ME)
+   Indirizzo: Via Vittorio Emanuele 235 - Letojanni (ME)
+   Coordinate: 37.8776032, 15.3037708
+   ✓ Distretto: Taormina
+   ✓ Comune: Letojanni
+
+[85/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Graniti (ME)
+   Indirizzo: Via Roma,138 - Graniti (ME)
+   Coordinate: 37.8923397, 15.2241019
+   ✓ Distretto: Taormina
+   ✓ Comune: Graniti
+
+[86/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Giardini Naxos (ME)
+   Indirizzo: Via Degli Agrumai 1, Giardini Naxos (ME)
+   ✗ Geocoding fallito
+
+[87/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Gallodoro (ME)
+   Indirizzo: Via V. Bellini, 1 - Gallodoro (ME)
+   Coordinate: 37.9017792, 15.2925739
+   ✓ Distretto: Taormina
+   ✓ Comune: Gallodoro
+
+[88/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Gaggi (ME)
+   Indirizzo: Via Berlinguer - Gaggi (ME)
+   ✗ Geocoding fallito
+
+[89/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Francavilla di Sicilia (ME)
+   Indirizzo: Via Mulini, 4 - Francavilla di Sicilia (ME)
+   Coordinate: 37.9010393, 15.1395694
+   ✓ Distretto: Taormina
+   ✓ Comune: Francavilla di Sicilia
+
+[90/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Forza D’Agrò (ME)
+   Indirizzo: Via Rimembranza - Forza D'Agrò (ME)
+   ✗ Geocoding fallito
+
+[91/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Cesarò (ME)
+   Indirizzo: Piazzale Papa Giovanni XIII, 1 - Cesarò (ME)
+   ✗ Geocoding fallito
+
+[92/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Castelmola (ME)
+   Indirizzo: Via Giosafat, sn- Castelmola (ME)
+   Coordinate: 37.8584757, 15.2781294
+   ✓ Distretto: Taormina
+   ✓ Comune: Castelmola
+
+[93/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Antillo (ME)
+   Indirizzo: Via Roma, 188 Antillo (ME)
+   Coordinate: 37.9773369, 15.2434189
+   ✓ Distretto: Taormina
+   ✓ Comune: Antillo
+
+[94/95] Presidio Continuità Assistenziale (ex Guardia Medica) – Casalvecchio Siculo (ME)
+   Indirizzo: Piazza dei Caduti, 2 - Casalvecchio Siculo (ME)
+   ✗ Geocoding fallito
+
+[95/95] Presidio Continuità Assistenziale (ex Guardia Medica – Santa Domenica Vittoria (ME)
+   Indirizzo: Piazza Aldo Moro, 1 Santa Domenica Vittoria (ME)
+   Coordinate: 37.9147943, 14.9620362
+   ✓ Distretto: Taormina
+   ✓ Comune: Santa Domenica Vittoria
+
+
+✓ File salvato: /Users/deduzzo/dev/personale-convenzionato-presidi/public/presidi.geojson
+✓ Presidi geocodificati: 55/95
+
+--- Presidi per distretto ---
+Barcellona P.G.: 6 presidi
+Messina: 7 presidi
+Messina Città: 2 presidi
+Milazzo: 6 presidi
+Mistretta: 3 presidi
+Patti: 11 presidi
+Sant’Agata di Militello: 9 presidi
+Taormina: 10 presidi

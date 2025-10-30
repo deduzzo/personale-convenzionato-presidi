@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presidi e Distretti Sanitari ASP Messina</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        #map-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+
+        #sidebar {
+            width: 320px;
+            background: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .distretto-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .distretto-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .comuni-list {
+            list-style: none;
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .comuni-list li {
+            padding: 4px 0;
+            padding-left: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comuni-list li:hover {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .comuni-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .comune-presidio-count {
+            font-size: 11px;
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .legend {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .legend h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+            padding: 4px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .legend-item:hover {
+            background: #f7fafc;
+        }
+
+        .legend-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .legend-item label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .info-box {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-size: 14px;
+            z-index: 1000;
+            max-width: 300px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .info-box.show {
+            display: block;
+        }
+
+        .info-box h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            margin: 4px 0;
+            color: #4a5568;
+        }
+
+        /* Search Bar */
+        .search-island {
+            position: absolute;
+            top: 20px;
+            left: 120px;
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            width: 320px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-results {
+            margin-top: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .search-result-item:hover {
+            background: #f7fafc;
+        }
+
+        .search-result-comune {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .search-result-distretto {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 2px;
+        }
+
+        .search-no-results {
+            padding: 8px 10px;
+            font-size: 13px;
+            color: #a0aec0;
+            text-align: center;
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 6px 0;
+            z-index: 10000;
+            min-width: 150px;
+            display: none;
+        }
+
+        .context-menu.show {
+            display: block;
+        }
+
+        .context-menu-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .context-menu-item:hover {
+            background: #f7fafc;
+        }
+
+        .context-menu-item.edit {
+            color: #667eea;
+        }
+
+        .context-menu-item.save {
+            color: #48bb78;
+        }
+
+        .context-menu-item:before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        /* Presidio count badge */
+        .presidio-count {
+            font-size: 11px;
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+
+        /* Footer copyright */
+        .footer-copyright {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #4a5568;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        /* Stats badge */
+        .stats-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            font-size: 13px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .stats-badge .stats-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .stats-badge .stats-missing {
+            color: #e53e3e;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .stats-badge .stats-success {
+            color: #48bb78;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            #map-container {
+                flex-direction: column;
+            }
+
+            #sidebar {
+                width: 100%;
+                max-height: 40vh;
+            }
+
+            #map {
+                height: 60vh;
+            }
+        }
+
+        .leaflet-popup-content {
+            font-family: inherit;
+        }
+
+        .popup-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .popup-text {
+            font-size: 14px;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Presidi e Distretti Sanitari ASP Messina</h1>
+        <div class="subtitle">Mappa interattiva dei distretti, comuni e presidi sanitari</div>
+    </header>
+
+    <div id="map-container">
+        <div id="map">
+            <!-- Search Island -->
+            <div class="search-island">
+                <input type="text" class="search-input" id="search-input" placeholder="Cerca un comune...">
+                <div class="search-results" id="search-results"></div>
+            </div>
+        </div>
+        <div id="sidebar">
+            <div class="legend">
+                <h3>Legenda</h3>
+                <div id="legend-content"></div>
+            </div>
+            <h2>Distretti e Comuni</h2>
+            <div id="distretti-list"></div>
+        </div>
+    </div>
+
+    <div id="info-box" class="info-box"></div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu">
+        <div class="context-menu-item edit" id="menu-edit">Modifica posizione</div>
+        <div class="context-menu-item save" id="menu-save">Salva posizione</div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-copyright">
+        © Ing. Roberto De Domenico per ASP 5 Messina
+    </div>
+
+    <!-- Stats Badge -->
+    <div class="stats-badge">
+        <div class="stats-title">Stato Geolocalizzazione</div>
+        <div class="stats-missing" id="stats-missing">Caricamento...</div>
+        <div class="stats-success" id="stats-success"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Inizializza mappa
+        const map = L.map('map').setView([38.19, 15.25], 10);
+
+        // Aggiungi tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Colori per i distretti
+        const colors = [
+            '#667eea', '#764ba2', '#f093fb', '#f5576c',
+            '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
+            '#fa709a', '#fee140', '#30cfd0', '#330867'
+        ];
+
+        const distrettiData = {};
+        const distrettiLayers = {}; // Store layers by distretto for filtering
+        const allFeatures = []; // Store all features for search
+        const presidiMarkers = {}; // Store presidi markers by distretto
+        const presidiCounts = {}; // Count presidi per distretto
+        const presidiCountsByComune = {}; // Count presidi per comune
+        const comuneFeatures = {}; // Store features by comune for zooming
+        let selectedDistretto = null;
+        let editingMarker = null; // Marker currently being edited
+        const infoBox = document.getElementById('info-box');
+        const contextMenu = document.getElementById('context-menu');
+
+        // Load and display statistics
+        fetch('/api/stats')
+            .then(r => r.json())
+            .then(stats => {
+                document.getElementById('stats-missing').textContent =
+                    `❌ ${stats.missing} presidi non geolocalizzati`;
+                document.getElementById('stats-success').textContent =
+                    `✓ ${stats.percentage}% geolocalizzati (${stats.geocoded}/${stats.total})`;
+            })
+            .catch(err => {
+                console.error('Error loading stats:', err);
+                document.getElementById('stats-missing').textContent = 'Errore caricamento';
+            });
+
+        // Carica i dati
+        Promise.all([
+            fetch('distretti-detailed.geojson').then(r => r.json()),
+            fetch('presidi.geojson').then(r => r.json())
+        ]).then(([detailedData, presidiData]) => {
+            console.log('Dati caricati:', detailedData, presidiData);
+
+            // Raggruppa per distretto
+            detailedData.features.forEach(feature => {
+                const distretto = feature.properties.distretto;
+                if (!distrettiData[distretto]) {
+                    distrettiData[distretto] = {
+                        features: [],
+                        comuni: new Set()
+                    };
+                }
+                distrettiData[distretto].features.push(feature);
+
+                if (feature.properties.comune) {
+                    distrettiData[distretto].comuni.add(feature.properties.comune);
+                }
+            });
+
+            // Crea layer per ogni distretto
+            const distrettiNames = Object.keys(distrettiData).sort();
+
+            distrettiNames.forEach((distretto, index) => {
+                const color = colors[index % colors.length];
+                const data = distrettiData[distretto];
+
+                // Initialize layer group for this distretto
+                distrettiLayers[distretto] = {
+                    layers: [],
+                    color: color,
+                    visible: true
+                };
+
+                data.features.forEach(feature => {
+                    const comune = feature.properties.comune;
+
+                    // Store feature with distretto info for search
+                    allFeatures.push({
+                        comune: comune,
+                        distretto: distretto,
+                        feature: feature,
+                        color: color
+                    });
+
+                    // Store feature by comune for zooming
+                    if (!comuneFeatures[comune]) {
+                        comuneFeatures[comune] = [];
+                    }
+                    comuneFeatures[comune].push(feature);
+
+                    const layer = L.geoJSON(feature, {
+                        style: {
+                            fillColor: color,
+                            weight: 1,
+                            opacity: 1,
+                            color: 'white',
+                            fillOpacity: 0.5
+                        }
+                    });
+
+                    layer.on('mouseover', function(e) {
+                        e.target.setStyle({
+                            fillOpacity: 0.8,
+                            weight: 2
+                        });
+
+                        const comune = feature.properties.comune;
+                        infoBox.innerHTML = `
+                            <h3>${distretto}</h3>
+                            <p><strong>Comune:</strong> ${comune}</p>
+                        `;
+                        infoBox.classList.add('show');
+                    });
+
+                    layer.on('mouseout', function(e) {
+                        if (selectedDistretto !== distretto) {
+                            e.target.setStyle({
+                                fillOpacity: 0.5,
+                                weight: 1
+                            });
+                        }
+                        infoBox.classList.remove('show');
+                    });
+
+                    layer.on('click', function(e) {
+                        selectedDistretto = distretto;
+
+                        // Mostra popup
+                        const comuniArray = Array.from(data.comuni).sort();
+                        const popupContent = `
+                            <div class="popup-title">${distretto}</div>
+                            <div class="popup-text">
+                                <strong>Comuni (${comuniArray.length}):</strong><br>
+                                ${comuniArray.join(', ')}
+                            </div>
+                        `;
+
+                        L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(popupContent)
+                            .openOn(map);
+                    });
+
+                    layer.addTo(map);
+                    distrettiLayers[distretto].layers.push(layer);
+                });
+            });
+
+            // Count presidi per distretto and comune (before creating sidebar)
+            presidiData.features.forEach(presidio => {
+                const distretto = presidio.properties.distretto;
+                const comune = presidio.properties.comune;
+
+                if (distretto) {
+                    presidiCounts[distretto] = (presidiCounts[distretto] || 0) + 1;
+                }
+
+                if (comune) {
+                    presidiCountsByComune[comune] = (presidiCountsByComune[comune] || 0) + 1;
+                }
+            });
+
+            // Popola sidebar
+            const legendContent = document.getElementById('legend-content');
+            const distrettiList = document.getElementById('distretti-list');
+
+            distrettiNames.forEach((distretto, index) => {
+                const color = colors[index % colors.length];
+                const data = distrettiData[distretto];
+                const comuniArray = Array.from(data.comuni).sort();
+
+                // Aggiungi alla legenda con checkbox
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                const checkboxId = `checkbox-${distretto.replace(/\s+/g, '-')}`;
+                legendItem.innerHTML = `
+                    <input type="checkbox" id="${checkboxId}" checked>
+                    <label for="${checkboxId}">
+                        <div class="legend-color" style="background-color: ${color}"></div>
+                        <span>${distretto}</span>
+                    </label>
+                `;
+                legendContent.appendChild(legendItem);
+
+                // Add event listener for checkbox
+                const checkbox = legendItem.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', function() {
+                    const visible = this.checked;
+                    distrettiLayers[distretto].visible = visible;
+
+                    // Show or hide all layers for this distretto
+                    distrettiLayers[distretto].layers.forEach(layer => {
+                        if (visible) {
+                            map.addLayer(layer);
+                        } else {
+                            map.removeLayer(layer);
+                        }
+                    });
+                });
+
+                // Aggiungi alla lista distretti
+                const distrettoInfo = document.createElement('div');
+                distrettoInfo.className = 'distretto-info';
+                distrettoInfo.innerHTML = `
+                    <div class="distretto-name" style="color: ${color}">${distretto}</div>
+                    <ul class="comuni-list" id="comuni-list-${distretto.replace(/\s+/g, '-')}">
+                    </ul>
+                `;
+                distrettiList.appendChild(distrettoInfo);
+
+                // Add comuni with presidio counts and click handlers
+                const comuniList = distrettoInfo.querySelector('.comuni-list');
+                comuniArray.forEach(comune => {
+                    const count = presidiCountsByComune[comune] || 0;
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${comune}</span>
+                        ${count > 0 ? `<span class="comune-presidio-count">${count} 🏥</span>` : ''}
+                    `;
+                    li.dataset.comune = comune;
+
+                    // Add click handler to zoom to comune
+                    li.addEventListener('click', function() {
+                        const comuneName = this.dataset.comune;
+                        if (comuneFeatures[comuneName] && comuneFeatures[comuneName].length > 0) {
+                            // Create temporary layer to get bounds
+                            const tempLayer = L.geoJSON({
+                                type: 'FeatureCollection',
+                                features: comuneFeatures[comuneName]
+                            });
+                            const bounds = tempLayer.getBounds();
+
+                            // Zoom to comune
+                            map.fitBounds(bounds, {
+                                padding: [50, 50],
+                                maxZoom: 13
+                            });
+
+                            // Show popup
+                            const center = bounds.getCenter();
+                            L.popup()
+                                .setLatLng(center)
+                                .setContent(`
+                                    <div class="popup-title">${comuneName}</div>
+                                    <div class="popup-text">
+                                        <strong>Distretto:</strong> ${distretto}<br>
+                                        ${count > 0 ? `<strong>Presidi:</strong> ${count}` : ''}
+                                    </div>
+                                `)
+                                .openOn(map);
+                        }
+                    });
+
+                    comuniList.appendChild(li);
+                });
+            });
+
+            // Fit bounds
+            const bounds = L.geoJSON(detailedData).getBounds();
+            map.fitBounds(bounds, { padding: [20, 20] });
+
+            // Setup search functionality
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            let currentHighlight = null;
+
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                searchResults.innerHTML = '';
+
+                if (searchTerm.length < 2) {
+                    return;
+                }
+
+                // Search through all features
+                const matches = allFeatures.filter(item =>
+                    item.comune.toLowerCase().includes(searchTerm)
+                ).slice(0, 10); // Limit to 10 results
+
+                if (matches.length === 0) {
+                    searchResults.innerHTML = '<div class="search-no-results">Nessun comune trovato</div>';
+                    return;
+                }
+
+                matches.forEach(match => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.innerHTML = `
+                        <div class="search-result-comune">${match.comune}</div>
+                        <div class="search-result-distretto">Distretto: ${match.distretto}</div>
+                    `;
+
+                    resultItem.addEventListener('click', function() {
+                        // Get bounds of the feature
+                        const featureLayer = L.geoJSON(match.feature);
+                        const featureBounds = featureLayer.getBounds();
+
+                        // Zoom to feature
+                        map.fitBounds(featureBounds, {
+                            padding: [50, 50],
+                            maxZoom: 13
+                        });
+
+                        // Remove previous highlight
+                        if (currentHighlight) {
+                            map.removeLayer(currentHighlight);
+                        }
+
+                        // Highlight the feature
+                        currentHighlight = L.geoJSON(match.feature, {
+                            style: {
+                                fillColor: match.color,
+                                weight: 3,
+                                opacity: 1,
+                                color: '#ff6b6b',
+                                fillOpacity: 0.7
+                            }
+                        }).addTo(map);
+
+                        // Show popup
+                        const center = featureBounds.getCenter();
+                        L.popup()
+                            .setLatLng(center)
+                            .setContent(`
+                                <div class="popup-title">${match.comune}</div>
+                                <div class="popup-text">
+                                    <strong>Distretto:</strong> ${match.distretto}
+                                </div>
+                            `)
+                            .openOn(map);
+
+                        // Clear search
+                        searchInput.value = '';
+                        searchResults.innerHTML = '';
+
+                        // Remove highlight after 5 seconds
+                        setTimeout(() => {
+                            if (currentHighlight) {
+                                map.removeLayer(currentHighlight);
+                                currentHighlight = null;
+                            }
+                        }, 5000);
+                    });
+
+                    searchResults.appendChild(resultItem);
+                });
+            });
+
+            // Load and display presidi
+            console.log(`Caricamento ${presidiData.features.length} presidi...`);
+
+            // Create custom marker icon with hospital emoji
+            const presidioIcon = L.divIcon({
+                className: 'presidio-marker',
+                html: '<div style="font-size: 28px; text-align: center; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">🏥</div>',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+
+            // Add presidi markers
+            presidiData.features.forEach(presidio => {
+                const [lon, lat] = presidio.geometry.coordinates;
+                const distretto = presidio.properties.distretto;
+                const nome = presidio.properties.nome;
+                const indirizzo = presidio.properties.indirizzo;
+                const comune = presidio.properties.comune;
+
+                const marker = L.marker([lat, lon], {
+                    icon: presidioIcon,
+                    draggable: false
+                }).addTo(map);
+
+                marker.presidioData = {
+                    nome: nome,
+                    indirizzo: indirizzo,
+                    distretto: distretto,
+                    comune: comune
+                };
+
+                // Popup on click
+                marker.on('click', function(e) {
+                    const popupContent = `
+                        <div class="popup-title">${nome}</div>
+                        <div class="popup-text">
+                            <strong>Indirizzo:</strong> ${indirizzo}<br>
+                            ${distretto ? `<strong>Distretto:</strong> ${distretto}<br>` : ''}
+                            ${comune ? `<strong>Comune:</strong> ${comune}` : ''}
+                        </div>
+                    `;
+
+                    L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(popupContent)
+                        .openOn(map);
+                });
+
+                // Right-click for context menu
+                marker.on('contextmenu', function(e) {
+                    L.DomEvent.preventDefault(e);
+
+                    editingMarker = marker;
+
+                    // Position context menu
+                    const x = e.originalEvent.pageX;
+                    const y = e.originalEvent.pageY;
+
+                    contextMenu.style.left = x + 'px';
+                    contextMenu.style.top = y + 'px';
+                    contextMenu.classList.add('show');
+
+                    // Update menu based on draggable state
+                    if (marker.options.draggable) {
+                        document.getElementById('menu-edit').style.display = 'none';
+                        document.getElementById('menu-save').style.display = 'block';
+                    } else {
+                        document.getElementById('menu-edit').style.display = 'block';
+                        document.getElementById('menu-save').style.display = 'none';
+                    }
+                });
+
+                // Store marker
+                if (distretto) {
+                    if (!presidiMarkers[distretto]) {
+                        presidiMarkers[distretto] = [];
+                    }
+                    presidiMarkers[distretto].push(marker);
+                }
+            });
+
+            // Update legend with presidio counts
+            distrettiNames.forEach((distretto, index) => {
+                const count = presidiCounts[distretto] || 0;
+                const checkbox = document.getElementById(`checkbox-${distretto.replace(/\s+/g, '-')}`);
+                if (checkbox) {
+                    const label = checkbox.nextElementSibling;
+                    if (label && count > 0) {
+                        const countBadge = document.createElement('span');
+                        countBadge.className = 'presidio-count';
+                        countBadge.textContent = `${count} P`;
+                        countBadge.title = `${count} presidi`;
+                        label.appendChild(countBadge);
+                    }
+                }
+            });
+
+            // Context menu handlers
+            document.getElementById('menu-edit').addEventListener('click', function() {
+                if (editingMarker) {
+                    editingMarker.options.draggable = true;
+                    editingMarker.dragging.enable();
+                    contextMenu.classList.remove('show');
+
+                    // Visual feedback
+                    editingMarker._icon.style.cursor = 'move';
+                    editingMarker._icon.style.transform = 'scale(1.3)';
+                }
+            });
+
+            document.getElementById('menu-save').addEventListener('click', async function() {
+                if (editingMarker) {
+                    const latlng = editingMarker.getLatLng();
+                    const nome = editingMarker.presidioData.nome;
+
+                    try {
+                        const response = await fetch('/api/update-presidio', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                nome: nome,
+                                lat: latlng.lat,
+                                lon: latlng.lng
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Disable dragging
+                            editingMarker.options.draggable = false;
+                            editingMarker.dragging.disable();
+
+                            // Reset visual feedback
+                            editingMarker._icon.style.cursor = '';
+                            editingMarker._icon.style.transform = '';
+
+                            alert(`✓ Posizione salvata per ${nome}`);
+                        } else {
+                            alert(`✗ Errore nel salvataggio: ${result.error}`);
+                        }
+                    } catch (error) {
+                        alert(`✗ Errore nel salvataggio: ${error.message}`);
+                    }
+
+                    contextMenu.classList.remove('show');
+                    editingMarker = null;
+                }
+            });
+
+            // Hide context menu on map click
+            map.on('click', function() {
+                contextMenu.classList.remove('show');
+            });
+
+            // Hide context menu on scroll
+            map.on('movestart', function() {
+                contextMenu.classList.remove('show');
+            });
+
+        }).catch(error => {
+            console.error('Errore nel caricamento dei dati:', error);
+            alert('Errore nel caricamento dei dati. Controlla la console.');
+        });
+    </script>
+</body>
+</html>
