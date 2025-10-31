@@ -471,9 +471,16 @@
                 try {
                     console.log('Running on ws1.asp.messina.it, loading config...');
                     const response = await fetch('https://ws1.asp.messina.it/api/v1/apps/presidi-distretti-asp-messina/config');
-                    const config = await response.json();
-                    BASE_PATH = config.basePath || '';
-                    console.log('Config loaded, using BASE_PATH:', BASE_PATH);
+                    if (response.ok) {
+                        const config = await response.json();
+                        BASE_PATH = config.data.basePath || '';
+                        console.log('Config loaded, using BASE_PATH:', BASE_PATH);
+                    }
+                    else
+                    {
+                        console.error('Failed to load config, status:', response.status);
+                        BASE_PATH = '';
+                    }
                 } catch (err) {
                     console.error('Error loading config from API:', err);
                     BASE_PATH = '';
