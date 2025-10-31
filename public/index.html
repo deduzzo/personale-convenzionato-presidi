@@ -460,12 +460,36 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // Get BASE_PATH from environment (injected by server)
-        const BASE_PATH = window.BASE_PATH || '';
-        console.log('Using BASE_PATH:', BASE_PATH);
+        // Initialize BASE_PATH based on hostname
+        let BASE_PATH = '';
 
-        // Inizializza mappa
-        const map = L.map('map').setView([38.19, 15.25], 10);
+        async function loadConfig() {
+            const hostname = window.location.hostname;
+
+            // Only load config from API if running on ws1.asp.messina.it
+            if (hostname === 'ws1.asp.messina.it') {
+                try {
+                    console.log('Running on ws1.asp.messina.it, loading config...');
+                    const response = await fetch('https://ws1.asp.messina.it/api/v1/apps/presidi-distretti-asp-messina/config');
+                    const config = await response.json();
+                    BASE_PATH = config.basePath || '';
+                    console.log('Config loaded, using BASE_PATH:', BASE_PATH);
+                } catch (err) {
+                    console.error('Error loading config from API:', err);
+                    BASE_PATH = '';
+                }
+            } else {
+                console.log('Not running on ws1.asp.messina.it, using empty BASE_PATH');
+                BASE_PATH = '';
+            }
+        }
+
+        async function initApp() {
+            // Load configuration first
+            await loadConfig();
+
+            // Inizializza mappa
+            const map = L.map('map').setView([38.19, 15.25], 10);
 
         // Aggiungi tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -988,6 +1012,10 @@
             console.error('Errore nel caricamento dei dati:', error);
             alert('Errore nel caricamento dei dati. Controlla la console.');
         });
+        }
+
+        // Initialize the app
+        initApp();
     </script>
 </body>
 </html>
