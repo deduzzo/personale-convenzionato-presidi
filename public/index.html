@@ -460,6 +460,10 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
+        // Get BASE_PATH from environment (injected by server)
+        const BASE_PATH = window.BASE_PATH || '';
+        console.log('Using BASE_PATH:', BASE_PATH);
+
         // Inizializza mappa
         const map = L.map('map').setView([38.19, 15.25], 10);
 
@@ -489,7 +493,7 @@
         const contextMenu = document.getElementById('context-menu');
 
         // Load and display statistics
-        fetch('/api/stats')
+        fetch(BASE_PATH + '/api/stats')
             .then(r => r.json())
             .then(stats => {
                 const missingElement = document.getElementById('stats-missing');
@@ -510,8 +514,8 @@
 
         // Carica i dati
         Promise.all([
-            fetch('distretti-detailed.geojson').then(r => r.json()),
-            fetch('presidi.geojson').then(r => r.json())
+            fetch(BASE_PATH + '/distretti-detailed.geojson').then(r => r.json()),
+            fetch(BASE_PATH + '/presidi.geojson').then(r => r.json())
         ]).then(([detailedData, presidiData]) => {
             console.log('Dati caricati:', detailedData, presidiData);
 
@@ -936,7 +940,7 @@
                     const nome = editingMarker.presidioData.nome;
 
                     try {
-                        const response = await fetch('/api/update-presidio', {
+                        const response = await fetch(BASE_PATH + '/api/update-presidio', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({

@@ -214,8 +214,21 @@ const server = http.createServer((req, res) => {
                 res.end(`Server Error: ${error.code}`, 'utf-8');
             }
         } else {
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(content, 'utf-8');
+            // Inject BASE_PATH into HTML files
+            if (extname === '.html' && content) {
+                const BASE_PATH = process.env.BASE_PATH || '';
+                let htmlContent = content.toString();
+                // Inject BASE_PATH as a global variable before the first <script> tag
+                htmlContent = htmlContent.replace(
+                    '<script>',
+                    `<script>window.BASE_PATH = '${BASE_PATH}';`
+                );
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.end(htmlContent, 'utf-8');
+            } else {
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.end(content, 'utf-8');
+            }
         }
     });
 });
