@@ -24,6 +24,10 @@ Applicazione web che visualizza su mappa interattiva:
 - Drag-and-drop per modificare posizioni
 - Salvataggio coordinate in CSV tramite right-click
 - Auto-completamento distretto/comune via geofencing
+- **NUOVO**: Checkbox per mostrare/nascondere singoli presidi
+- **NUOVO**: Salvataggio stato visibilità in localStorage browser
+- **NUOVO**: Pulsanti Salva/Reset per gestire preferenze
+- **NUOVO**: Funzione stampa mappa in formato A3 con etichette presidi
 
 ### Sidebar
 - Legenda interattiva con filtri
@@ -140,6 +144,24 @@ Nome struttura,Indirizzo,Latitudine,Longitudine,Distretto,Comune
 4. Trascina il marker
 5. Right-click e "Salva posizione"
 
+### Gestione Visibilità Presidi (v2.0)
+
+1. Nella sidebar, sezione "🏥 Gestione Presidi"
+2. Lista di tutti i presidi con checkbox
+3. Deseleziona presidi da nascondere
+4. Click "💾 Salva" per salvare lo stato nel browser
+5. Click "🔄 Reset" per ripristinare (tutti visibili)
+6. Lo stato viene caricato automaticamente al prossimo accesso
+
+### Stampa Mappa (v2.0)
+
+1. Configura i presidi visibili (mostra solo quelli desiderati)
+2. Click "🖨️ Stampa" nella sidebar
+3. La mappa si adatta automaticamente ai presidi visibili
+4. Appaiono etichette con i nomi dei presidi
+5. Formato: A3 landscape, ottimizzato per stampa
+6. Dopo la stampa, la vista torna automaticamente allo stato precedente
+
 ## API Endpoints
 
 ### GET /api/stats
@@ -193,6 +215,12 @@ Messina è divisa in 6 circoscrizioni per maggiore granularità, ma unificata co
 ### Cache e Performance
 - `generate-presidi-from-csv.js`: veloce, legge coordinate da CSV
 - `process-presidi.js`: lento, chiama API esterna per geocodifica
+- **localStorage**: Salvataggio stato visibilità presidi (persistente nel browser)
+
+### Persistenza Dati
+- **Server-side**: CSV per dati presidi, GeoJSON generato automaticamente
+- **Client-side**: localStorage per preferenze visibilità (chiave: `presidi-visibility`)
+- **Formato**: JSON object con mapping nome_presidio → boolean (visible)
 
 ## Copyright
 

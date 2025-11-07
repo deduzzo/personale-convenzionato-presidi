@@ -1,0 +1,47 @@
+{
+  "project": {
+    "name": "Presidi e Distretti ASP Messina",
+    "description": "Applicazione web per la visualizzazione interattiva di presidi sanitari e distretti ASP Messina con funzionalità di gestione visibilità e stampa",
+    "version": "2.0.0"
+  },
+  "structure": {
+    "server": "server.js",
+    "frontend": "public/index.html",
+    "data": {
+      "csv": "data/presidi.csv",
+      "geojson": {
+        "presidi": "public/presidi.geojson",
+        "distretti": "public/distretti.geojson",
+        "detailed": "public/distretti-detailed.geojson"
+      }
+    }
+  },
+  "scripts": {
+    "start": "node server.js",
+    "geocode": "node process-presidi.js",
+    "generate": "node generate-presidi-from-csv.js"
+  },
+  "features": {
+    "map": {
+      "library": "Leaflet.js 1.9.4",
+      "provider": "OpenStreetMap",
+      "center": [38.19, 15.25],
+      "zoom": 10
+    },
+    "presidi": {
+      "total": 94,
+      "visibility_control": true,
+      "local_storage": true,
+      "print_support": true
+    },
+    "distretti": {
+      "count": 8,
+      "comuni": 112,
+      "color_coded": true
+    }
+  },
+  "endpoints": {
+    "GET /api/stats": "Statistiche geolocalizzazione presidi",
+    "POST /api/update-presidio": "Aggiorna coordinate presidio"
+  }
+}

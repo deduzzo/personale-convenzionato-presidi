@@ -410,6 +410,208 @@
             font-size: 14px;
             color: #4a5568;
         }
+
+        /* Presidi controls section */
+        .presidi-controls {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .presidi-controls h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .presidi-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+
+        .presidio-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            margin-bottom: 4px;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .presidio-item:hover {
+            background: #edf2f7;
+        }
+
+        .presidio-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .presidio-item label {
+            cursor: pointer;
+            flex: 1;
+            color: #4a5568;
+        }
+
+        .print-options {
+            margin-top: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .print-options-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #4a5568;
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 6px;
+            cursor: pointer;
+        }
+
+        .radio-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-save {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #38a169;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-reset {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #c53030;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+        }
+
+        .btn-print {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Presidio labels for print */
+        .presidio-label {
+            display: none;
+            position: absolute;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #2d3748;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -100%);
+            margin-top: -8px;
+        }
+
+        /* Print styles */
+        @media print {
+            @page {
+                size: A3 landscape;
+                margin: 1cm;
+            }
+
+            body {
+                background: white;
+            }
+
+            header {
+                background: #667eea;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            #sidebar,
+            .search-island,
+            .stats-badge,
+            .footer-copyright,
+            .context-menu,
+            .leaflet-control-zoom {
+                display: none !important;
+            }
+
+            #map-container {
+                height: 100vh;
+                display: block;
+            }
+
+            #map {
+                width: 100% !important;
+                height: calc(100vh - 80px) !important;
+            }
+
+            .presidio-label {
+                display: block !important;
+            }
+
+            .leaflet-popup {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -431,6 +633,34 @@
                 <h3>Legenda</h3>
                 <div id="legend-content"></div>
             </div>
+
+            <!-- Presidi Controls -->
+            <div class="presidi-controls">
+                <h2>🏥 Gestione Presidi</h2>
+                <div class="presidi-list" id="presidi-list"></div>
+
+                <!-- Print Options -->
+                <div class="print-options">
+                    <div class="print-options-title">🏷️ Etichette Stampa:</div>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="label-nome" name="print-label" value="nome" checked>
+                            <label for="label-nome">Nome Presidio</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="label-comune" name="print-label" value="comune">
+                            <label for="label-comune">Comune/Quartiere</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="btn btn-save" id="btn-save" title="Salva lo stato corrente dei presidi">💾 Salva</button>
+                    <button class="btn btn-reset" id="btn-reset" title="Ripristina tutti i presidi">🔄 Reset</button>
+                    <button class="btn btn-print" id="btn-print" title="Stampa la mappa">🖨️ Stampa</button>
+                </div>
+            </div>
+
             <h2>Distretti e Comuni</h2>
             <div id="distretti-list"></div>
         </div>
@@ -522,6 +752,9 @@
         let editingMarker = null; // Marker currently being edited
         const infoBox = document.getElementById('info-box');
         const contextMenu = document.getElementById('context-menu');
+        const allPresidiMarkers = []; // Store all presidi markers for visibility control
+        const presidiVisibility = {}; // Track visibility state of each presidio
+        const presidiLabels = {}; // Store labels for print
 
         // Load and display statistics
         fetch(BASE_PATH + '/api/stats')
@@ -855,6 +1088,57 @@
                 });
             });
 
+            // Load visibility state from localStorage
+            function loadPresidiVisibility() {
+                try {
+                    const saved = localStorage.getItem('presidi-visibility');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        Object.assign(presidiVisibility, parsed);
+                        console.log('Stato presidi caricato da localStorage');
+                    }
+                } catch (error) {
+                    console.error('Errore nel caricamento dello stato:', error);
+                }
+            }
+
+            // Save visibility state to localStorage
+            function savePresidiVisibility() {
+                try {
+                    localStorage.setItem('presidi-visibility', JSON.stringify(presidiVisibility));
+                    alert('✓ Stato presidi salvato con successo!');
+                    console.log('Stato presidi salvato in localStorage');
+                } catch (error) {
+                    console.error('Errore nel salvataggio dello stato:', error);
+                    alert('✗ Errore nel salvataggio dello stato');
+                }
+            }
+
+            // Reset visibility state
+            function resetPresidiVisibility() {
+                if (confirm('Sei sicuro di voler ripristinare lo stato iniziale? Tutti i presidi saranno nuovamente visibili.')) {
+                    try {
+                        localStorage.removeItem('presidi-visibility');
+                        // Reset all to visible
+                        allPresidiMarkers.forEach(markerData => {
+                            presidiVisibility[markerData.nome] = true;
+                            map.addLayer(markerData.marker);
+                            // Update checkbox
+                            const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                        alert('✓ Stato ripristinato! Tutti i presidi sono ora visibili.');
+                        console.log('Stato presidi ripristinato');
+                    } catch (error) {
+                        console.error('Errore nel reset dello stato:', error);
+                        alert('✗ Errore nel reset dello stato');
+                    }
+                }
+            }
+
+            // Load saved state
+            loadPresidiVisibility();
+
             // Load and display presidi
             console.log(`Caricamento ${presidiData.features.length} presidi...`);
 
@@ -867,7 +1151,7 @@
             });
 
             // Add presidi markers
-            presidiData.features.forEach(presidio => {
+            presidiData.features.forEach((presidio, index) => {
                 const [lon, lat] = presidio.geometry.coordinates;
                 const distretto = presidio.properties.distretto;
                 const nome = presidio.properties.nome;
@@ -927,7 +1211,38 @@
                     }
                 });
 
-                // Store marker
+                // Create label for print
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'presidio-label';
+                labelDiv.textContent = nome;
+                labelDiv.style.left = '0px';
+                labelDiv.style.top = '0px';
+                document.body.appendChild(labelDiv);
+
+                // Store marker with visibility data
+                const markerData = {
+                    id: index,
+                    marker: marker,
+                    nome: nome,
+                    distretto: distretto,
+                    comune: comune,
+                    lat: lat,
+                    lon: lon,
+                    labelDiv: labelDiv  // Store reference to label
+                };
+                allPresidiMarkers.push(markerData);
+                presidiLabels[nome] = markerData;  // Store full markerData instead of just label
+
+                // Initialize visibility (default true or from saved state)
+                if (presidiVisibility[nome] === undefined) {
+                    presidiVisibility[nome] = true;
+                }
+
+                // Apply saved visibility state
+                if (presidiVisibility[nome] === false) {
+                    map.removeLayer(marker);
+                }
+
                 if (distretto) {
                     if (!presidiMarkers[distretto]) {
                         presidiMarkers[distretto] = [];
@@ -935,6 +1250,37 @@
                     presidiMarkers[distretto].push(marker);
                 }
             });
+
+            // Populate presidi list in sidebar
+            const presidiList = document.getElementById('presidi-list');
+            allPresidiMarkers
+                .sort((a, b) => a.nome.localeCompare(b.nome))
+                .forEach(markerData => {
+                    const item = document.createElement('div');
+                    item.className = 'presidio-item';
+
+                    const checkboxId = `presidio-${markerData.id}`;
+                    const isVisible = presidiVisibility[markerData.nome] !== false;
+
+                    item.innerHTML = `
+                        <input type="checkbox" id="${checkboxId}" ${isVisible ? 'checked' : ''}>
+                        <label for="${checkboxId}" title="${markerData.nome}">${markerData.nome}</label>
+                    `;
+
+                    const checkbox = item.querySelector('input');
+                    checkbox.addEventListener('change', function() {
+                        const visible = this.checked;
+                        presidiVisibility[markerData.nome] = visible;
+
+                        if (visible) {
+                            map.addLayer(markerData.marker);
+                        } else {
+                            map.removeLayer(markerData.marker);
+                        }
+                    });
+
+                    presidiList.appendChild(item);
+                });
 
             // Update legend with presidio counts
             distrettiNames.forEach((distretto, index) => {
@@ -1014,6 +1360,96 @@
             map.on('movestart', function() {
                 contextMenu.classList.remove('show');
             });
+
+            // Button event listeners
+            document.getElementById('btn-save').addEventListener('click', savePresidiVisibility);
+            document.getElementById('btn-reset').addEventListener('click', resetPresidiVisibility);
+            document.getElementById('btn-print').addEventListener('click', function() {
+                printMap();
+            });
+
+            // Print function
+            function printMap() {
+                // Get all visible presidi
+                const visiblePresidi = allPresidiMarkers.filter(md =>
+                    presidiVisibility[md.nome] !== false
+                );
+
+                if (visiblePresidi.length === 0) {
+                    alert('Nessun presidio visibile da stampare!');
+                    return;
+                }
+
+                // Get selected label type
+                const labelType = document.querySelector('input[name="print-label"]:checked').value;
+
+                // Calculate bounds of visible presidi
+                const bounds = L.latLngBounds(
+                    visiblePresidi.map(md => [md.lat, md.lon])
+                );
+
+                // Store current view
+                const currentCenter = map.getCenter();
+                const currentZoom = map.getZoom();
+
+                // Fit to visible presidi with padding
+                map.fitBounds(bounds, {
+                    padding: [100, 100],
+                    maxZoom: 14
+                });
+
+                // Position labels for visible presidi
+                setTimeout(() => {
+                    visiblePresidi.forEach(markerData => {
+                        const point = map.latLngToContainerPoint([markerData.lat, markerData.lon]);
+                        const markerInfo = presidiLabels[markerData.nome];
+                        if (markerInfo && markerInfo.labelDiv) {
+                            const label = markerInfo.labelDiv;
+
+                            // Update label text based on selection
+                            if (labelType === 'comune') {
+                                // Use comune (which is the quartiere for Messina)
+                                label.textContent = markerInfo.comune || markerInfo.nome;
+                            } else {
+                                // Use nome presidio
+                                label.textContent = markerInfo.nome;
+                            }
+
+                            label.style.left = point.x + 'px';
+                            label.style.top = point.y + 'px';
+                        }
+                    });
+
+                    // Hide labels for non-visible presidi
+                    allPresidiMarkers.forEach(markerData => {
+                        if (presidiVisibility[markerData.nome] === false) {
+                            const markerInfo = presidiLabels[markerData.nome];
+                            if (markerInfo && markerInfo.labelDiv) {
+                                markerInfo.labelDiv.style.display = 'none';
+                            }
+                        }
+                    });
+
+                    // Trigger print dialog
+                    setTimeout(() => {
+                        window.print();
+
+                        // Restore view after print
+                        setTimeout(() => {
+                            map.setView(currentCenter, currentZoom);
+                            // Reset label display and text
+                            allPresidiMarkers.forEach(markerData => {
+                                const markerInfo = presidiLabels[markerData.nome];
+                                if (markerInfo && markerInfo.labelDiv) {
+                                    markerInfo.labelDiv.style.display = '';
+                                    // Reset to nome presidio
+                                    markerInfo.labelDiv.textContent = markerInfo.nome;
+                                }
+                            });
+                        }, 500);
+                    }, 500);
+                }, 500);
+            }
 
         }).catch(error => {
             console.error('Errore nel caricamento dei dati:', error);
