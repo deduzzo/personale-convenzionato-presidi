@@ -78,6 +78,21 @@
             color: #2d3748;
             margin-bottom: 8px;
             font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .distretto-name input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .distretto-name label {
+            cursor: pointer;
+            flex: 1;
         }
 
         .comuni-list {
@@ -118,6 +133,57 @@
             border-radius: 10px;
             font-weight: 600;
             margin-left: 8px;
+        }
+
+        .settings {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .settings h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 4px;
+            background: #f7fafc;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .settings-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .settings-item label {
+            cursor: pointer;
+            flex: 1;
+            color: #4a5568;
+        }
+
+        .settings-item .radio-group {
+            width: 100%;
+        }
+
+        .settings-item .radio-item {
+            margin-bottom: 4px;
+        }
+
+        .settings-item .radio-item label {
+            font-size: 12px;
         }
 
         .legend {
@@ -304,11 +370,32 @@
             color: #48bb78;
         }
 
+        .context-menu-item.measure {
+            color: #f59e0b;
+        }
+
         .context-menu-item:before {
             content: '';
             width: 16px;
             height: 16px;
             margin-right: 8px;
+        }
+
+        /* Distance measurement line */
+        .distance-line {
+            stroke: #f59e0b;
+            stroke-width: 3;
+            stroke-dasharray: 10, 5;
+            fill: none;
+        }
+
+        .distance-marker {
+            background: #f59e0b;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
         }
 
         /* Presidio count badge */
@@ -411,47 +498,61 @@
             color: #4a5568;
         }
 
-        /* Presidi controls section */
-        .presidi-controls {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f7fafc;
-            border-radius: 8px;
-            border-left: 4px solid #48bb78;
+        /* Permanent tooltip styles */
+        .presidio-permanent-tooltip {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 4px 8px;
+            white-space: nowrap;
         }
 
-        .presidi-controls h2 {
-            font-size: 16px;
-            margin-bottom: 12px;
+        .presidio-permanent-tooltip:before {
+            border-top-color: white;
+        }
+
+        /* Control section */
+        .control-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .control-section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
             color: #2d3748;
         }
 
-        .presidi-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 12px;
+        /* Presidi under comuni */
+        .presidi-comune-list {
+            list-style: none;
+            margin-top: 8px;
+            margin-left: 12px;
+            padding-left: 12px;
+            border-left: 2px solid #e2e8f0;
         }
 
         .presidio-item {
             display: flex;
             align-items: center;
-            padding: 6px 8px;
-            margin-bottom: 4px;
-            background: white;
-            border-radius: 6px;
-            font-size: 13px;
-            transition: background 0.2s;
-        }
-
-        .presidio-item:hover {
-            background: #edf2f7;
+            padding: 4px 0;
+            font-size: 12px;
+            color: #4a5568;
         }
 
         .presidio-item input[type="checkbox"] {
-            margin-right: 8px;
+            margin-right: 6px;
             cursor: pointer;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             flex-shrink: 0;
         }
 
@@ -459,6 +560,10 @@
             cursor: pointer;
             flex: 1;
             color: #4a5568;
+        }
+
+        .presidio-item:hover label {
+            color: #667eea;
         }
 
         .print-options {
@@ -608,7 +713,8 @@
                 display: block !important;
             }
 
-            .leaflet-popup {
+            .leaflet-popup,
+            .leaflet-tooltip {
                 display: none !important;
             }
         }
@@ -629,15 +735,35 @@
             </div>
         </div>
         <div id="sidebar">
+            <!-- Settings -->
+            <div class="settings">
+                <h3>⚙️ Impostazioni</h3>
+                <div class="settings-item">
+                    <input type="checkbox" id="toggle-popup-labels" title="Mostra sempre i titoli dei presidi sulla mappa">
+                    <label for="toggle-popup-labels">Mostra sempre titoli presidi</label>
+                </div>
+                <div class="settings-item" id="label-type-setting" style="display: none; padding-left: 24px;">
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="label-type-nome" name="label-type" value="nome" checked>
+                            <label for="label-type-nome">Nome completo presidio</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="label-type-comune" name="label-type" value="comune">
+                            <label for="label-type-comune">Solo comune/quartiere</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="legend">
                 <h3>Legenda</h3>
                 <div id="legend-content"></div>
             </div>
 
-            <!-- Presidi Controls -->
-            <div class="presidi-controls">
-                <h2>🏥 Gestione Presidi</h2>
-                <div class="presidi-list" id="presidi-list"></div>
+            <!-- Control Buttons -->
+            <div class="control-section">
+                <h3>🏥 Gestione Presidi</h3>
 
                 <!-- Print Options -->
                 <div class="print-options">
@@ -670,8 +796,9 @@
 
     <!-- Context Menu -->
     <div id="context-menu" class="context-menu">
-        <div class="context-menu-item edit" id="menu-edit">Modifica posizione</div>
-        <div class="context-menu-item save" id="menu-save">Salva posizione</div>
+        <div class="context-menu-item edit" id="menu-edit">✏️ Modifica posizione</div>
+        <div class="context-menu-item save" id="menu-save">💾 Salva posizione</div>
+        <div class="context-menu-item measure" id="menu-measure">📏 Misura distanza</div>
     </div>
 
     <!-- Copyright -->
@@ -755,6 +882,12 @@
         const allPresidiMarkers = []; // Store all presidi markers for visibility control
         const presidiVisibility = {}; // Track visibility state of each presidio
         const presidiLabels = {}; // Store labels for print
+
+        // Distance measurement state
+        let measuringDistance = false;
+        let firstMeasurePoint = null;
+        let distanceLine = null;
+        let distanceMarkers = [];
 
         // Load and display statistics
         fetch(BASE_PATH + '/api/stats')
@@ -888,7 +1021,8 @@
                 });
             });
 
-            // Count presidi per distretto and comune (before creating sidebar)
+            // Create map of presidi by comune
+            const presidiByComune = {};
             presidiData.features.forEach(presidio => {
                 const distretto = presidio.properties.distretto;
                 const comune = presidio.properties.comune;
@@ -899,8 +1033,46 @@
 
                 if (comune) {
                     presidiCountsByComune[comune] = (presidiCountsByComune[comune] || 0) + 1;
+                    if (!presidiByComune[comune]) {
+                        presidiByComune[comune] = [];
+                    }
+                    presidiByComune[comune].push(presidio);
                 }
             });
+
+            // Helper function to update tooltip content based on label type
+            function updateTooltipContent(marker) {
+                const labelType = document.querySelector('input[name="label-type"]:checked').value;
+                const content = labelType === 'comune'
+                    ? (marker.tooltipContent.comune || marker.tooltipContent.nome)
+                    : marker.tooltipContent.nome;
+                marker.setTooltipContent(content);
+            }
+
+            // Helper function to check if tooltips should be shown based on zoom
+            function shouldShowTooltips() {
+                const showLabels = document.getElementById('toggle-popup-labels').checked;
+                const currentZoom = map.getZoom();
+                const minZoomForTooltips = 11; // Only show tooltips at zoom level 11 or higher
+                return showLabels && currentZoom >= minZoomForTooltips;
+            }
+
+            // Helper function to update all tooltips visibility
+            function updateAllTooltips() {
+                const showTooltips = shouldShowTooltips();
+                allPresidiMarkers.forEach(markerData => {
+                    const marker = markerData.marker;
+                    // Only show tooltip if marker is visible
+                    if (presidiVisibility[markerData.nome] !== false) {
+                        if (showTooltips) {
+                            updateTooltipContent(marker);
+                            marker.openTooltip();
+                        } else {
+                            marker.closeTooltip();
+                        }
+                    }
+                });
+            }
 
             // Popola sidebar
             const legendContent = document.getElementById('legend-content');
@@ -914,7 +1086,8 @@
                 // Aggiungi alla legenda con checkbox
                 const legendItem = document.createElement('div');
                 legendItem.className = 'legend-item';
-                const checkboxId = `checkbox-${distretto.replace(/\s+/g, '-')}`;
+                const safeDistrettoIdLegend = distretto.replace(/[\s.]+/g, '-');
+                const checkboxId = `checkbox-${safeDistrettoIdLegend}`;
                 legendItem.innerHTML = `
                     <input type="checkbox" id="${checkboxId}" checked>
                     <label for="${checkboxId}">
@@ -929,6 +1102,7 @@
                 checkbox.addEventListener('change', function() {
                     const visible = this.checked;
                     distrettiLayers[distretto].visible = visible;
+                    const showLabels = document.getElementById('toggle-popup-labels').checked;
 
                     // Show or hide all layers for this distretto
                     distrettiLayers[distretto].layers.forEach(layer => {
@@ -938,37 +1112,102 @@
                             map.removeLayer(layer);
                         }
                     });
+
+                    // Show or hide all presidi markers for this distretto
+                    if (presidiMarkers[distretto]) {
+                        presidiMarkers[distretto].forEach(marker => {
+                            const markerData = allPresidiMarkers.find(md => md.marker === marker);
+                            if (markerData) {
+                                presidiVisibility[markerData.nome] = visible;
+                                if (visible) {
+                                    map.addLayer(marker);
+                                    // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                    if (shouldShowTooltips()) {
+                                        updateTooltipContent(marker);
+                                        marker.openTooltip();
+                                    }
+                                } else {
+                                    marker.closeTooltip();
+                                    map.removeLayer(marker);
+                                }
+                                // Update checkbox in presidi list
+                                const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                if (checkbox) checkbox.checked = visible;
+                            }
+                        });
+                    }
                 });
 
                 // Aggiungi alla lista distretti
                 const distrettoInfo = document.createElement('div');
                 distrettoInfo.className = 'distretto-info';
+                const safeDistrettoId = distretto.replace(/[\s.]+/g, '-');
+                const toggleCheckboxId = `toggle-presidi-${safeDistrettoId}`;
                 distrettoInfo.innerHTML = `
-                    <div class="distretto-name" style="color: ${color}">${distretto}</div>
-                    <ul class="comuni-list" id="comuni-list-${distretto.replace(/\s+/g, '-')}">
+                    <div class="distretto-name" style="color: ${color}">
+                        <input type="checkbox" id="${toggleCheckboxId}" checked title="Mostra/nascondi presidi del distretto">
+                        <label for="${toggleCheckboxId}">${distretto}</label>
+                    </div>
+                    <ul class="comuni-list" id="comuni-list-${safeDistrettoId}">
                     </ul>
                 `;
                 distrettiList.appendChild(distrettoInfo);
+
+                // Add event listener for toggle presidi checkbox
+                const toggleCheckbox = document.getElementById(toggleCheckboxId);
+                toggleCheckbox.addEventListener('change', function() {
+                    const visible = this.checked;
+                    // Show/hide all presidi markers for this distretto
+                    if (presidiMarkers[distretto]) {
+                        presidiMarkers[distretto].forEach(marker => {
+                            const markerData = allPresidiMarkers.find(md => md.marker === marker);
+                            if (markerData) {
+                                presidiVisibility[markerData.nome] = visible;
+                                if (visible) {
+                                    map.addLayer(marker);
+                                    // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                    if (shouldShowTooltips()) {
+                                        updateTooltipContent(marker);
+                                        marker.openTooltip();
+                                    }
+                                } else {
+                                    marker.closeTooltip();
+                                    map.removeLayer(marker);
+                                }
+                                // Update checkbox in presidi list
+                                const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                if (checkbox) checkbox.checked = visible;
+                            }
+                        });
+                    }
+                });
 
                 // Add comuni with presidio counts and click handlers
                 const comuniList = distrettoInfo.querySelector('.comuni-list');
                 comuniArray.forEach(comune => {
                     const count = presidiCountsByComune[comune] || 0;
                     const li = document.createElement('li');
-                    li.innerHTML = `
-                        <span>${comune}</span>
-                        ${count > 0 ? `<span class="comune-presidio-count">${count} 🏥</span>` : ''}
-                    `;
-                    li.dataset.comune = comune;
 
-                    // Add click handler to zoom to comune
-                    li.addEventListener('click', function() {
-                        const comuneName = this.dataset.comune;
-                        if (comuneFeatures[comuneName] && comuneFeatures[comuneName].length > 0) {
+                    const comuneSpan = document.createElement('span');
+                    comuneSpan.textContent = comune;
+                    comuneSpan.style.cursor = 'pointer';
+                    li.appendChild(comuneSpan);
+
+                    if (count > 0) {
+                        const countBadge = document.createElement('span');
+                        countBadge.className = 'comune-presidio-count';
+                        countBadge.textContent = `${count} 🏥`;
+                        li.appendChild(countBadge);
+                    }
+
+                    // Add click handler to zoom to comune (solo sul nome)
+                    comuneSpan.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (comuneFeatures[comune] && comuneFeatures[comune].length > 0) {
                             // Create temporary layer to get bounds
                             const tempLayer = L.geoJSON({
                                 type: 'FeatureCollection',
-                                features: comuneFeatures[comuneName]
+                                features: comuneFeatures[comune]
                             });
                             const bounds = tempLayer.getBounds();
 
@@ -983,7 +1222,7 @@
                             L.popup()
                                 .setLatLng(center)
                                 .setContent(`
-                                    <div class="popup-title">${comuneName}</div>
+                                    <div class="popup-title">${comune}</div>
                                     <div class="popup-text">
                                         <strong>Distretto:</strong> ${distretto}<br>
                                         ${count > 0 ? `<strong>Presidi:</strong> ${count}` : ''}
@@ -993,6 +1232,8 @@
                         }
                     });
 
+                    // Store li element for later (when we add presidi)
+                    li.dataset.comune = comune;
                     comuniList.appendChild(li);
                 });
             });
@@ -1123,6 +1364,11 @@
                         allPresidiMarkers.forEach(markerData => {
                             presidiVisibility[markerData.nome] = true;
                             map.addLayer(markerData.marker);
+                            // If permanent labels are enabled and zoom is sufficient, show tooltip
+                            if (shouldShowTooltips()) {
+                                updateTooltipContent(markerData.marker);
+                                markerData.marker.openTooltip();
+                            }
                             // Update checkbox
                             const checkbox = document.getElementById(`presidio-${markerData.id}`);
                             if (checkbox) checkbox.checked = true;
@@ -1170,22 +1416,44 @@
                     comune: comune
                 };
 
-                // Popup on click
-                marker.on('click', function(e) {
-                    const popupContent = `
-                        <div class="popup-title">${nome}</div>
-                        <div class="popup-text">
-                            <strong>Indirizzo:</strong> ${indirizzo}<br>
-                            ${distretto ? `<strong>Distretto:</strong> ${distretto}<br>` : ''}
-                            ${comune ? `<strong>Comune:</strong> ${comune}` : ''}
-                        </div>
-                    `;
+                // Store popup content for reuse
+                const popupContent = `
+                    <div class="popup-title">${nome}</div>
+                    <div class="popup-text">
+                        <strong>Indirizzo:</strong> ${indirizzo}<br>
+                        ${distretto ? `<strong>Distretto:</strong> ${distretto}<br>` : ''}
+                        ${comune ? `<strong>Comune:</strong> ${comune}` : ''}
+                    </div>
+                `;
 
-                    L.popup()
-                        .setLatLng(e.latlng)
-                        .setContent(popupContent)
-                        .openOn(map);
+                // Popup on click (default behavior)
+                marker.on('click', function(e) {
+                    // Check if we're measuring distance
+                    const distanceMeasured = handlePresidioClickForDistance(marker, e.latlng, nome);
+
+                    // Only show normal popup if not measuring distance
+                    if (!distanceMeasured) {
+                        L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(popupContent)
+                            .openOn(map);
+                    }
                 });
+
+                // Bind permanent tooltip (initially hidden)
+                // Store both nome and comune for dynamic tooltip content
+                marker.tooltipContent = {
+                    nome: nome,
+                    comune: comune
+                };
+                marker.bindTooltip(nome, {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -10],
+                    className: 'presidio-permanent-tooltip',
+                    opacity: 0.9
+                });
+                marker.closeTooltip(); // Start with tooltip hidden
 
                 // Right-click for context menu
                 marker.on('contextmenu', function(e) {
@@ -1205,9 +1473,11 @@
                     if (marker.options.draggable) {
                         document.getElementById('menu-edit').style.display = 'none';
                         document.getElementById('menu-save').style.display = 'block';
+                        document.getElementById('menu-measure').style.display = 'none';
                     } else {
                         document.getElementById('menu-edit').style.display = 'block';
                         document.getElementById('menu-save').style.display = 'none';
+                        document.getElementById('menu-measure').style.display = 'block';
                     }
                 });
 
@@ -1251,41 +1521,84 @@
                 }
             });
 
-            // Populate presidi list in sidebar
-            const presidiList = document.getElementById('presidi-list');
-            allPresidiMarkers
-                .sort((a, b) => a.nome.localeCompare(b.nome))
-                .forEach(markerData => {
-                    const item = document.createElement('div');
-                    item.className = 'presidio-item';
+            // Now add presidi checkboxes under each comune (after all markers are created)
+            distrettiNames.forEach((distretto) => {
+                const distrettoData = distrettiData[distretto];
+                const comuniArray = Array.from(distrettoData.comuni).sort();
 
-                    const checkboxId = `presidio-${markerData.id}`;
-                    const isVisible = presidiVisibility[markerData.nome] !== false;
+                comuniArray.forEach(comune => {
+                    // Find the li element for this comune
+                    const safeDistrettoIdForList = distretto.replace(/[\s.]+/g, '-');
+                    const comuniListId = `comuni-list-${safeDistrettoIdForList}`;
+                    const comuniList = document.getElementById(comuniListId);
+                    if (!comuniList) return;
 
-                    item.innerHTML = `
-                        <input type="checkbox" id="${checkboxId}" ${isVisible ? 'checked' : ''}>
-                        <label for="${checkboxId}" title="${markerData.nome}">${markerData.nome}</label>
-                    `;
+                    // Find the li for this specific comune
+                    const comuneLi = Array.from(comuniList.querySelectorAll('li')).find(
+                        li => li.dataset.comune === comune && !li.classList.contains('presidio-item')
+                    );
+                    if (!comuneLi) return;
 
-                    const checkbox = item.querySelector('input');
-                    checkbox.addEventListener('change', function() {
-                        const visible = this.checked;
-                        presidiVisibility[markerData.nome] = visible;
+                    // Add presidi list under comune if there are any
+                    if (presidiByComune[comune] && presidiByComune[comune].length > 0) {
+                        const presidiListUl = document.createElement('ul');
+                        presidiListUl.className = 'presidi-comune-list';
 
-                        if (visible) {
-                            map.addLayer(markerData.marker);
-                        } else {
-                            map.removeLayer(markerData.marker);
-                        }
-                    });
+                        presidiByComune[comune].forEach(presidioFeature => {
+                            const presidioNome = presidioFeature.properties.nome;
+                            const presidioMarkerData = allPresidiMarkers.find(md => md.nome === presidioNome);
 
-                    presidiList.appendChild(item);
+                            if (presidioMarkerData) {
+                                const presidioLi = document.createElement('li');
+                                presidioLi.className = 'presidio-item';
+
+                                const checkboxId = `presidio-${presidioMarkerData.id}`;
+                                const isVisible = presidiVisibility[presidioNome] !== false;
+
+                                const checkbox = document.createElement('input');
+                                checkbox.type = 'checkbox';
+                                checkbox.id = checkboxId;
+                                checkbox.checked = isVisible;
+
+                                const label = document.createElement('label');
+                                label.htmlFor = checkboxId;
+                                label.textContent = presidioNome;
+                                label.title = presidioNome;
+
+                                checkbox.addEventListener('change', function() {
+                                    const visible = this.checked;
+                                    presidiVisibility[presidioNome] = visible;
+
+                                    if (visible) {
+                                        map.addLayer(presidioMarkerData.marker);
+                                        // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                        if (shouldShowTooltips()) {
+                                            updateTooltipContent(presidioMarkerData.marker);
+                                            presidioMarkerData.marker.openTooltip();
+                                        }
+                                    } else {
+                                        presidioMarkerData.marker.closeTooltip();
+                                        map.removeLayer(presidioMarkerData.marker);
+                                    }
+                                });
+
+                                presidioLi.appendChild(checkbox);
+                                presidioLi.appendChild(label);
+                                presidiListUl.appendChild(presidioLi);
+                            }
+                        });
+
+                        // Insert after the comune li
+                        comuneLi.parentNode.insertBefore(presidiListUl, comuneLi.nextSibling);
+                    }
                 });
+            });
 
             // Update legend with presidio counts
             distrettiNames.forEach((distretto, index) => {
                 const count = presidiCounts[distretto] || 0;
-                const checkbox = document.getElementById(`checkbox-${distretto.replace(/\s+/g, '-')}`);
+                const safeDistrettoIdForCount = distretto.replace(/[\s.]+/g, '-');
+                const checkbox = document.getElementById(`checkbox-${safeDistrettoIdForCount}`);
                 if (checkbox) {
                     const label = checkbox.nextElementSibling;
                     if (label && count > 0) {
@@ -1351,9 +1664,235 @@
                 }
             });
 
+            // Function to calculate distance between two points (Haversine formula)
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371; // Earth's radius in km
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                          Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c; // Distance in km
+            }
+
+            // Clear distance measurement
+            function clearDistanceMeasurement() {
+                if (distanceLine) {
+                    map.removeLayer(distanceLine);
+                    distanceLine = null;
+                }
+                distanceMarkers.forEach(marker => map.removeLayer(marker));
+                distanceMarkers = [];
+                measuringDistance = false;
+                firstMeasurePoint = null;
+
+                // Remove measuring cursor class from all markers
+                allPresidiMarkers.forEach(md => {
+                    if (md.marker._icon) {
+                        md.marker._icon.style.cursor = '';
+                    }
+                });
+            }
+
+            // Measure distance menu item
+            document.getElementById('menu-measure').addEventListener('click', function() {
+                if (editingMarker) {
+                    // Clear any previous measurement
+                    clearDistanceMeasurement();
+
+                    // Start measuring
+                    measuringDistance = true;
+                    firstMeasurePoint = {
+                        marker: editingMarker,
+                        latlng: editingMarker.getLatLng(),
+                        nome: editingMarker.presidioData.nome
+                    };
+
+                    // Visual feedback - change cursor
+                    allPresidiMarkers.forEach(md => {
+                        if (md.marker._icon) {
+                            md.marker._icon.style.cursor = 'crosshair';
+                        }
+                    });
+
+                    // Add marker to first point
+                    const marker1 = L.circleMarker(firstMeasurePoint.latlng, {
+                        radius: 8,
+                        fillColor: '#f59e0b',
+                        color: 'white',
+                        weight: 2,
+                        fillOpacity: 1
+                    }).addTo(map);
+                    distanceMarkers.push(marker1);
+
+                    contextMenu.classList.remove('show');
+                    alert(`Primo punto selezionato: ${firstMeasurePoint.nome}\nClicca su un altro presidio per misurare la distanza.`);
+                }
+            });
+
+            // Handle click on presidio when measuring distance
+            async function handlePresidioClickForDistance(marker, latlng, nome) {
+                if (measuringDistance && firstMeasurePoint) {
+                    // Calculate straight-line distance
+                    const straightDistance = calculateDistance(
+                        firstMeasurePoint.latlng.lat,
+                        firstMeasurePoint.latlng.lng,
+                        latlng.lat,
+                        latlng.lng
+                    );
+
+                    // Add marker to second point
+                    const marker2 = L.circleMarker(latlng, {
+                        radius: 8,
+                        fillColor: '#f59e0b',
+                        color: 'white',
+                        weight: 2,
+                        fillOpacity: 1
+                    }).addTo(map);
+                    distanceMarkers.push(marker2);
+
+                    // Draw line between points
+                    distanceLine = L.polyline([firstMeasurePoint.latlng, latlng], {
+                        color: '#f59e0b',
+                        weight: 3,
+                        dashArray: '10, 5'
+                    }).addTo(map);
+
+                    // Calculate midpoint for popup
+                    const midpoint = L.latLng(
+                        (firstMeasurePoint.latlng.lat + latlng.lat) / 2,
+                        (firstMeasurePoint.latlng.lng + latlng.lng) / 2
+                    );
+
+                    const straightDistanceKm = straightDistance.toFixed(2);
+                    const straightDistanceM = (straightDistance * 1000).toFixed(0);
+
+                    // Show initial popup with straight-line distance
+                    const popup = L.popup()
+                        .setLatLng(midpoint)
+                        .setContent(`
+                            <div class="popup-title">📏 Distanza misurata</div>
+                            <div class="popup-text">
+                                <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
+                                <strong>A:</strong> ${nome}<br>
+                                <br>
+                                <strong>🦅 Linea d'aria:</strong> ${straightDistanceKm} km (${straightDistanceM} m)<br>
+                                <strong>🚗 Distanza stradale:</strong> <span style="color: #f59e0b;">Calcolo in corso...</span><br>
+                                <br>
+                                <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
+                            </div>
+                        `)
+                        .openOn(map);
+
+                    // Fetch road distance from OSRM
+                    try {
+                        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${firstMeasurePoint.latlng.lng},${firstMeasurePoint.latlng.lat};${latlng.lng},${latlng.lat}?overview=full&geometries=geojson`;
+                        const response = await fetch(osrmUrl);
+                        const data = await response.json();
+
+                        if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                            const route = data.routes[0];
+                            const roadDistanceKm = (route.distance / 1000).toFixed(2);
+                            const roadDistanceM = route.distance.toFixed(0);
+                            const durationMinutes = Math.round(route.duration / 60);
+                            const durationHours = Math.floor(durationMinutes / 60);
+                            const durationMins = durationMinutes % 60;
+
+                            let durationText = '';
+                            if (durationHours > 0) {
+                                durationText = `${durationHours}h ${durationMins}min`;
+                            } else {
+                                durationText = `${durationMins} min`;
+                            }
+
+                            // Draw the actual road route
+                            if (route.geometry && route.geometry.coordinates) {
+                                // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
+                                const routeCoords = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+
+                                // Remove the straight line
+                                if (distanceLine) {
+                                    map.removeLayer(distanceLine);
+                                }
+
+                                // Draw the road route
+                                distanceLine = L.polyline(routeCoords, {
+                                    color: '#3b82f6',
+                                    weight: 4,
+                                    opacity: 0.7
+                                }).addTo(map);
+                            }
+
+                            // Update popup with road distance and duration
+                            popup.setContent(`
+                                <div class="popup-title">📏 Distanza misurata</div>
+                                <div class="popup-text">
+                                    <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
+                                    <strong>A:</strong> ${nome}<br>
+                                    <br>
+                                    <strong>🦅 Linea d'aria:</strong> ${straightDistanceKm} km<br>
+                                    <strong>🚗 Distanza stradale:</strong> ${roadDistanceKm} km (${roadDistanceM} m)<br>
+                                    <strong>⏱️ Tempo percorrenza:</strong> ${durationText}<br>
+                                    <br>
+                                    <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
+                                </div>
+                            `);
+                        } else {
+                            // No route found
+                            popup.setContent(`
+                                <div class="popup-title">📏 Distanza misurata</div>
+                                <div class="popup-text">
+                                    <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
+                                    <strong>A:</strong> ${nome}<br>
+                                    <br>
+                                    <strong>🦅 Linea d'aria:</strong> ${straightDistanceKm} km<br>
+                                    <strong>🚗 Distanza stradale:</strong> <span style="color: #ef4444;">Non disponibile</span><br>
+                                    <br>
+                                    <small style="color: #6b7280;">Percorso stradale non trovato. Clicca sulla mappa per rimuovere la misurazione.</small>
+                                </div>
+                            `);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching road distance:', error);
+                        // Update popup with error
+                        popup.setContent(`
+                            <div class="popup-title">📏 Distanza misurata</div>
+                            <div class="popup-text">
+                                <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
+                                <strong>A:</strong> ${nome}<br>
+                                <br>
+                                <strong>🦅 Linea d'aria:</strong> ${straightDistanceKm} km<br>
+                                <strong>🚗 Distanza stradale:</strong> <span style="color: #ef4444;">Errore calcolo</span><br>
+                                <br>
+                                <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
+                            </div>
+                        `);
+                    }
+
+                    // Reset measuring state
+                    measuringDistance = false;
+                    firstMeasurePoint = null;
+
+                    // Reset cursor
+                    allPresidiMarkers.forEach(md => {
+                        if (md.marker._icon) {
+                            md.marker._icon.style.cursor = '';
+                        }
+                    });
+
+                    return true; // Indicate that distance was measured
+                }
+                return false;
+            }
+
             // Hide context menu on map click
             map.on('click', function() {
                 contextMenu.classList.remove('show');
+                // Clear distance measurement when clicking on map
+                if (distanceLine || distanceMarkers.length > 0) {
+                    clearDistanceMeasurement();
+                }
             });
 
             // Hide context menu on scroll
@@ -1366,6 +1905,29 @@
             document.getElementById('btn-reset').addEventListener('click', resetPresidiVisibility);
             document.getElementById('btn-print').addEventListener('click', function() {
                 printMap();
+            });
+
+            // Toggle permanent popup labels
+            document.getElementById('toggle-popup-labels').addEventListener('change', function() {
+                const showLabels = this.checked;
+                const labelTypeSetting = document.getElementById('label-type-setting');
+
+                // Show/hide label type options
+                labelTypeSetting.style.display = showLabels ? 'block' : 'none';
+
+                updateAllTooltips();
+            });
+
+            // Update tooltips when zoom level changes
+            map.on('zoomend', function() {
+                updateAllTooltips();
+            });
+
+            // Handle label type change
+            document.querySelectorAll('input[name="label-type"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateAllTooltips();
+                });
             });
 
             // Print function
