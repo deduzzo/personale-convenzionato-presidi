@@ -194,11 +194,15 @@ const server = http.createServer((req, res) => {
     }
 
     // Serve static files
-    let filePath = '.' + req.url;
-    if (filePath === './') {
+    // Extract pathname without query parameters
+    const urlObj = new URL(req.url, `http://${req.headers.host}`);
+    const pathname = urlObj.pathname;
+
+    let filePath = '.' + pathname;
+    if (filePath === './' || pathname === '/') {
         filePath = './public/index.html';
     } else if (!filePath.startsWith('./public/')) {
-        filePath = './public' + req.url;
+        filePath = './public' + pathname;
     }
 
     const extname = String(path.extname(filePath)).toLowerCase();

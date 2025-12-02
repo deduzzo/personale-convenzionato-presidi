@@ -374,6 +374,14 @@
             color: #f59e0b;
         }
 
+        .context-menu-item.add {
+            color: #10b981;
+        }
+
+        .context-menu-item.change-icon {
+            color: #8b5cf6;
+        }
+
         .context-menu-item:before {
             content: '';
             width: 16px;
@@ -454,6 +462,124 @@
             font-weight: 600;
             font-size: 14px;
             margin-top: 2px;
+        }
+
+        /* Distretti legend badge */
+        .distretti-legend-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            font-size: 12px;
+            border-left: 4px solid #667eea;
+            max-width: 280px;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .distretti-legend-badge.hidden {
+            opacity: 0;
+            transform: translateX(320px);
+            pointer-events: none;
+        }
+
+        .distretti-legend-badge .legend-badge-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .distretti-legend-badge .distretto-id-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 11px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .distretti-legend-badge .distretto-id-item:last-child {
+            border-bottom: none;
+        }
+
+        .distretti-legend-badge .distretto-id-name {
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .distretti-legend-badge .distretto-id-code {
+            color: #667eea;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            background: #f7fafc;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .distretti-legend-badge .legend-badge-hint {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        .distretti-legend-badge .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #f7fafc;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .distretti-legend-badge .close-btn:hover {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        /* Toggle button for reopening legend */
+        .toggle-legend-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(102, 126, 234, 0.95);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+            transition: all 0.2s;
+        }
+
+        .toggle-legend-btn:hover {
+            background: rgba(85, 104, 211, 0.95);
+            transform: scale(1.05);
+        }
+
+        .toggle-legend-btn.visible {
+            display: flex;
         }
 
         @keyframes fadeIn {
@@ -655,6 +781,183 @@
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
+        .btn-export {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-import {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-import:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .modal-btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .modal-btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        /* Hidden file input */
+        .hidden-input {
+            display: none;
+        }
+
+        /* Icon selection modal */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .icon-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .icon-option:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+            transform: translateY(-2px);
+        }
+
+        .icon-option.selected {
+            border-color: #667eea;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .icon-option-emoji {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .icon-option-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            text-align: center;
+        }
+
+        .icon-option.selected .icon-option-label {
+            color: #667eea;
+        }
+
         /* Presidio labels for print */
         .presidio-label {
             display: none;
@@ -693,6 +996,7 @@
             #sidebar,
             .search-island,
             .stats-badge,
+            .distretti-legend-badge,
             .footer-copyright,
             .context-menu,
             .leaflet-control-zoom {
@@ -785,6 +1089,11 @@
                     <button class="btn btn-reset" id="btn-reset" title="Ripristina tutti i presidi">🔄 Reset</button>
                     <button class="btn btn-print" id="btn-print" title="Stampa la mappa">🖨️ Stampa</button>
                 </div>
+
+                <div class="control-buttons">
+                    <button class="btn btn-export" id="btn-export" title="Esporta configurazione (stato presidi + presidi custom)">📤 Esporta</button>
+                    <button class="btn btn-import" id="btn-import" title="Importa configurazione">📥 Importa</button>
+                </div>
             </div>
 
             <h2>Distretti e Comuni</h2>
@@ -798,8 +1107,55 @@
     <div id="context-menu" class="context-menu">
         <div class="context-menu-item edit" id="menu-edit">✏️ Modifica posizione</div>
         <div class="context-menu-item save" id="menu-save">💾 Salva posizione</div>
+        <div class="context-menu-item change-icon" id="menu-change-icon">🎨 Cambia icona</div>
         <div class="context-menu-item measure" id="menu-measure">📏 Misura distanza</div>
+        <div class="context-menu-item add" id="menu-add-presidio">➕ Aggiungi presidio</div>
     </div>
+
+    <!-- Modal for adding custom presidio -->
+    <div id="modal-add-presidio" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">➕ Aggiungi nuovo presidio</div>
+            <div class="modal-body">
+                <label for="presidio-name-input" style="display: block; margin-bottom: 8px; color: #4a5568; font-size: 13px; font-weight: 500;">Nome del presidio:</label>
+                <input type="text" id="presidio-name-input" class="modal-input" placeholder="Inserisci il nome del presidio...">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="modal-cancel-btn">Annulla</button>
+                <button class="modal-btn modal-btn-primary" id="modal-confirm-btn">Aggiungi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for changing presidio icon -->
+    <div id="modal-change-icon" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">🎨 Seleziona icona presidio</div>
+            <div class="modal-body">
+                <div class="icon-grid">
+                    <div class="icon-option" data-icon="hospital">
+                        <div class="icon-option-emoji">🏥</div>
+                        <div class="icon-option-label">Ospedale</div>
+                    </div>
+                    <div class="icon-option" data-icon="ambulance">
+                        <div class="icon-option-emoji">🚑</div>
+                        <div class="icon-option-label">Ambulanza</div>
+                    </div>
+                    <div class="icon-option" data-icon="cross">
+                        <div class="icon-option-emoji">✚</div>
+                        <div class="icon-option-label">Croce</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="modal-icon-cancel-btn">Annulla</button>
+                <button class="modal-btn modal-btn-primary" id="modal-icon-confirm-btn">Conferma</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="import-file-input" class="hidden-input" accept=".json">
 
     <!-- Copyright -->
     <div class="footer-copyright">
@@ -811,6 +1167,52 @@
         <div class="stats-title">Stato Geolocalizzazione</div>
         <div class="stats-missing" id="stats-missing">Caricamento...</div>
         <div class="stats-success" id="stats-success"></div>
+    </div>
+
+    <!-- Toggle Legend Button -->
+    <button class="toggle-legend-btn" id="toggle-legend-btn" title="Mostra legenda distretti">
+        📍
+    </button>
+
+    <!-- Distretti Legend Badge -->
+    <div class="distretti-legend-badge" id="distretti-legend-badge">
+        <button class="close-btn" id="close-legend-btn" title="Nascondi legenda">×</button>
+        <div class="legend-badge-title">📍 ID Distretti per URL</div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Barcellona P.G.</span>
+            <span class="distretto-id-code">barcellona</span>
+        </div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Lipari</span>
+            <span class="distretto-id-code">lipari</span>
+        </div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Messina</span>
+            <span class="distretto-id-code">messina</span>
+        </div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Milazzo</span>
+            <span class="distretto-id-code">milazzo</span>
+        </div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Mistretta</span>
+            <span class="distretto-id-code">mistretta</span>
+        </div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Patti</span>
+            <span class="distretto-id-code">patti</span>
+        </div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Sant'Agata di Militello</span>
+            <span class="distretto-id-code">santagata</span>
+        </div>
+        <div class="distretto-id-item">
+            <span class="distretto-id-name">Taormina</span>
+            <span class="distretto-id-code">taormina</span>
+        </div>
+        <div class="legend-badge-hint">
+            💡 Usa: ?distretto=<span style="color: #667eea; font-weight: 600;">nome</span>
+        </div>
     </div>
 
     <!-- Leaflet JS -->
@@ -846,6 +1248,37 @@
                 console.log('Not running on ws1.asp.messina.it, using empty BASE_PATH');
                 BASE_PATH = '';
             }
+        }
+
+        // Mappatura nomi semplificati → nomi ufficiali distretti
+        const DISTRETTI_MAP = {
+            'barcellona': 'Barcellona P.G.',
+            'barcellonapg': 'Barcellona P.G.',
+            'lipari': 'Lipari',
+            'messina': 'Messina',
+            'messinacittà': 'Messina',
+            'messinacitta': 'Messina',
+            'milazzo': 'Milazzo',
+            'mistretta': 'Mistretta',
+            'patti': 'Patti',
+            'santagata': 'Sant\'Agata di Militello',
+            'santagatadimilitello': 'Sant\'Agata di Militello',
+            'santagatamililitello': 'Sant\'Agata di Militello',
+            'taormina': 'Taormina'
+        };
+
+        // Parse URL parameters
+        function getURLParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Normalize distretto name from URL
+        function normalizeDistrettoName(input) {
+            if (!input) return null;
+            // Rimuovi spazi, punti, apostrofi e converti in lowercase
+            const normalized = input.toLowerCase().replace(/[\s.']/g, '');
+            return DISTRETTI_MAP[normalized] || null;
         }
 
         async function initApp() {
@@ -888,6 +1321,24 @@
         let firstMeasurePoint = null;
         let distanceLine = null;
         let distanceMarkers = [];
+
+        // Custom presidi state
+        const customPresidi = []; // Store custom presidi added by user
+        let pendingPresidioPosition = null; // Store position for new presidio
+
+        // Icon types and preferences
+        const ICON_TYPES = {
+            hospital: '🏥',
+            ambulance: '🚑',
+            cross: '✚'
+        };
+        const presidiIcons = {}; // Store icon type for each presidio (by nome)
+
+        // Get icon HTML for a given type
+        function getIconHTML(iconType = 'hospital') {
+            const emoji = ICON_TYPES[iconType] || ICON_TYPES.hospital;
+            return `<div style="font-size: 28px; text-align: center; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">${emoji}</div>`;
+        }
 
         // Load and display statistics
         fetch(BASE_PATH + '/api/stats')
@@ -1074,6 +1525,32 @@
                 });
             }
 
+            // Check for URL parameter to filter by distretto
+            const urlDistrettoParam = getURLParameter('distretto');
+            let filteredDistretto = null;
+
+            if (urlDistrettoParam) {
+                filteredDistretto = normalizeDistrettoName(urlDistrettoParam);
+
+                if (filteredDistretto && distrettiNames.includes(filteredDistretto)) {
+                    console.log(`Filtro distretto attivato: ${filteredDistretto} (da parametro: ${urlDistrettoParam})`);
+
+                    // Hide all distretti except the filtered one
+                    distrettiNames.forEach(distretto => {
+                        if (distretto !== filteredDistretto) {
+                            distrettiLayers[distretto].visible = false;
+                            // Hide all layers for this distretto
+                            distrettiLayers[distretto].layers.forEach(layer => {
+                                map.removeLayer(layer);
+                            });
+                        }
+                    });
+                } else if (urlDistrettoParam) {
+                    console.warn(`Distretto non valido: ${urlDistrettoParam}`);
+                    alert(`⚠️ Distretto "${urlDistrettoParam}" non trovato. Distretti validi: ${distrettiNames.join(', ')}`);
+                }
+            }
+
             // Popola sidebar
             const legendContent = document.getElementById('legend-content');
             const distrettiList = document.getElementById('distretti-list');
@@ -1088,8 +1565,9 @@
                 legendItem.className = 'legend-item';
                 const safeDistrettoIdLegend = distretto.replace(/[\s.]+/g, '-');
                 const checkboxId = `checkbox-${safeDistrettoIdLegend}`;
+                const isChecked = distrettiLayers[distretto].visible;
                 legendItem.innerHTML = `
-                    <input type="checkbox" id="${checkboxId}" checked>
+                    <input type="checkbox" id="${checkboxId}" ${isChecked ? 'checked' : ''}>
                     <label for="${checkboxId}">
                         <div class="legend-color" style="background-color: ${color}"></div>
                         <span>${distretto}</span>
@@ -1143,9 +1621,10 @@
                 distrettoInfo.className = 'distretto-info';
                 const safeDistrettoId = distretto.replace(/[\s.]+/g, '-');
                 const toggleCheckboxId = `toggle-presidi-${safeDistrettoId}`;
+                const isDistrettoChecked = distrettiLayers[distretto].visible;
                 distrettoInfo.innerHTML = `
                     <div class="distretto-name" style="color: ${color}">
-                        <input type="checkbox" id="${toggleCheckboxId}" checked title="Mostra/nascondi presidi del distretto">
+                        <input type="checkbox" id="${toggleCheckboxId}" ${isDistrettoChecked ? 'checked' : ''} title="Mostra/nascondi presidi del distretto">
                         <label for="${toggleCheckboxId}">${distretto}</label>
                     </div>
                     <ul class="comuni-list" id="comuni-list-${safeDistrettoId}">
@@ -1385,16 +1864,32 @@
             // Load saved state
             loadPresidiVisibility();
 
+            // Load icon preferences
+            function loadPresidiIcons() {
+                try {
+                    const saved = localStorage.getItem('presidi-icons');
+                    if (saved) {
+                        Object.assign(presidiIcons, JSON.parse(saved));
+                        console.log('Preferenze icone caricate da localStorage');
+                    }
+                } catch (error) {
+                    console.error('Errore nel caricamento preferenze icone:', error);
+                }
+            }
+
+            function savePresidiIcons() {
+                try {
+                    localStorage.setItem('presidi-icons', JSON.stringify(presidiIcons));
+                    console.log('Preferenze icone salvate in localStorage');
+                } catch (error) {
+                    console.error('Errore nel salvataggio preferenze icone:', error);
+                }
+            }
+
+            loadPresidiIcons();
+
             // Load and display presidi
             console.log(`Caricamento ${presidiData.features.length} presidi...`);
-
-            // Create custom marker icon with hospital emoji
-            const presidioIcon = L.divIcon({
-                className: 'presidio-marker',
-                html: '<div style="font-size: 28px; text-align: center; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">🏥</div>',
-                iconSize: [28, 28],
-                iconAnchor: [14, 14]
-            });
 
             // Add presidi markers
             presidiData.features.forEach((presidio, index) => {
@@ -1403,6 +1898,17 @@
                 const nome = presidio.properties.nome;
                 const indirizzo = presidio.properties.indirizzo;
                 const comune = presidio.properties.comune;
+
+                // Get icon type for this presidio (default: hospital)
+                const iconType = presidiIcons[nome] || 'hospital';
+
+                // Create custom marker icon
+                const presidioIcon = L.divIcon({
+                    className: 'presidio-marker',
+                    html: getIconHTML(iconType),
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
 
                 const marker = L.marker([lat, lon], {
                     icon: presidioIcon,
@@ -1460,6 +1966,7 @@
                     L.DomEvent.preventDefault(e);
 
                     editingMarker = marker;
+                    pendingPresidioPosition = null; // Clear pending position
 
                     // Position context menu
                     const x = e.originalEvent.pageX;
@@ -1469,14 +1976,19 @@
                     contextMenu.style.top = y + 'px';
                     contextMenu.classList.add('show');
 
+                    // Hide "Add presidio" option for marker context menu
+                    document.getElementById('menu-add-presidio').style.display = 'none';
+
                     // Update menu based on draggable state
                     if (marker.options.draggable) {
                         document.getElementById('menu-edit').style.display = 'none';
                         document.getElementById('menu-save').style.display = 'block';
+                        document.getElementById('menu-change-icon').style.display = 'none';
                         document.getElementById('menu-measure').style.display = 'none';
                     } else {
                         document.getElementById('menu-edit').style.display = 'block';
                         document.getElementById('menu-save').style.display = 'none';
+                        document.getElementById('menu-change-icon').style.display = 'block';
                         document.getElementById('menu-measure').style.display = 'block';
                     }
                 });
@@ -1611,6 +2123,35 @@
                 }
             });
 
+            // Apply distretto filter to presidi if URL parameter is present
+            if (filteredDistretto) {
+                console.log(`Applicazione filtro presidi per distretto: ${filteredDistretto}`);
+
+                // Hide all presidi that don't belong to the filtered distretto
+                allPresidiMarkers.forEach(markerData => {
+                    if (markerData.distretto !== filteredDistretto) {
+                        presidiVisibility[markerData.nome] = false;
+                        map.removeLayer(markerData.marker);
+                        // Update checkbox if it exists
+                        const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                        if (checkbox) checkbox.checked = false;
+                    }
+                });
+
+                // Zoom to filtered distretto bounds
+                if (distrettiData[filteredDistretto] && distrettiData[filteredDistretto].features.length > 0) {
+                    const tempLayer = L.geoJSON({
+                        type: 'FeatureCollection',
+                        features: distrettiData[filteredDistretto].features
+                    });
+                    const bounds = tempLayer.getBounds();
+                    map.fitBounds(bounds, {
+                        padding: [50, 50],
+                        maxZoom: 12
+                    });
+                }
+            }
+
             // Context menu handlers
             document.getElementById('menu-edit').addEventListener('click', function() {
                 if (editingMarker) {
@@ -1661,6 +2202,80 @@
 
                     contextMenu.classList.remove('show');
                     editingMarker = null;
+                }
+            });
+
+            // Change icon menu handler
+            document.getElementById('menu-change-icon').addEventListener('click', function() {
+                if (editingMarker) {
+                    contextMenu.classList.remove('show');
+
+                    // Open icon selection modal
+                    const iconModal = document.getElementById('modal-change-icon');
+                    iconModal.classList.add('show');
+
+                    // Get current icon type
+                    const currentIcon = presidiIcons[editingMarker.presidioData.nome] || 'hospital';
+
+                    // Select current icon in modal
+                    document.querySelectorAll('.icon-option').forEach(option => {
+                        option.classList.remove('selected');
+                        if (option.dataset.icon === currentIcon) {
+                            option.classList.add('selected');
+                        }
+                    });
+                }
+            });
+
+            // Icon selection modal handlers
+            const iconModal = document.getElementById('modal-change-icon');
+            let selectedIcon = null;
+
+            // Click on icon option to select
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedIcon = this.dataset.icon;
+                });
+            });
+
+            // Cancel button
+            document.getElementById('modal-icon-cancel-btn').addEventListener('click', function() {
+                iconModal.classList.remove('show');
+                selectedIcon = null;
+            });
+
+            // Confirm button
+            document.getElementById('modal-icon-confirm-btn').addEventListener('click', function() {
+                if (editingMarker && selectedIcon) {
+                    const nome = editingMarker.presidioData.nome;
+
+                    // Update icon preference
+                    presidiIcons[nome] = selectedIcon;
+                    savePresidiIcons();
+
+                    // Update marker icon
+                    const newIcon = L.divIcon({
+                        className: 'presidio-marker',
+                        html: getIconHTML(selectedIcon),
+                        iconSize: [28, 28],
+                        iconAnchor: [14, 14]
+                    });
+                    editingMarker.setIcon(newIcon);
+
+                    iconModal.classList.remove('show');
+                    selectedIcon = null;
+
+                    alert(`✓ Icona cambiata per "${nome}"`);
+                }
+            });
+
+            // Close modal on click outside
+            iconModal.addEventListener('click', function(e) {
+                if (e.target === iconModal) {
+                    iconModal.classList.remove('show');
+                    selectedIcon = null;
                 }
             });
 
@@ -1900,6 +2515,28 @@
                 contextMenu.classList.remove('show');
             });
 
+            // Context menu on map (right-click)
+            map.on('contextmenu', function(e) {
+                // Only show "Add presidio" option on map context menu
+                pendingPresidioPosition = e.latlng;
+                editingMarker = null;
+
+                // Position context menu
+                const point = map.latLngToContainerPoint(e.latlng);
+                const x = point.x;
+                const y = point.y;
+
+                contextMenu.style.left = x + 'px';
+                contextMenu.style.top = y + 'px';
+                contextMenu.classList.add('show');
+
+                // Show only "Add presidio" option
+                document.getElementById('menu-edit').style.display = 'none';
+                document.getElementById('menu-save').style.display = 'none';
+                document.getElementById('menu-measure').style.display = 'none';
+                document.getElementById('menu-add-presidio').style.display = 'block';
+            });
+
             // Button event listeners
             document.getElementById('btn-save').addEventListener('click', savePresidiVisibility);
             document.getElementById('btn-reset').addEventListener('click', resetPresidiVisibility);
@@ -1929,6 +2566,354 @@
                     updateAllTooltips();
                 });
             });
+
+            // Custom presidi functions
+            function loadCustomPresidi() {
+                try {
+                    const saved = localStorage.getItem('custom-presidi');
+                    if (saved) {
+                        const loaded = JSON.parse(saved);
+                        customPresidi.push(...loaded);
+                        console.log(`Caricati ${loaded.length} presidi custom da localStorage`);
+
+                        // Add markers for custom presidi
+                        loaded.forEach(presidio => {
+                            addCustomPresidioMarker(presidio);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Errore nel caricamento presidi custom:', error);
+                }
+            }
+
+            function saveCustomPresidi() {
+                try {
+                    localStorage.setItem('custom-presidi', JSON.stringify(customPresidi));
+                    console.log('Presidi custom salvati in localStorage');
+                } catch (error) {
+                    console.error('Errore nel salvataggio presidi custom:', error);
+                }
+            }
+
+            function addCustomPresidioMarker(presidio) {
+                // Get icon type for this presidio (default: hospital)
+                const iconType = presidiIcons[presidio.nome] || 'hospital';
+
+                const presidioIcon = L.divIcon({
+                    className: 'presidio-marker',
+                    html: getIconHTML(iconType),
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
+
+                const marker = L.marker([presidio.lat, presidio.lon], {
+                    icon: presidioIcon,
+                    draggable: false
+                }).addTo(map);
+
+                marker.presidioData = {
+                    nome: presidio.nome,
+                    indirizzo: 'Custom',
+                    distretto: 'Custom',
+                    comune: 'Custom',
+                    isCustom: true
+                };
+
+                const popupContent = `
+                    <div class="popup-title">${presidio.nome}</div>
+                    <div class="popup-text">
+                        <strong>Tipo:</strong> Presidio personalizzato<br>
+                        <strong>Lat:</strong> ${presidio.lat.toFixed(6)}<br>
+                        <strong>Lon:</strong> ${presidio.lon.toFixed(6)}
+                    </div>
+                `;
+
+                marker.on('click', function(e) {
+                    L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(popupContent)
+                        .openOn(map);
+                });
+
+                // Right-click for context menu (same as regular presidi)
+                marker.on('contextmenu', function(e) {
+                    L.DomEvent.preventDefault(e);
+
+                    editingMarker = marker;
+                    pendingPresidioPosition = null; // Clear pending position
+
+                    // Position context menu
+                    const x = e.originalEvent.pageX;
+                    const y = e.originalEvent.pageY;
+
+                    contextMenu.style.left = x + 'px';
+                    contextMenu.style.top = y + 'px';
+                    contextMenu.classList.add('show');
+
+                    // Hide "Add presidio" option for marker context menu
+                    document.getElementById('menu-add-presidio').style.display = 'none';
+
+                    // Custom presidi cannot be edited, but can change icon and measure distance
+                    document.getElementById('menu-edit').style.display = 'none';
+                    document.getElementById('menu-save').style.display = 'none';
+                    document.getElementById('menu-change-icon').style.display = 'block';
+                    document.getElementById('menu-measure').style.display = 'block';
+                });
+
+                // Bind permanent tooltip (initially hidden)
+                marker.tooltipContent = {
+                    nome: presidio.nome,
+                    comune: presidio.nome // For custom presidi, use nome for both
+                };
+                marker.bindTooltip(presidio.nome, {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -10],
+                    className: 'presidio-permanent-tooltip',
+                    opacity: 0.9
+                });
+                marker.closeTooltip(); // Start with tooltip hidden
+
+                // Create label for print
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'presidio-label';
+                labelDiv.textContent = presidio.nome;
+                document.body.appendChild(labelDiv);
+
+                // Store marker with visibility data
+                const markerData = {
+                    id: allPresidiMarkers.length,
+                    marker: marker,
+                    nome: presidio.nome,
+                    distretto: 'Custom',
+                    comune: 'Custom',
+                    lat: presidio.lat,
+                    lon: presidio.lon,
+                    labelDiv: labelDiv,
+                    isCustom: true
+                };
+
+                allPresidiMarkers.push(markerData);
+                presidiLabels[presidio.nome] = markerData;
+
+                // Initialize visibility
+                if (presidiVisibility[presidio.nome] === undefined) {
+                    presidiVisibility[presidio.nome] = true;
+                }
+
+                // Show tooltip if permanent labels are enabled and zoom is sufficient
+                if (shouldShowTooltips()) {
+                    updateTooltipContent(marker);
+                    marker.openTooltip();
+                }
+            }
+
+            // Export configuration
+            function exportConfiguration() {
+                try {
+                    const config = {
+                        version: '1.0',
+                        timestamp: new Date().toISOString(),
+                        presidiVisibility: presidiVisibility,
+                        customPresidi: customPresidi,
+                        presidiIcons: presidiIcons
+                    };
+
+                    const dataStr = JSON.stringify(config, null, 2);
+                    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `presidi-config-${new Date().toISOString().split('T')[0]}.json`;
+                    link.click();
+                    URL.revokeObjectURL(url);
+
+                    alert('✓ Configurazione esportata con successo!');
+                } catch (error) {
+                    console.error('Errore nell\'esportazione:', error);
+                    alert('✗ Errore nell\'esportazione della configurazione');
+                }
+            }
+
+            // Import configuration
+            function importConfiguration(file) {
+                try {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const config = JSON.parse(e.target.result);
+
+                            if (!config.version || !config.presidiVisibility) {
+                                alert('✗ File di configurazione non valido');
+                                return;
+                            }
+
+                            // Import presidiVisibility
+                            Object.assign(presidiVisibility, config.presidiVisibility);
+
+                            // Import presidiIcons
+                            if (config.presidiIcons) {
+                                Object.assign(presidiIcons, config.presidiIcons);
+                                savePresidiIcons();
+                            }
+
+                            // Apply visibility and icons to existing presidi
+                            allPresidiMarkers.forEach(markerData => {
+                                const visible = presidiVisibility[markerData.nome] !== false;
+                                if (visible) {
+                                    map.addLayer(markerData.marker);
+                                } else {
+                                    map.removeLayer(markerData.marker);
+                                }
+
+                                // Update icon if preference exists
+                                const iconType = presidiIcons[markerData.nome];
+                                if (iconType) {
+                                    const newIcon = L.divIcon({
+                                        className: 'presidio-marker',
+                                        html: getIconHTML(iconType),
+                                        iconSize: [28, 28],
+                                        iconAnchor: [14, 14]
+                                    });
+                                    markerData.marker.setIcon(newIcon);
+                                }
+
+                                // Update checkbox if exists
+                                const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                if (checkbox) checkbox.checked = visible;
+                            });
+
+                            // Import custom presidi
+                            if (config.customPresidi && config.customPresidi.length > 0) {
+                                // Remove old custom presidi markers
+                                const customMarkers = allPresidiMarkers.filter(md => md.isCustom);
+                                customMarkers.forEach(md => {
+                                    map.removeLayer(md.marker);
+                                    if (md.labelDiv && md.labelDiv.parentNode) {
+                                        md.labelDiv.parentNode.removeChild(md.labelDiv);
+                                    }
+                                    const index = allPresidiMarkers.indexOf(md);
+                                    if (index > -1) {
+                                        allPresidiMarkers.splice(index, 1);
+                                    }
+                                });
+
+                                // Clear and add new custom presidi
+                                customPresidi.length = 0;
+                                customPresidi.push(...config.customPresidi);
+
+                                // Add markers for imported custom presidi
+                                config.customPresidi.forEach(presidio => {
+                                    addCustomPresidioMarker(presidio);
+                                });
+
+                                // Save to localStorage
+                                saveCustomPresidi();
+                            }
+
+                            // Save visibility to localStorage
+                            savePresidiVisibility();
+
+                            alert(`✓ Configurazione importata con successo!\n${config.customPresidi ? config.customPresidi.length : 0} presidi custom caricati`);
+                        } catch (parseError) {
+                            console.error('Errore nel parsing del file:', parseError);
+                            alert('✗ Errore nel parsing del file di configurazione');
+                        }
+                    };
+                    reader.readAsText(file);
+                } catch (error) {
+                    console.error('Errore nell\'importazione:', error);
+                    alert('✗ Errore nell\'importazione della configurazione');
+                }
+            }
+
+            // Export button event listener
+            document.getElementById('btn-export').addEventListener('click', exportConfiguration);
+
+            // Import button event listener
+            document.getElementById('btn-import').addEventListener('click', function() {
+                document.getElementById('import-file-input').click();
+            });
+
+            document.getElementById('import-file-input').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    importConfiguration(file);
+                }
+                // Reset input
+                e.target.value = '';
+            });
+
+            // Modal handlers for adding custom presidio
+            const modal = document.getElementById('modal-add-presidio');
+            const presidioNameInput = document.getElementById('presidio-name-input');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+            const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+            document.getElementById('menu-add-presidio').addEventListener('click', function() {
+                if (pendingPresidioPosition) {
+                    contextMenu.classList.remove('show');
+                    modal.classList.add('show');
+                    presidioNameInput.value = '';
+                    presidioNameInput.focus();
+                }
+            });
+
+            modalCancelBtn.addEventListener('click', function() {
+                modal.classList.remove('show');
+                pendingPresidioPosition = null;
+            });
+
+            modalConfirmBtn.addEventListener('click', function() {
+                const nome = presidioNameInput.value.trim();
+                if (!nome) {
+                    alert('Inserisci un nome per il presidio');
+                    return;
+                }
+
+                if (pendingPresidioPosition) {
+                    // Check if presidio with same name exists
+                    const exists = customPresidi.find(p => p.nome === nome);
+                    if (exists) {
+                        alert('Esiste già un presidio con questo nome');
+                        return;
+                    }
+
+                    // Add custom presidio
+                    const presidio = {
+                        nome: nome,
+                        lat: pendingPresidioPosition.lat,
+                        lon: pendingPresidioPosition.lng
+                    };
+
+                    customPresidi.push(presidio);
+                    addCustomPresidioMarker(presidio);
+                    saveCustomPresidi();
+
+                    modal.classList.remove('show');
+                    pendingPresidioPosition = null;
+
+                    alert(`✓ Presidio "${nome}" aggiunto con successo!`);
+                }
+            });
+
+            // Close modal on click outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    pendingPresidioPosition = null;
+                }
+            });
+
+            // Handle Enter key in modal input
+            presidioNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    modalConfirmBtn.click();
+                }
+            });
+
+            // Load custom presidi on startup
+            loadCustomPresidi();
 
             // Print function
             function printMap() {
@@ -2019,8 +3004,28 @@
         });
         }
 
+        // Toggle legend badge visibility
+        function setupLegendToggle() {
+            const legendBadge = document.getElementById('distretti-legend-badge');
+            const toggleBtn = document.getElementById('toggle-legend-btn');
+            const closeBtn = document.getElementById('close-legend-btn');
+
+            // Close legend
+            closeBtn.addEventListener('click', function() {
+                legendBadge.classList.add('hidden');
+                toggleBtn.classList.add('visible');
+            });
+
+            // Open legend
+            toggleBtn.addEventListener('click', function() {
+                legendBadge.classList.remove('hidden');
+                toggleBtn.classList.remove('visible');
+            });
+        }
+
         // Initialize the app
         initApp();
+        setupLegendToggle();
     </script>
 </body>
 </html>
