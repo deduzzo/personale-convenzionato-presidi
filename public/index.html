@@ -85,9 +85,15 @@
 
         .distretto-name input[type="checkbox"] {
             cursor: pointer;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
+            accent-color: #667eea;
+            transition: all 0.2s ease;
+        }
+
+        .distretto-name input[type="checkbox"]:hover {
+            transform: scale(1.1);
         }
 
         .distretto-name label {
@@ -1263,7 +1269,7 @@
             'patti': 'Patti',
             'santagata': 'Sant\'Agata di Militello',
             'santagatadimilitello': 'Sant\'Agata di Militello',
-            'santagatamililitello': 'Sant\'Agata di Militello',
+            'santagatadimililitello': 'Sant\'Agata di Militello',
             'taormina': 'Taormina'
         };
 
@@ -1279,6 +1285,21 @@
             // Rimuovi spazi, punti, apostrofi e converti in lowercase
             const normalized = input.toLowerCase().replace(/[\s.']/g, '');
             return DISTRETTI_MAP[normalized] || null;
+        }
+
+        // Normalize string for comparison (handles different apostrophe types)
+        function normalizeForComparison(str) {
+            if (!str) return '';
+            // Replace all types of apostrophes and normalize
+            // U+0027 = straight apostrophe ('), U+2019 = right single quotation mark (')
+            return str.toLowerCase().replace(/[\s.\u0027\u2019]/g, '');
+        }
+
+        // Find matching distretto name in array (handles apostrophe variations)
+        function findMatchingDistretto(searchName, distrettiArray) {
+            if (!searchName) return null;
+            const normalizedSearch = normalizeForComparison(searchName);
+            return distrettiArray.find(d => normalizeForComparison(d) === normalizedSearch);
         }
 
         async function initApp() {
@@ -1530,14 +1551,16 @@
             let filteredDistretto = null;
 
             if (urlDistrettoParam) {
-                filteredDistretto = normalizeDistrettoName(urlDistrettoParam);
+                const mappedDistretto = normalizeDistrettoName(urlDistrettoParam);
+                // Find actual distretto name (handles apostrophe variations)
+                filteredDistretto = findMatchingDistretto(mappedDistretto, distrettiNames);
 
-                if (filteredDistretto && distrettiNames.includes(filteredDistretto)) {
+                if (filteredDistretto) {
                     console.log(`Filtro distretto attivato: ${filteredDistretto} (da parametro: ${urlDistrettoParam})`);
 
                     // Hide all distretti except the filtered one
                     distrettiNames.forEach(distretto => {
-                        if (distretto !== filteredDistretto) {
+                        if (normalizeForComparison(distretto) !== normalizeForComparison(filteredDistretto)) {
                             distrettiLayers[distretto].visible = false;
                             // Hide all layers for this distretto
                             distrettiLayers[distretto].layers.forEach(layer => {
@@ -2129,7 +2152,7 @@
 
                 // Hide all presidi that don't belong to the filtered distretto
                 allPresidiMarkers.forEach(markerData => {
-                    if (markerData.distretto !== filteredDistretto) {
+                    if (normalizeForComparison(markerData.distretto) !== normalizeForComparison(filteredDistretto)) {
                         presidiVisibility[markerData.nome] = false;
                         map.removeLayer(markerData.marker);
                         // Update checkbox if it exists
@@ -2138,11 +2161,12 @@
                     }
                 });
 
-                // Zoom to filtered distretto bounds
-                if (distrettiData[filteredDistretto] && distrettiData[filteredDistretto].features.length > 0) {
+                // Zoom to filtered distretto bounds - find actual key in distrettiData
+                const actualDistrettoKey = Object.keys(distrettiData).find(key => normalizeForComparison(key) === normalizeForComparison(filteredDistretto));
+                if (actualDistrettoKey && distrettiData[actualDistrettoKey] && distrettiData[actualDistrettoKey].features.length > 0) {
                     const tempLayer = L.geoJSON({
                         type: 'FeatureCollection',
-                        features: distrettiData[filteredDistretto].features
+                        features: distrettiData[actualDistrettoKey].features
                     });
                     const bounds = tempLayer.getBounds();
                     map.fitBounds(bounds, {

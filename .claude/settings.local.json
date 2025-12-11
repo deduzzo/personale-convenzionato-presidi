@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(node server.js:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(node /tmp/test-flow.js:*)",
+      "Bash(curl:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
