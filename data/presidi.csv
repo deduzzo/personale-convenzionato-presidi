@@ -1,13 +1,13 @@
 Nome struttura,Indirizzo,Latitudine,Longitudine,Distretto,Comune
 Presidio Continuità Assistenziale (ex Guardia Medica) – Villafranca Tirrena (ME),"Via Principe di Castelnuovo, 71 Villafranca Tirrena (ME)",38.2396418,15.4324964,Messina,Villafranca Tirrena
-Presidio Continuità Assistenziale (ex Guardia Medica) – Saponara (ME),Via J.F Kennedy - Saponara (ME),38.2163168,15.425746,Messina,Rometta
+Presidio Continuità Assistenziale (ex Guardia Medica) – Saponara (ME),Via J.F Kennedy - Saponara (ME),38.1941403,15.4340271,Messina,Saponara
 Presidio Continuità Assistenziale (ex Guardia Medica) – Rometta (ME),"Via Don G. Mento Visalli, 5 - Rometta (ME)",38.1714297,15.4101132,Messina,Rometta
 Presidio Continuità Assistenziale (ex Guardia Medica) – Roccalumera (ME),"Via Torrente Sciglio, 20 - Roccalumera (ME)",37.9822631,15.3955882,Messina,Roccalumera
 Presidio Continuità Assistenziale (ex Guardia Medica) – Pagliara (ME),"Via Vallone Rinaldo, 1 - Pagliara (ME)",37.9870986,15.3546434,Messina,Pagliara
 Presidio Continuità Assistenziale (ex Guardia Medica) – Nizza di Sicilia (ME),"Via Comandante Todaro,70 Nizza di Sicilia (ME)",37.9931255,15.4114813,Messina,Nizza di Sicilia
 Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Sud,"Via Sacra Famiglia, 7 Messina",38.1534618,15.5296155,Messina,Messina - II CIRCOSCRIZIONE
 Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Centro,"Via Garibaldi, 240/242 - Messina (ME)",38.1865928,15.5560614,Messina,Messina - IV CIRCOSCRIZIONE
-Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Nord,Via Risorgimento 22 - Messina (ME),38.2207858,15.2377915,Milazzo,Milazzo
+Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Nord,Via Risorgimento 22 - Messina (ME),38.1859649,15.5553406,Milazzo,Milazzo
 Presidio Continuità Assistenziale (ex Guardia Medica) – Mandanici (ME),Via SS. Trinità - Mandanici (ME),38.0005305,15.3192653,Messina,Mandanici
 Presidio Continuità Assistenziale (ex Guardia Medica) – Furci Siculo (ME),"Via Spinelli, 58 - Furci Siculo (ME)",37.9645524,15.3830214,Messina,Furci Siculo
 Presidio Continuità Assistenziale (ex Guardia Medica) – Fiumedinisi (ME),Corso Bottari - Fiumedinisi (ME),38.0258893,15.3824852,Messina,Fiumedinisi
@@ -23,7 +23,7 @@ Presidio Continuità Assistenziale – Roccavaldina Valdina (ME),"Via Collegio, 
 Presidio Continuità Assistenziale – Pace del Mela (ME),"Via Libertà, 78 - Pace del Mela (ME)",38.2009526,15.3164689,Milazzo,Pace del Mela
 Presidio Continuità Assistenziale – Monforte San Giorgio (ME),Via Ingegnere A. Calogero - Monforte San Giorgio (ME),38.1571352,15.3780666,Milazzo,Monforte San Giorgio
 Presidio Continuità Assistenziale – Milazzo (ME),"Via G.B Impallomeni, 45 - Milazzo (ME)",38.2265396,15.2386912,Milazzo,Milazzo
-Presidio Continuità Assistenziale – Gualtieri Sicaminò, Condrò (ME),"Via Nuova, 12 - Gualtieri Sicaminò (ME)",38.1678467,15.3199218,Milazzo,Gualtieri Sicaminò
+Presidio Continuità Assistenziale – Gualtieri Sicaminò, "Condrò (ME) Via Nuova, 12 - Gualtieri Sicaminò (ME)",38.1678467,15.3199218,Milazzo,Gualtieri Sicaminò
 Presidio Continuità Assistenziale – Venetico (ME),Via Roma ex Municipio - Venetico (ME),38.2184975,15.3632136,Milazzo,Venetico
 Presidio Continuità Assistenziale – Mazzarà Sant’Andrea (ME),Via Principe Umberto c/o Municipio - Mazzarrà Sant'Andrea ME,38.0898331,15.1335813,Barcellona P.G.,Mazzarrà Sant'Andrea
 Presidio Continuità Assistenziale – Furnari (ME),Piazza Municipio - Furnari (ME),38.1041637,15.1251424,Barcellona P.G.,Furnari
@@ -70,7 +70,7 @@ Presidio Continuità Assistenziale – Rocca di Capri Leone (ME),Via Monsignor F
 Presidio Continuità Assistenziale – Tusa (ME),"Via Roma, 3 - Tusa (ME)",37.9810444,14.2362897,Mistretta,Tusa
 Presidio Continuità Assistenziale – Santo Stefano di Camastra (ME),"Via L. Grassi, 1 - Santo Stefano di Camastra (ME)",38.00850602058154, 14.35176970612925,Mistretta,Santo Stefano di Camastra
 Presidio Continuità Assistenziale – Pettineo (ME),Via A. Pedevillano - Pettineo (ME),37.966796867727716, 14.293479438325274,Mistretta,Pettineo
-Presidio Continuità Assistenziale – Motta d’Affermo (ME),"Via Kennedy, 11 Motta D' Affermo (ME)",37.97975,14.3008839,Mistretta,Pettineo
+Presidio Continuità Assistenziale – Motta d’Affermo (ME),"Via Kennedy, 11 Motta D' Affermo (ME)",37.982466, 14.304340,Mistretta,Motta d’Affermo
 Presidio Continuità Assistenziale – Mistretta, Reitano (ME),"Villaggio San Giuseppe, 6 - Reitano (ME)",37.9723661,14.3421219,Mistretta,Reitano
 Presidio Continuità Assistenziale – Castel di Lucio (ME),"Via Santa Lucia, 1 - Castel di Lucio (ME)",37.882919801233236, 14.310560715725018,Mistretta,Castel di Lucio
 Presidio Continuità Assistenziale (ex Guardia Medica) – Savoca (ME),Via Borgo - Savoca (ME),37.955411,15.3396124,Taormina,Savoca

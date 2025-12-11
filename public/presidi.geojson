@@ -23,13 +23,13 @@
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Saponara (ME)",
         "indirizzo": "Via J.F Kennedy - Saponara (ME)",
         "distretto": "Messina",
-        "comune": "Rometta"
+        "comune": "Saponara"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          15.425746,
-          38.2163168
+          15.4340271,
+          38.1941403
         ]
       }
     },
@@ -134,14 +134,14 @@
       "properties": {
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Nord",
         "indirizzo": "Via Risorgimento 22 - Messina (ME)",
-        "distretto": "Milazzo",
-        "comune": "Milazzo"
+        "distretto": "Messina",
+        "comune": "Messina - IV CIRCOSCRIZIONE"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          15.2377915,
-          38.2207858
+          15.5553406,
+          38.1859649
         ]
       }
     },
@@ -382,6 +382,22 @@
         "coordinates": [
           15.2386912,
           38.2265396
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale – Gualtieri Sicaminò",
+        "indirizzo": "Condrò (ME) Via Nuova, 12 - Gualtieri Sicaminò (ME)",
+        "distretto": "Milazzo",
+        "comune": "Gualtieri Sicaminò"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.3199218,
+          38.1678467
         ]
       }
     },
@@ -1095,13 +1111,13 @@
         "nome": "Presidio Continuità Assistenziale – Motta d’Affermo (ME)",
         "indirizzo": "Via Kennedy, 11 Motta D' Affermo (ME)",
         "distretto": "Mistretta",
-        "comune": "Pettineo"
+        "comune": "Motta d'Affermo"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          14.3008839,
-          37.97975
+          14.30434,
+          37.982466
         ]
       }
     },
