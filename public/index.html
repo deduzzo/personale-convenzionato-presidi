@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -461,6 +462,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -666,7 +668,7 @@
             font-weight: 600;
             color: #2d3748;
             white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             pointer-events: none;
             z-index: 1000;
             transform: translate(-50%, -100%);
@@ -720,6 +722,7 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Presidi e Distretti Sanitari ASP Messina</h1>
@@ -739,7 +742,8 @@
             <div class="settings">
                 <h3>⚙️ Impostazioni</h3>
                 <div class="settings-item">
-                    <input type="checkbox" id="toggle-popup-labels" title="Mostra sempre i titoli dei presidi sulla mappa">
+                    <input type="checkbox" id="toggle-popup-labels"
+                        title="Mostra sempre i titoli dei presidi sulla mappa">
                     <label for="toggle-popup-labels">Mostra sempre titoli presidi</label>
                 </div>
                 <div class="settings-item" id="label-type-setting" style="display: none; padding-left: 24px;">
@@ -781,7 +785,8 @@
                 </div>
 
                 <div class="control-buttons">
-                    <button class="btn btn-save" id="btn-save" title="Salva lo stato corrente dei presidi">💾 Salva</button>
+                    <button class="btn btn-save" id="btn-save" title="Salva lo stato corrente dei presidi">💾
+                        Salva</button>
                     <button class="btn btn-reset" id="btn-reset" title="Ripristina tutti i presidi">🔄 Reset</button>
                     <button class="btn btn-print" id="btn-print" title="Stampa la mappa">🖨️ Stampa</button>
                 </div>
@@ -815,6 +820,7 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="google-app.js"></script>
 
     <script>
         // Initialize BASE_PATH based on hostname
@@ -833,8 +839,7 @@
                         BASE_PATH = config.data.basePath || '';
                         console.log('Config loaded, using BASE_PATH:', BASE_PATH);
                     }
-                    else
-                    {
+                    else {
                         console.error('Failed to load config, status:', response.status);
                         BASE_PATH = '';
                     }
@@ -848,161 +853,161 @@
             }
         }
 
-        async function initApp() {
+        async function initLeafletApp() {
             // Load configuration first
             await loadConfig();
 
             // Inizializza mappa
             const map = L.map('map').setView([38.19, 15.25], 10);
 
-        // Aggiungi tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+            // Aggiungi tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
 
-        // Colori per i distretti
-        const colors = [
-            '#667eea', '#764ba2', '#f093fb', '#f5576c',
-            '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
-            '#fa709a', '#fee140', '#30cfd0', '#330867'
-        ];
+            // Colori per i distretti
+            const colors = [
+                '#667eea', '#764ba2', '#f093fb', '#f5576c',
+                '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
+                '#fa709a', '#fee140', '#30cfd0', '#330867'
+            ];
 
-        const distrettiData = {};
-        const distrettiLayers = {}; // Store layers by distretto for filtering
-        const allFeatures = []; // Store all features for search
-        const presidiMarkers = {}; // Store presidi markers by distretto
-        const presidiCounts = {}; // Count presidi per distretto
-        const presidiCountsByComune = {}; // Count presidi per comune
-        const comuneFeatures = {}; // Store features by comune for zooming
-        let selectedDistretto = null;
-        let editingMarker = null; // Marker currently being edited
-        const infoBox = document.getElementById('info-box');
-        const contextMenu = document.getElementById('context-menu');
-        const allPresidiMarkers = []; // Store all presidi markers for visibility control
-        const presidiVisibility = {}; // Track visibility state of each presidio
-        const presidiLabels = {}; // Store labels for print
+            const distrettiData = {};
+            const distrettiLayers = {}; // Store layers by distretto for filtering
+            const allFeatures = []; // Store all features for search
+            const presidiMarkers = {}; // Store presidi markers by distretto
+            const presidiCounts = {}; // Count presidi per distretto
+            const presidiCountsByComune = {}; // Count presidi per comune
+            const comuneFeatures = {}; // Store features by comune for zooming
+            let selectedDistretto = null;
+            let editingMarker = null; // Marker currently being edited
+            const infoBox = document.getElementById('info-box');
+            const contextMenu = document.getElementById('context-menu');
+            const allPresidiMarkers = []; // Store all presidi markers for visibility control
+            const presidiVisibility = {}; // Track visibility state of each presidio
+            const presidiLabels = {}; // Store labels for print
 
-        // Distance measurement state
-        let measuringDistance = false;
-        let firstMeasurePoint = null;
-        let distanceLine = null;
-        let distanceMarkers = [];
+            // Distance measurement state
+            let measuringDistance = false;
+            let firstMeasurePoint = null;
+            let distanceLine = null;
+            let distanceMarkers = [];
 
-        // Load and display statistics
-        fetch(BASE_PATH + '/api/stats')
-            .then(r => r.json())
-            .then(stats => {
-                const missingElement = document.getElementById('stats-missing');
-                if (stats.missing === 0) {
-                    // Hide missing count if all are geocoded
-                    missingElement.style.display = 'none';
-                } else {
-                    missingElement.textContent =
-                        `❌ ${stats.missing} presidi non geolocalizzati`;
-                }
-                document.getElementById('stats-success').textContent =
-                    `✓ ${stats.percentage}% geolocalizzati (${stats.geocoded}/${stats.total})`;
-            })
-            .catch(err => {
-                console.error('Error loading stats:', err);
-                document.getElementById('stats-missing').textContent = 'Errore caricamento';
-            });
-
-        // Carica i dati
-        Promise.all([
-            fetch(BASE_PATH + '/distretti-detailed.geojson').then(r => r.json()),
-            fetch(BASE_PATH + '/presidi.geojson').then(r => r.json())
-        ]).then(([detailedData, presidiData]) => {
-            console.log('Dati caricati:', detailedData, presidiData);
-
-            // Raggruppa per distretto
-            detailedData.features.forEach(feature => {
-                const distretto = feature.properties.distretto;
-                if (!distrettiData[distretto]) {
-                    distrettiData[distretto] = {
-                        features: [],
-                        comuni: new Set()
-                    };
-                }
-                distrettiData[distretto].features.push(feature);
-
-                if (feature.properties.comune) {
-                    distrettiData[distretto].comuni.add(feature.properties.comune);
-                }
-            });
-
-            // Crea layer per ogni distretto
-            const distrettiNames = Object.keys(distrettiData).sort();
-
-            distrettiNames.forEach((distretto, index) => {
-                const color = colors[index % colors.length];
-                const data = distrettiData[distretto];
-
-                // Initialize layer group for this distretto
-                distrettiLayers[distretto] = {
-                    layers: [],
-                    color: color,
-                    visible: true
-                };
-
-                data.features.forEach(feature => {
-                    const comune = feature.properties.comune;
-
-                    // Store feature with distretto info for search
-                    allFeatures.push({
-                        comune: comune,
-                        distretto: distretto,
-                        feature: feature,
-                        color: color
-                    });
-
-                    // Store feature by comune for zooming
-                    if (!comuneFeatures[comune]) {
-                        comuneFeatures[comune] = [];
+            // Load and display statistics
+            fetch(BASE_PATH + '/api/stats')
+                .then(r => r.json())
+                .then(stats => {
+                    const missingElement = document.getElementById('stats-missing');
+                    if (stats.missing === 0) {
+                        // Hide missing count if all are geocoded
+                        missingElement.style.display = 'none';
+                    } else {
+                        missingElement.textContent =
+                            `❌ ${stats.missing} presidi non geolocalizzati`;
                     }
-                    comuneFeatures[comune].push(feature);
+                    document.getElementById('stats-success').textContent =
+                        `✓ ${stats.percentage}% geolocalizzati (${stats.geocoded}/${stats.total})`;
+                })
+                .catch(err => {
+                    console.error('Error loading stats:', err);
+                    document.getElementById('stats-missing').textContent = 'Errore caricamento';
+                });
 
-                    const layer = L.geoJSON(feature, {
-                        style: {
-                            fillColor: color,
-                            weight: 1,
-                            opacity: 1,
-                            color: 'white',
-                            fillOpacity: 0.5
-                        }
-                    });
+            // Carica i dati
+            Promise.all([
+                fetch(BASE_PATH + '/distretti-detailed.geojson').then(r => r.json()),
+                fetch(BASE_PATH + '/presidi.geojson').then(r => r.json())
+            ]).then(([detailedData, presidiData]) => {
+                console.log('Dati caricati:', detailedData, presidiData);
 
-                    layer.on('mouseover', function(e) {
-                        e.target.setStyle({
-                            fillOpacity: 0.8,
-                            weight: 2
+                // Raggruppa per distretto
+                detailedData.features.forEach(feature => {
+                    const distretto = feature.properties.distretto;
+                    if (!distrettiData[distretto]) {
+                        distrettiData[distretto] = {
+                            features: [],
+                            comuni: new Set()
+                        };
+                    }
+                    distrettiData[distretto].features.push(feature);
+
+                    if (feature.properties.comune) {
+                        distrettiData[distretto].comuni.add(feature.properties.comune);
+                    }
+                });
+
+                // Crea layer per ogni distretto
+                const distrettiNames = Object.keys(distrettiData).sort();
+
+                distrettiNames.forEach((distretto, index) => {
+                    const color = colors[index % colors.length];
+                    const data = distrettiData[distretto];
+
+                    // Initialize layer group for this distretto
+                    distrettiLayers[distretto] = {
+                        layers: [],
+                        color: color,
+                        visible: true
+                    };
+
+                    data.features.forEach(feature => {
+                        const comune = feature.properties.comune;
+
+                        // Store feature with distretto info for search
+                        allFeatures.push({
+                            comune: comune,
+                            distretto: distretto,
+                            feature: feature,
+                            color: color
                         });
 
-                        const comune = feature.properties.comune;
-                        infoBox.innerHTML = `
+                        // Store feature by comune for zooming
+                        if (!comuneFeatures[comune]) {
+                            comuneFeatures[comune] = [];
+                        }
+                        comuneFeatures[comune].push(feature);
+
+                        const layer = L.geoJSON(feature, {
+                            style: {
+                                fillColor: color,
+                                weight: 1,
+                                opacity: 1,
+                                color: 'white',
+                                fillOpacity: 0.5
+                            }
+                        });
+
+                        layer.on('mouseover', function (e) {
+                            e.target.setStyle({
+                                fillOpacity: 0.8,
+                                weight: 2
+                            });
+
+                            const comune = feature.properties.comune;
+                            infoBox.innerHTML = `
                             <h3>${distretto}</h3>
                             <p><strong>Comune:</strong> ${comune}</p>
                         `;
-                        infoBox.classList.add('show');
-                    });
+                            infoBox.classList.add('show');
+                        });
 
-                    layer.on('mouseout', function(e) {
-                        if (selectedDistretto !== distretto) {
-                            e.target.setStyle({
-                                fillOpacity: 0.5,
-                                weight: 1
-                            });
-                        }
-                        infoBox.classList.remove('show');
-                    });
+                        layer.on('mouseout', function (e) {
+                            if (selectedDistretto !== distretto) {
+                                e.target.setStyle({
+                                    fillOpacity: 0.5,
+                                    weight: 1
+                                });
+                            }
+                            infoBox.classList.remove('show');
+                        });
 
-                    layer.on('click', function(e) {
-                        selectedDistretto = distretto;
+                        layer.on('click', function (e) {
+                            selectedDistretto = distretto;
 
-                        // Mostra popup
-                        const comuniArray = Array.from(data.comuni).sort();
-                        const popupContent = `
+                            // Mostra popup
+                            const comuniArray = Array.from(data.comuni).sort();
+                            const popupContent = `
                             <div class="popup-title">${distretto}</div>
                             <div class="popup-text">
                                 <strong>Comuni (${comuniArray.length}):</strong><br>
@@ -1010,140 +1015,140 @@
                             </div>
                         `;
 
-                        L.popup()
-                            .setLatLng(e.latlng)
-                            .setContent(popupContent)
-                            .openOn(map);
+                            L.popup()
+                                .setLatLng(e.latlng)
+                                .setContent(popupContent)
+                                .openOn(map);
+                        });
+
+                        layer.addTo(map);
+                        distrettiLayers[distretto].layers.push(layer);
                     });
-
-                    layer.addTo(map);
-                    distrettiLayers[distretto].layers.push(layer);
                 });
-            });
 
-            // Create map of presidi by comune
-            const presidiByComune = {};
-            presidiData.features.forEach(presidio => {
-                const distretto = presidio.properties.distretto;
-                const comune = presidio.properties.comune;
+                // Create map of presidi by comune
+                const presidiByComune = {};
+                presidiData.features.forEach(presidio => {
+                    const distretto = presidio.properties.distretto;
+                    const comune = presidio.properties.comune;
 
-                if (distretto) {
-                    presidiCounts[distretto] = (presidiCounts[distretto] || 0) + 1;
-                }
-
-                if (comune) {
-                    presidiCountsByComune[comune] = (presidiCountsByComune[comune] || 0) + 1;
-                    if (!presidiByComune[comune]) {
-                        presidiByComune[comune] = [];
+                    if (distretto) {
+                        presidiCounts[distretto] = (presidiCounts[distretto] || 0) + 1;
                     }
-                    presidiByComune[comune].push(presidio);
-                }
-            });
 
-            // Helper function to update tooltip content based on label type
-            function updateTooltipContent(marker) {
-                const labelType = document.querySelector('input[name="label-type"]:checked').value;
-                const content = labelType === 'comune'
-                    ? (marker.tooltipContent.comune || marker.tooltipContent.nome)
-                    : marker.tooltipContent.nome;
-                marker.setTooltipContent(content);
-            }
-
-            // Helper function to check if tooltips should be shown based on zoom
-            function shouldShowTooltips() {
-                const showLabels = document.getElementById('toggle-popup-labels').checked;
-                const currentZoom = map.getZoom();
-                const minZoomForTooltips = 11; // Only show tooltips at zoom level 11 or higher
-                return showLabels && currentZoom >= minZoomForTooltips;
-            }
-
-            // Helper function to update all tooltips visibility
-            function updateAllTooltips() {
-                const showTooltips = shouldShowTooltips();
-                allPresidiMarkers.forEach(markerData => {
-                    const marker = markerData.marker;
-                    // Only show tooltip if marker is visible
-                    if (presidiVisibility[markerData.nome] !== false) {
-                        if (showTooltips) {
-                            updateTooltipContent(marker);
-                            marker.openTooltip();
-                        } else {
-                            marker.closeTooltip();
+                    if (comune) {
+                        presidiCountsByComune[comune] = (presidiCountsByComune[comune] || 0) + 1;
+                        if (!presidiByComune[comune]) {
+                            presidiByComune[comune] = [];
                         }
+                        presidiByComune[comune].push(presidio);
                     }
                 });
-            }
 
-            // Popola sidebar
-            const legendContent = document.getElementById('legend-content');
-            const distrettiList = document.getElementById('distretti-list');
+                // Helper function to update tooltip content based on label type
+                function updateTooltipContent(marker) {
+                    const labelType = document.querySelector('input[name="label-type"]:checked').value;
+                    const content = labelType === 'comune'
+                        ? (marker.tooltipContent.comune || marker.tooltipContent.nome)
+                        : marker.tooltipContent.nome;
+                    marker.setTooltipContent(content);
+                }
 
-            distrettiNames.forEach((distretto, index) => {
-                const color = colors[index % colors.length];
-                const data = distrettiData[distretto];
-                const comuniArray = Array.from(data.comuni).sort();
+                // Helper function to check if tooltips should be shown based on zoom
+                function shouldShowTooltips() {
+                    const showLabels = document.getElementById('toggle-popup-labels').checked;
+                    const currentZoom = map.getZoom();
+                    const minZoomForTooltips = 11; // Only show tooltips at zoom level 11 or higher
+                    return showLabels && currentZoom >= minZoomForTooltips;
+                }
 
-                // Aggiungi alla legenda con checkbox
-                const legendItem = document.createElement('div');
-                legendItem.className = 'legend-item';
-                const safeDistrettoIdLegend = distretto.replace(/[\s.]+/g, '-');
-                const checkboxId = `checkbox-${safeDistrettoIdLegend}`;
-                legendItem.innerHTML = `
+                // Helper function to update all tooltips visibility
+                function updateAllTooltips() {
+                    const showTooltips = shouldShowTooltips();
+                    allPresidiMarkers.forEach(markerData => {
+                        const marker = markerData.marker;
+                        // Only show tooltip if marker is visible
+                        if (presidiVisibility[markerData.nome] !== false) {
+                            if (showTooltips) {
+                                updateTooltipContent(marker);
+                                marker.openTooltip();
+                            } else {
+                                marker.closeTooltip();
+                            }
+                        }
+                    });
+                }
+
+                // Popola sidebar
+                const legendContent = document.getElementById('legend-content');
+                const distrettiList = document.getElementById('distretti-list');
+
+                distrettiNames.forEach((distretto, index) => {
+                    const color = colors[index % colors.length];
+                    const data = distrettiData[distretto];
+                    const comuniArray = Array.from(data.comuni).sort();
+
+                    // Aggiungi alla legenda con checkbox
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    const safeDistrettoIdLegend = distretto.replace(/[\s.]+/g, '-');
+                    const checkboxId = `checkbox-${safeDistrettoIdLegend}`;
+                    legendItem.innerHTML = `
                     <input type="checkbox" id="${checkboxId}" checked>
                     <label for="${checkboxId}">
                         <div class="legend-color" style="background-color: ${color}"></div>
                         <span>${distretto}</span>
                     </label>
                 `;
-                legendContent.appendChild(legendItem);
+                    legendContent.appendChild(legendItem);
 
-                // Add event listener for checkbox
-                const checkbox = legendItem.querySelector('input[type="checkbox"]');
-                checkbox.addEventListener('change', function() {
-                    const visible = this.checked;
-                    distrettiLayers[distretto].visible = visible;
-                    const showLabels = document.getElementById('toggle-popup-labels').checked;
+                    // Add event listener for checkbox
+                    const checkbox = legendItem.querySelector('input[type="checkbox"]');
+                    checkbox.addEventListener('change', function () {
+                        const visible = this.checked;
+                        distrettiLayers[distretto].visible = visible;
+                        const showLabels = document.getElementById('toggle-popup-labels').checked;
 
-                    // Show or hide all layers for this distretto
-                    distrettiLayers[distretto].layers.forEach(layer => {
-                        if (visible) {
-                            map.addLayer(layer);
-                        } else {
-                            map.removeLayer(layer);
+                        // Show or hide all layers for this distretto
+                        distrettiLayers[distretto].layers.forEach(layer => {
+                            if (visible) {
+                                map.addLayer(layer);
+                            } else {
+                                map.removeLayer(layer);
+                            }
+                        });
+
+                        // Show or hide all presidi markers for this distretto
+                        if (presidiMarkers[distretto]) {
+                            presidiMarkers[distretto].forEach(marker => {
+                                const markerData = allPresidiMarkers.find(md => md.marker === marker);
+                                if (markerData) {
+                                    presidiVisibility[markerData.nome] = visible;
+                                    if (visible) {
+                                        map.addLayer(marker);
+                                        // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                        if (shouldShowTooltips()) {
+                                            updateTooltipContent(marker);
+                                            marker.openTooltip();
+                                        }
+                                    } else {
+                                        marker.closeTooltip();
+                                        map.removeLayer(marker);
+                                    }
+                                    // Update checkbox in presidi list
+                                    const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                    if (checkbox) checkbox.checked = visible;
+                                }
+                            });
                         }
                     });
 
-                    // Show or hide all presidi markers for this distretto
-                    if (presidiMarkers[distretto]) {
-                        presidiMarkers[distretto].forEach(marker => {
-                            const markerData = allPresidiMarkers.find(md => md.marker === marker);
-                            if (markerData) {
-                                presidiVisibility[markerData.nome] = visible;
-                                if (visible) {
-                                    map.addLayer(marker);
-                                    // If permanent labels are enabled and zoom is sufficient, show tooltip
-                                    if (shouldShowTooltips()) {
-                                        updateTooltipContent(marker);
-                                        marker.openTooltip();
-                                    }
-                                } else {
-                                    marker.closeTooltip();
-                                    map.removeLayer(marker);
-                                }
-                                // Update checkbox in presidi list
-                                const checkbox = document.getElementById(`presidio-${markerData.id}`);
-                                if (checkbox) checkbox.checked = visible;
-                            }
-                        });
-                    }
-                });
-
-                // Aggiungi alla lista distretti
-                const distrettoInfo = document.createElement('div');
-                distrettoInfo.className = 'distretto-info';
-                const safeDistrettoId = distretto.replace(/[\s.]+/g, '-');
-                const toggleCheckboxId = `toggle-presidi-${safeDistrettoId}`;
-                distrettoInfo.innerHTML = `
+                    // Aggiungi alla lista distretti
+                    const distrettoInfo = document.createElement('div');
+                    distrettoInfo.className = 'distretto-info';
+                    const safeDistrettoId = distretto.replace(/[\s.]+/g, '-');
+                    const toggleCheckboxId = `toggle-presidi-${safeDistrettoId}`;
+                    distrettoInfo.innerHTML = `
                     <div class="distretto-name" style="color: ${color}">
                         <input type="checkbox" id="${toggleCheckboxId}" checked title="Mostra/nascondi presidi del distretto">
                         <label for="${toggleCheckboxId}">${distretto}</label>
@@ -1151,273 +1156,273 @@
                     <ul class="comuni-list" id="comuni-list-${safeDistrettoId}">
                     </ul>
                 `;
-                distrettiList.appendChild(distrettoInfo);
+                    distrettiList.appendChild(distrettoInfo);
 
-                // Add event listener for toggle presidi checkbox
-                const toggleCheckbox = document.getElementById(toggleCheckboxId);
-                toggleCheckbox.addEventListener('change', function() {
-                    const visible = this.checked;
-                    // Show/hide all presidi markers for this distretto
-                    if (presidiMarkers[distretto]) {
-                        presidiMarkers[distretto].forEach(marker => {
-                            const markerData = allPresidiMarkers.find(md => md.marker === marker);
-                            if (markerData) {
-                                presidiVisibility[markerData.nome] = visible;
-                                if (visible) {
-                                    map.addLayer(marker);
-                                    // If permanent labels are enabled and zoom is sufficient, show tooltip
-                                    if (shouldShowTooltips()) {
-                                        updateTooltipContent(marker);
-                                        marker.openTooltip();
+                    // Add event listener for toggle presidi checkbox
+                    const toggleCheckbox = document.getElementById(toggleCheckboxId);
+                    toggleCheckbox.addEventListener('change', function () {
+                        const visible = this.checked;
+                        // Show/hide all presidi markers for this distretto
+                        if (presidiMarkers[distretto]) {
+                            presidiMarkers[distretto].forEach(marker => {
+                                const markerData = allPresidiMarkers.find(md => md.marker === marker);
+                                if (markerData) {
+                                    presidiVisibility[markerData.nome] = visible;
+                                    if (visible) {
+                                        map.addLayer(marker);
+                                        // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                        if (shouldShowTooltips()) {
+                                            updateTooltipContent(marker);
+                                            marker.openTooltip();
+                                        }
+                                    } else {
+                                        marker.closeTooltip();
+                                        map.removeLayer(marker);
                                     }
-                                } else {
-                                    marker.closeTooltip();
-                                    map.removeLayer(marker);
+                                    // Update checkbox in presidi list
+                                    const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                    if (checkbox) checkbox.checked = visible;
                                 }
-                                // Update checkbox in presidi list
-                                const checkbox = document.getElementById(`presidio-${markerData.id}`);
-                                if (checkbox) checkbox.checked = visible;
-                            }
-                        });
-                    }
-                });
-
-                // Add comuni with presidio counts and click handlers
-                const comuniList = distrettoInfo.querySelector('.comuni-list');
-                comuniArray.forEach(comune => {
-                    const count = presidiCountsByComune[comune] || 0;
-                    const li = document.createElement('li');
-
-                    const comuneSpan = document.createElement('span');
-                    comuneSpan.textContent = comune;
-                    comuneSpan.style.cursor = 'pointer';
-                    li.appendChild(comuneSpan);
-
-                    if (count > 0) {
-                        const countBadge = document.createElement('span');
-                        countBadge.className = 'comune-presidio-count';
-                        countBadge.textContent = `${count} 🏥`;
-                        li.appendChild(countBadge);
-                    }
-
-                    // Add click handler to zoom to comune (solo sul nome)
-                    comuneSpan.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        if (comuneFeatures[comune] && comuneFeatures[comune].length > 0) {
-                            // Create temporary layer to get bounds
-                            const tempLayer = L.geoJSON({
-                                type: 'FeatureCollection',
-                                features: comuneFeatures[comune]
                             });
-                            const bounds = tempLayer.getBounds();
+                        }
+                    });
 
-                            // Zoom to comune
-                            map.fitBounds(bounds, {
-                                padding: [50, 50],
-                                maxZoom: 13
-                            });
+                    // Add comuni with presidio counts and click handlers
+                    const comuniList = distrettoInfo.querySelector('.comuni-list');
+                    comuniArray.forEach(comune => {
+                        const count = presidiCountsByComune[comune] || 0;
+                        const li = document.createElement('li');
 
-                            // Show popup
-                            const center = bounds.getCenter();
-                            L.popup()
-                                .setLatLng(center)
-                                .setContent(`
+                        const comuneSpan = document.createElement('span');
+                        comuneSpan.textContent = comune;
+                        comuneSpan.style.cursor = 'pointer';
+                        li.appendChild(comuneSpan);
+
+                        if (count > 0) {
+                            const countBadge = document.createElement('span');
+                            countBadge.className = 'comune-presidio-count';
+                            countBadge.textContent = `${count} 🏥`;
+                            li.appendChild(countBadge);
+                        }
+
+                        // Add click handler to zoom to comune (solo sul nome)
+                        comuneSpan.addEventListener('click', function (e) {
+                            e.stopPropagation();
+                            if (comuneFeatures[comune] && comuneFeatures[comune].length > 0) {
+                                // Create temporary layer to get bounds
+                                const tempLayer = L.geoJSON({
+                                    type: 'FeatureCollection',
+                                    features: comuneFeatures[comune]
+                                });
+                                const bounds = tempLayer.getBounds();
+
+                                // Zoom to comune
+                                map.fitBounds(bounds, {
+                                    padding: [50, 50],
+                                    maxZoom: 13
+                                });
+
+                                // Show popup
+                                const center = bounds.getCenter();
+                                L.popup()
+                                    .setLatLng(center)
+                                    .setContent(`
                                     <div class="popup-title">${comune}</div>
                                     <div class="popup-text">
                                         <strong>Distretto:</strong> ${distretto}<br>
                                         ${count > 0 ? `<strong>Presidi:</strong> ${count}` : ''}
                                     </div>
                                 `)
-                                .openOn(map);
-                        }
+                                    .openOn(map);
+                            }
+                        });
+
+                        // Store li element for later (when we add presidi)
+                        li.dataset.comune = comune;
+                        comuniList.appendChild(li);
                     });
-
-                    // Store li element for later (when we add presidi)
-                    li.dataset.comune = comune;
-                    comuniList.appendChild(li);
                 });
-            });
 
-            // Fit bounds
-            const bounds = L.geoJSON(detailedData).getBounds();
-            map.fitBounds(bounds, { padding: [20, 20] });
+                // Fit bounds
+                const bounds = L.geoJSON(detailedData).getBounds();
+                map.fitBounds(bounds, { padding: [20, 20] });
 
-            // Setup search functionality
-            const searchInput = document.getElementById('search-input');
-            const searchResults = document.getElementById('search-results');
-            let currentHighlight = null;
+                // Setup search functionality
+                const searchInput = document.getElementById('search-input');
+                const searchResults = document.getElementById('search-results');
+                let currentHighlight = null;
 
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase().trim();
-                searchResults.innerHTML = '';
+                searchInput.addEventListener('input', function (e) {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    searchResults.innerHTML = '';
 
-                if (searchTerm.length < 2) {
-                    return;
-                }
+                    if (searchTerm.length < 2) {
+                        return;
+                    }
 
-                // Search through all features
-                const matches = allFeatures.filter(item =>
-                    item.comune.toLowerCase().includes(searchTerm)
-                ).slice(0, 10); // Limit to 10 results
+                    // Search through all features
+                    const matches = allFeatures.filter(item =>
+                        item.comune.toLowerCase().includes(searchTerm)
+                    ).slice(0, 10); // Limit to 10 results
 
-                if (matches.length === 0) {
-                    searchResults.innerHTML = '<div class="search-no-results">Nessun comune trovato</div>';
-                    return;
-                }
+                    if (matches.length === 0) {
+                        searchResults.innerHTML = '<div class="search-no-results">Nessun comune trovato</div>';
+                        return;
+                    }
 
-                matches.forEach(match => {
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'search-result-item';
-                    resultItem.innerHTML = `
+                    matches.forEach(match => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item';
+                        resultItem.innerHTML = `
                         <div class="search-result-comune">${match.comune}</div>
                         <div class="search-result-distretto">Distretto: ${match.distretto}</div>
                     `;
 
-                    resultItem.addEventListener('click', function() {
-                        // Get bounds of the feature
-                        const featureLayer = L.geoJSON(match.feature);
-                        const featureBounds = featureLayer.getBounds();
+                        resultItem.addEventListener('click', function () {
+                            // Get bounds of the feature
+                            const featureLayer = L.geoJSON(match.feature);
+                            const featureBounds = featureLayer.getBounds();
 
-                        // Zoom to feature
-                        map.fitBounds(featureBounds, {
-                            padding: [50, 50],
-                            maxZoom: 13
-                        });
+                            // Zoom to feature
+                            map.fitBounds(featureBounds, {
+                                padding: [50, 50],
+                                maxZoom: 13
+                            });
 
-                        // Remove previous highlight
-                        if (currentHighlight) {
-                            map.removeLayer(currentHighlight);
-                        }
-
-                        // Highlight the feature
-                        currentHighlight = L.geoJSON(match.feature, {
-                            style: {
-                                fillColor: match.color,
-                                weight: 3,
-                                opacity: 1,
-                                color: '#ff6b6b',
-                                fillOpacity: 0.7
+                            // Remove previous highlight
+                            if (currentHighlight) {
+                                map.removeLayer(currentHighlight);
                             }
-                        }).addTo(map);
 
-                        // Show popup
-                        const center = featureBounds.getCenter();
-                        L.popup()
-                            .setLatLng(center)
-                            .setContent(`
+                            // Highlight the feature
+                            currentHighlight = L.geoJSON(match.feature, {
+                                style: {
+                                    fillColor: match.color,
+                                    weight: 3,
+                                    opacity: 1,
+                                    color: '#ff6b6b',
+                                    fillOpacity: 0.7
+                                }
+                            }).addTo(map);
+
+                            // Show popup
+                            const center = featureBounds.getCenter();
+                            L.popup()
+                                .setLatLng(center)
+                                .setContent(`
                                 <div class="popup-title">${match.comune}</div>
                                 <div class="popup-text">
                                     <strong>Distretto:</strong> ${match.distretto}
                                 </div>
                             `)
-                            .openOn(map);
+                                .openOn(map);
 
-                        // Clear search
-                        searchInput.value = '';
-                        searchResults.innerHTML = '';
+                            // Clear search
+                            searchInput.value = '';
+                            searchResults.innerHTML = '';
 
-                        // Remove highlight after 5 seconds
-                        setTimeout(() => {
-                            if (currentHighlight) {
-                                map.removeLayer(currentHighlight);
-                                currentHighlight = null;
-                            }
-                        }, 5000);
-                    });
-
-                    searchResults.appendChild(resultItem);
-                });
-            });
-
-            // Load visibility state from localStorage
-            function loadPresidiVisibility() {
-                try {
-                    const saved = localStorage.getItem('presidi-visibility');
-                    if (saved) {
-                        const parsed = JSON.parse(saved);
-                        Object.assign(presidiVisibility, parsed);
-                        console.log('Stato presidi caricato da localStorage');
-                    }
-                } catch (error) {
-                    console.error('Errore nel caricamento dello stato:', error);
-                }
-            }
-
-            // Save visibility state to localStorage
-            function savePresidiVisibility() {
-                try {
-                    localStorage.setItem('presidi-visibility', JSON.stringify(presidiVisibility));
-                    alert('✓ Stato presidi salvato con successo!');
-                    console.log('Stato presidi salvato in localStorage');
-                } catch (error) {
-                    console.error('Errore nel salvataggio dello stato:', error);
-                    alert('✗ Errore nel salvataggio dello stato');
-                }
-            }
-
-            // Reset visibility state
-            function resetPresidiVisibility() {
-                if (confirm('Sei sicuro di voler ripristinare lo stato iniziale? Tutti i presidi saranno nuovamente visibili.')) {
-                    try {
-                        localStorage.removeItem('presidi-visibility');
-                        // Reset all to visible
-                        allPresidiMarkers.forEach(markerData => {
-                            presidiVisibility[markerData.nome] = true;
-                            map.addLayer(markerData.marker);
-                            // If permanent labels are enabled and zoom is sufficient, show tooltip
-                            if (shouldShowTooltips()) {
-                                updateTooltipContent(markerData.marker);
-                                markerData.marker.openTooltip();
-                            }
-                            // Update checkbox
-                            const checkbox = document.getElementById(`presidio-${markerData.id}`);
-                            if (checkbox) checkbox.checked = true;
+                            // Remove highlight after 5 seconds
+                            setTimeout(() => {
+                                if (currentHighlight) {
+                                    map.removeLayer(currentHighlight);
+                                    currentHighlight = null;
+                                }
+                            }, 5000);
                         });
-                        alert('✓ Stato ripristinato! Tutti i presidi sono ora visibili.');
-                        console.log('Stato presidi ripristinato');
+
+                        searchResults.appendChild(resultItem);
+                    });
+                });
+
+                // Load visibility state from localStorage
+                function loadPresidiVisibility() {
+                    try {
+                        const saved = localStorage.getItem('presidi-visibility');
+                        if (saved) {
+                            const parsed = JSON.parse(saved);
+                            Object.assign(presidiVisibility, parsed);
+                            console.log('Stato presidi caricato da localStorage');
+                        }
                     } catch (error) {
-                        console.error('Errore nel reset dello stato:', error);
-                        alert('✗ Errore nel reset dello stato');
+                        console.error('Errore nel caricamento dello stato:', error);
                     }
                 }
-            }
 
-            // Load saved state
-            loadPresidiVisibility();
+                // Save visibility state to localStorage
+                function savePresidiVisibility() {
+                    try {
+                        localStorage.setItem('presidi-visibility', JSON.stringify(presidiVisibility));
+                        alert('✓ Stato presidi salvato con successo!');
+                        console.log('Stato presidi salvato in localStorage');
+                    } catch (error) {
+                        console.error('Errore nel salvataggio dello stato:', error);
+                        alert('✗ Errore nel salvataggio dello stato');
+                    }
+                }
 
-            // Load and display presidi
-            console.log(`Caricamento ${presidiData.features.length} presidi...`);
+                // Reset visibility state
+                function resetPresidiVisibility() {
+                    if (confirm('Sei sicuro di voler ripristinare lo stato iniziale? Tutti i presidi saranno nuovamente visibili.')) {
+                        try {
+                            localStorage.removeItem('presidi-visibility');
+                            // Reset all to visible
+                            allPresidiMarkers.forEach(markerData => {
+                                presidiVisibility[markerData.nome] = true;
+                                map.addLayer(markerData.marker);
+                                // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                if (shouldShowTooltips()) {
+                                    updateTooltipContent(markerData.marker);
+                                    markerData.marker.openTooltip();
+                                }
+                                // Update checkbox
+                                const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                if (checkbox) checkbox.checked = true;
+                            });
+                            alert('✓ Stato ripristinato! Tutti i presidi sono ora visibili.');
+                            console.log('Stato presidi ripristinato');
+                        } catch (error) {
+                            console.error('Errore nel reset dello stato:', error);
+                            alert('✗ Errore nel reset dello stato');
+                        }
+                    }
+                }
 
-            // Create custom marker icon with hospital emoji
-            const presidioIcon = L.divIcon({
-                className: 'presidio-marker',
-                html: '<div style="font-size: 28px; text-align: center; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">🏥</div>',
-                iconSize: [28, 28],
-                iconAnchor: [14, 14]
-            });
+                // Load saved state
+                loadPresidiVisibility();
 
-            // Add presidi markers
-            presidiData.features.forEach((presidio, index) => {
-                const [lon, lat] = presidio.geometry.coordinates;
-                const distretto = presidio.properties.distretto;
-                const nome = presidio.properties.nome;
-                const indirizzo = presidio.properties.indirizzo;
-                const comune = presidio.properties.comune;
+                // Load and display presidi
+                console.log(`Caricamento ${presidiData.features.length} presidi...`);
 
-                const marker = L.marker([lat, lon], {
-                    icon: presidioIcon,
-                    draggable: false
-                }).addTo(map);
+                // Create custom marker icon with hospital emoji
+                const presidioIcon = L.divIcon({
+                    className: 'presidio-marker',
+                    html: '<div style="font-size: 28px; text-align: center; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">🏥</div>',
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
 
-                marker.presidioData = {
-                    nome: nome,
-                    indirizzo: indirizzo,
-                    distretto: distretto,
-                    comune: comune
-                };
+                // Add presidi markers
+                presidiData.features.forEach((presidio, index) => {
+                    const [lon, lat] = presidio.geometry.coordinates;
+                    const distretto = presidio.properties.distretto;
+                    const nome = presidio.properties.nome;
+                    const indirizzo = presidio.properties.indirizzo;
+                    const comune = presidio.properties.comune;
 
-                // Store popup content for reuse
-                const popupContent = `
+                    const marker = L.marker([lat, lon], {
+                        icon: presidioIcon,
+                        draggable: false
+                    }).addTo(map);
+
+                    marker.presidioData = {
+                        nome: nome,
+                        indirizzo: indirizzo,
+                        distretto: distretto,
+                        comune: comune
+                    };
+
+                    // Store popup content for reuse
+                    const popupContent = `
                     <div class="popup-title">${nome}</div>
                     <div class="popup-text">
                         <strong>Indirizzo:</strong> ${indirizzo}<br>
@@ -1426,352 +1431,352 @@
                     </div>
                 `;
 
-                // Popup on click (default behavior)
-                marker.on('click', function(e) {
-                    // Check if we're measuring distance
-                    const distanceMeasured = handlePresidioClickForDistance(marker, e.latlng, nome);
+                    // Popup on click (default behavior)
+                    marker.on('click', function (e) {
+                        // Check if we're measuring distance
+                        const distanceMeasured = handlePresidioClickForDistance(marker, e.latlng, nome);
 
-                    // Only show normal popup if not measuring distance
-                    if (!distanceMeasured) {
-                        L.popup()
-                            .setLatLng(e.latlng)
-                            .setContent(popupContent)
-                            .openOn(map);
-                    }
-                });
-
-                // Bind permanent tooltip (initially hidden)
-                // Store both nome and comune for dynamic tooltip content
-                marker.tooltipContent = {
-                    nome: nome,
-                    comune: comune
-                };
-                marker.bindTooltip(nome, {
-                    permanent: true,
-                    direction: 'top',
-                    offset: [0, -10],
-                    className: 'presidio-permanent-tooltip',
-                    opacity: 0.9
-                });
-                marker.closeTooltip(); // Start with tooltip hidden
-
-                // Right-click for context menu
-                marker.on('contextmenu', function(e) {
-                    L.DomEvent.preventDefault(e);
-
-                    editingMarker = marker;
-
-                    // Position context menu
-                    const x = e.originalEvent.pageX;
-                    const y = e.originalEvent.pageY;
-
-                    contextMenu.style.left = x + 'px';
-                    contextMenu.style.top = y + 'px';
-                    contextMenu.classList.add('show');
-
-                    // Update menu based on draggable state
-                    if (marker.options.draggable) {
-                        document.getElementById('menu-edit').style.display = 'none';
-                        document.getElementById('menu-save').style.display = 'block';
-                        document.getElementById('menu-measure').style.display = 'none';
-                    } else {
-                        document.getElementById('menu-edit').style.display = 'block';
-                        document.getElementById('menu-save').style.display = 'none';
-                        document.getElementById('menu-measure').style.display = 'block';
-                    }
-                });
-
-                // Create label for print
-                const labelDiv = document.createElement('div');
-                labelDiv.className = 'presidio-label';
-                labelDiv.textContent = nome;
-                labelDiv.style.left = '0px';
-                labelDiv.style.top = '0px';
-                document.body.appendChild(labelDiv);
-
-                // Store marker with visibility data
-                const markerData = {
-                    id: index,
-                    marker: marker,
-                    nome: nome,
-                    distretto: distretto,
-                    comune: comune,
-                    lat: lat,
-                    lon: lon,
-                    labelDiv: labelDiv  // Store reference to label
-                };
-                allPresidiMarkers.push(markerData);
-                presidiLabels[nome] = markerData;  // Store full markerData instead of just label
-
-                // Initialize visibility (default true or from saved state)
-                if (presidiVisibility[nome] === undefined) {
-                    presidiVisibility[nome] = true;
-                }
-
-                // Apply saved visibility state
-                if (presidiVisibility[nome] === false) {
-                    map.removeLayer(marker);
-                }
-
-                if (distretto) {
-                    if (!presidiMarkers[distretto]) {
-                        presidiMarkers[distretto] = [];
-                    }
-                    presidiMarkers[distretto].push(marker);
-                }
-            });
-
-            // Now add presidi checkboxes under each comune (after all markers are created)
-            distrettiNames.forEach((distretto) => {
-                const distrettoData = distrettiData[distretto];
-                const comuniArray = Array.from(distrettoData.comuni).sort();
-
-                comuniArray.forEach(comune => {
-                    // Find the li element for this comune
-                    const safeDistrettoIdForList = distretto.replace(/[\s.]+/g, '-');
-                    const comuniListId = `comuni-list-${safeDistrettoIdForList}`;
-                    const comuniList = document.getElementById(comuniListId);
-                    if (!comuniList) return;
-
-                    // Find the li for this specific comune
-                    const comuneLi = Array.from(comuniList.querySelectorAll('li')).find(
-                        li => li.dataset.comune === comune && !li.classList.contains('presidio-item')
-                    );
-                    if (!comuneLi) return;
-
-                    // Add presidi list under comune if there are any
-                    if (presidiByComune[comune] && presidiByComune[comune].length > 0) {
-                        const presidiListUl = document.createElement('ul');
-                        presidiListUl.className = 'presidi-comune-list';
-
-                        presidiByComune[comune].forEach(presidioFeature => {
-                            const presidioNome = presidioFeature.properties.nome;
-                            const presidioMarkerData = allPresidiMarkers.find(md => md.nome === presidioNome);
-
-                            if (presidioMarkerData) {
-                                const presidioLi = document.createElement('li');
-                                presidioLi.className = 'presidio-item';
-
-                                const checkboxId = `presidio-${presidioMarkerData.id}`;
-                                const isVisible = presidiVisibility[presidioNome] !== false;
-
-                                const checkbox = document.createElement('input');
-                                checkbox.type = 'checkbox';
-                                checkbox.id = checkboxId;
-                                checkbox.checked = isVisible;
-
-                                const label = document.createElement('label');
-                                label.htmlFor = checkboxId;
-                                label.textContent = presidioNome;
-                                label.title = presidioNome;
-
-                                checkbox.addEventListener('change', function() {
-                                    const visible = this.checked;
-                                    presidiVisibility[presidioNome] = visible;
-
-                                    if (visible) {
-                                        map.addLayer(presidioMarkerData.marker);
-                                        // If permanent labels are enabled and zoom is sufficient, show tooltip
-                                        if (shouldShowTooltips()) {
-                                            updateTooltipContent(presidioMarkerData.marker);
-                                            presidioMarkerData.marker.openTooltip();
-                                        }
-                                    } else {
-                                        presidioMarkerData.marker.closeTooltip();
-                                        map.removeLayer(presidioMarkerData.marker);
-                                    }
-                                });
-
-                                presidioLi.appendChild(checkbox);
-                                presidioLi.appendChild(label);
-                                presidiListUl.appendChild(presidioLi);
-                            }
-                        });
-
-                        // Insert after the comune li
-                        comuneLi.parentNode.insertBefore(presidiListUl, comuneLi.nextSibling);
-                    }
-                });
-            });
-
-            // Update legend with presidio counts
-            distrettiNames.forEach((distretto, index) => {
-                const count = presidiCounts[distretto] || 0;
-                const safeDistrettoIdForCount = distretto.replace(/[\s.]+/g, '-');
-                const checkbox = document.getElementById(`checkbox-${safeDistrettoIdForCount}`);
-                if (checkbox) {
-                    const label = checkbox.nextElementSibling;
-                    if (label && count > 0) {
-                        const countBadge = document.createElement('span');
-                        countBadge.className = 'presidio-count';
-                        countBadge.textContent = `${count} P`;
-                        countBadge.title = `${count} presidi`;
-                        label.appendChild(countBadge);
-                    }
-                }
-            });
-
-            // Context menu handlers
-            document.getElementById('menu-edit').addEventListener('click', function() {
-                if (editingMarker) {
-                    editingMarker.options.draggable = true;
-                    editingMarker.dragging.enable();
-                    contextMenu.classList.remove('show');
-
-                    // Visual feedback
-                    editingMarker._icon.style.cursor = 'move';
-                    editingMarker._icon.style.transform = 'scale(1.3)';
-                }
-            });
-
-            document.getElementById('menu-save').addEventListener('click', async function() {
-                if (editingMarker) {
-                    const latlng = editingMarker.getLatLng();
-                    const nome = editingMarker.presidioData.nome;
-
-                    try {
-                        const response = await fetch(BASE_PATH + '/api/update-presidio', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                nome: nome,
-                                lat: latlng.lat,
-                                lon: latlng.lng
-                            })
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            // Disable dragging
-                            editingMarker.options.draggable = false;
-                            editingMarker.dragging.disable();
-
-                            // Reset visual feedback
-                            editingMarker._icon.style.cursor = '';
-                            editingMarker._icon.style.transform = '';
-
-                            alert(`✓ Posizione salvata per ${nome}`);
-                        } else {
-                            alert(`✗ Errore nel salvataggio: ${result.error}`);
-                        }
-                    } catch (error) {
-                        alert(`✗ Errore nel salvataggio: ${error.message}`);
-                    }
-
-                    contextMenu.classList.remove('show');
-                    editingMarker = null;
-                }
-            });
-
-            // Function to calculate distance between two points (Haversine formula)
-            function calculateDistance(lat1, lon1, lat2, lon2) {
-                const R = 6371; // Earth's radius in km
-                const dLat = (lat2 - lat1) * Math.PI / 180;
-                const dLon = (lon2 - lon1) * Math.PI / 180;
-                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                          Math.sin(dLon/2) * Math.sin(dLon/2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                return R * c; // Distance in km
-            }
-
-            // Clear distance measurement
-            function clearDistanceMeasurement() {
-                if (distanceLine) {
-                    map.removeLayer(distanceLine);
-                    distanceLine = null;
-                }
-                distanceMarkers.forEach(marker => map.removeLayer(marker));
-                distanceMarkers = [];
-                measuringDistance = false;
-                firstMeasurePoint = null;
-
-                // Remove measuring cursor class from all markers
-                allPresidiMarkers.forEach(md => {
-                    if (md.marker._icon) {
-                        md.marker._icon.style.cursor = '';
-                    }
-                });
-            }
-
-            // Measure distance menu item
-            document.getElementById('menu-measure').addEventListener('click', function() {
-                if (editingMarker) {
-                    // Clear any previous measurement
-                    clearDistanceMeasurement();
-
-                    // Start measuring
-                    measuringDistance = true;
-                    firstMeasurePoint = {
-                        marker: editingMarker,
-                        latlng: editingMarker.getLatLng(),
-                        nome: editingMarker.presidioData.nome
-                    };
-
-                    // Visual feedback - change cursor
-                    allPresidiMarkers.forEach(md => {
-                        if (md.marker._icon) {
-                            md.marker._icon.style.cursor = 'crosshair';
+                        // Only show normal popup if not measuring distance
+                        if (!distanceMeasured) {
+                            L.popup()
+                                .setLatLng(e.latlng)
+                                .setContent(popupContent)
+                                .openOn(map);
                         }
                     });
 
-                    // Add marker to first point
-                    const marker1 = L.circleMarker(firstMeasurePoint.latlng, {
-                        radius: 8,
-                        fillColor: '#f59e0b',
-                        color: 'white',
-                        weight: 2,
-                        fillOpacity: 1
-                    }).addTo(map);
-                    distanceMarkers.push(marker1);
+                    // Bind permanent tooltip (initially hidden)
+                    // Store both nome and comune for dynamic tooltip content
+                    marker.tooltipContent = {
+                        nome: nome,
+                        comune: comune
+                    };
+                    marker.bindTooltip(nome, {
+                        permanent: true,
+                        direction: 'top',
+                        offset: [0, -10],
+                        className: 'presidio-permanent-tooltip',
+                        opacity: 0.9
+                    });
+                    marker.closeTooltip(); // Start with tooltip hidden
 
-                    contextMenu.classList.remove('show');
-                    alert(`Primo punto selezionato: ${firstMeasurePoint.nome}\nClicca su un altro presidio per misurare la distanza.`);
+                    // Right-click for context menu
+                    marker.on('contextmenu', function (e) {
+                        L.DomEvent.preventDefault(e);
+
+                        editingMarker = marker;
+
+                        // Position context menu
+                        const x = e.originalEvent.pageX;
+                        const y = e.originalEvent.pageY;
+
+                        contextMenu.style.left = x + 'px';
+                        contextMenu.style.top = y + 'px';
+                        contextMenu.classList.add('show');
+
+                        // Update menu based on draggable state
+                        if (marker.options.draggable) {
+                            document.getElementById('menu-edit').style.display = 'none';
+                            document.getElementById('menu-save').style.display = 'block';
+                            document.getElementById('menu-measure').style.display = 'none';
+                        } else {
+                            document.getElementById('menu-edit').style.display = 'block';
+                            document.getElementById('menu-save').style.display = 'none';
+                            document.getElementById('menu-measure').style.display = 'block';
+                        }
+                    });
+
+                    // Create label for print
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'presidio-label';
+                    labelDiv.textContent = nome;
+                    labelDiv.style.left = '0px';
+                    labelDiv.style.top = '0px';
+                    document.body.appendChild(labelDiv);
+
+                    // Store marker with visibility data
+                    const markerData = {
+                        id: index,
+                        marker: marker,
+                        nome: nome,
+                        distretto: distretto,
+                        comune: comune,
+                        lat: lat,
+                        lon: lon,
+                        labelDiv: labelDiv  // Store reference to label
+                    };
+                    allPresidiMarkers.push(markerData);
+                    presidiLabels[nome] = markerData;  // Store full markerData instead of just label
+
+                    // Initialize visibility (default true or from saved state)
+                    if (presidiVisibility[nome] === undefined) {
+                        presidiVisibility[nome] = true;
+                    }
+
+                    // Apply saved visibility state
+                    if (presidiVisibility[nome] === false) {
+                        map.removeLayer(marker);
+                    }
+
+                    if (distretto) {
+                        if (!presidiMarkers[distretto]) {
+                            presidiMarkers[distretto] = [];
+                        }
+                        presidiMarkers[distretto].push(marker);
+                    }
+                });
+
+                // Now add presidi checkboxes under each comune (after all markers are created)
+                distrettiNames.forEach((distretto) => {
+                    const distrettoData = distrettiData[distretto];
+                    const comuniArray = Array.from(distrettoData.comuni).sort();
+
+                    comuniArray.forEach(comune => {
+                        // Find the li element for this comune
+                        const safeDistrettoIdForList = distretto.replace(/[\s.]+/g, '-');
+                        const comuniListId = `comuni-list-${safeDistrettoIdForList}`;
+                        const comuniList = document.getElementById(comuniListId);
+                        if (!comuniList) return;
+
+                        // Find the li for this specific comune
+                        const comuneLi = Array.from(comuniList.querySelectorAll('li')).find(
+                            li => li.dataset.comune === comune && !li.classList.contains('presidio-item')
+                        );
+                        if (!comuneLi) return;
+
+                        // Add presidi list under comune if there are any
+                        if (presidiByComune[comune] && presidiByComune[comune].length > 0) {
+                            const presidiListUl = document.createElement('ul');
+                            presidiListUl.className = 'presidi-comune-list';
+
+                            presidiByComune[comune].forEach(presidioFeature => {
+                                const presidioNome = presidioFeature.properties.nome;
+                                const presidioMarkerData = allPresidiMarkers.find(md => md.nome === presidioNome);
+
+                                if (presidioMarkerData) {
+                                    const presidioLi = document.createElement('li');
+                                    presidioLi.className = 'presidio-item';
+
+                                    const checkboxId = `presidio-${presidioMarkerData.id}`;
+                                    const isVisible = presidiVisibility[presidioNome] !== false;
+
+                                    const checkbox = document.createElement('input');
+                                    checkbox.type = 'checkbox';
+                                    checkbox.id = checkboxId;
+                                    checkbox.checked = isVisible;
+
+                                    const label = document.createElement('label');
+                                    label.htmlFor = checkboxId;
+                                    label.textContent = presidioNome;
+                                    label.title = presidioNome;
+
+                                    checkbox.addEventListener('change', function () {
+                                        const visible = this.checked;
+                                        presidiVisibility[presidioNome] = visible;
+
+                                        if (visible) {
+                                            map.addLayer(presidioMarkerData.marker);
+                                            // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                            if (shouldShowTooltips()) {
+                                                updateTooltipContent(presidioMarkerData.marker);
+                                                presidioMarkerData.marker.openTooltip();
+                                            }
+                                        } else {
+                                            presidioMarkerData.marker.closeTooltip();
+                                            map.removeLayer(presidioMarkerData.marker);
+                                        }
+                                    });
+
+                                    presidioLi.appendChild(checkbox);
+                                    presidioLi.appendChild(label);
+                                    presidiListUl.appendChild(presidioLi);
+                                }
+                            });
+
+                            // Insert after the comune li
+                            comuneLi.parentNode.insertBefore(presidiListUl, comuneLi.nextSibling);
+                        }
+                    });
+                });
+
+                // Update legend with presidio counts
+                distrettiNames.forEach((distretto, index) => {
+                    const count = presidiCounts[distretto] || 0;
+                    const safeDistrettoIdForCount = distretto.replace(/[\s.]+/g, '-');
+                    const checkbox = document.getElementById(`checkbox-${safeDistrettoIdForCount}`);
+                    if (checkbox) {
+                        const label = checkbox.nextElementSibling;
+                        if (label && count > 0) {
+                            const countBadge = document.createElement('span');
+                            countBadge.className = 'presidio-count';
+                            countBadge.textContent = `${count} P`;
+                            countBadge.title = `${count} presidi`;
+                            label.appendChild(countBadge);
+                        }
+                    }
+                });
+
+                // Context menu handlers
+                document.getElementById('menu-edit').addEventListener('click', function () {
+                    if (editingMarker) {
+                        editingMarker.options.draggable = true;
+                        editingMarker.dragging.enable();
+                        contextMenu.classList.remove('show');
+
+                        // Visual feedback
+                        editingMarker._icon.style.cursor = 'move';
+                        editingMarker._icon.style.transform = 'scale(1.3)';
+                    }
+                });
+
+                document.getElementById('menu-save').addEventListener('click', async function () {
+                    if (editingMarker) {
+                        const latlng = editingMarker.getLatLng();
+                        const nome = editingMarker.presidioData.nome;
+
+                        try {
+                            const response = await fetch(BASE_PATH + '/api/update-presidio', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    nome: nome,
+                                    lat: latlng.lat,
+                                    lon: latlng.lng
+                                })
+                            });
+
+                            const result = await response.json();
+
+                            if (result.success) {
+                                // Disable dragging
+                                editingMarker.options.draggable = false;
+                                editingMarker.dragging.disable();
+
+                                // Reset visual feedback
+                                editingMarker._icon.style.cursor = '';
+                                editingMarker._icon.style.transform = '';
+
+                                alert(`✓ Posizione salvata per ${nome}`);
+                            } else {
+                                alert(`✗ Errore nel salvataggio: ${result.error}`);
+                            }
+                        } catch (error) {
+                            alert(`✗ Errore nel salvataggio: ${error.message}`);
+                        }
+
+                        contextMenu.classList.remove('show');
+                        editingMarker = null;
+                    }
+                });
+
+                // Function to calculate distance between two points (Haversine formula)
+                function calculateDistance(lat1, lon1, lat2, lon2) {
+                    const R = 6371; // Earth's radius in km
+                    const dLat = (lat2 - lat1) * Math.PI / 180;
+                    const dLon = (lon2 - lon1) * Math.PI / 180;
+                    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    return R * c; // Distance in km
                 }
-            });
 
-            // Handle click on presidio when measuring distance
-            async function handlePresidioClickForDistance(marker, latlng, nome) {
-                if (measuringDistance && firstMeasurePoint) {
-                    // Calculate straight-line distance
-                    const straightDistance = calculateDistance(
-                        firstMeasurePoint.latlng.lat,
-                        firstMeasurePoint.latlng.lng,
-                        latlng.lat,
-                        latlng.lng
-                    );
+                // Clear distance measurement
+                function clearDistanceMeasurement() {
+                    if (distanceLine) {
+                        map.removeLayer(distanceLine);
+                        distanceLine = null;
+                    }
+                    distanceMarkers.forEach(marker => map.removeLayer(marker));
+                    distanceMarkers = [];
+                    measuringDistance = false;
+                    firstMeasurePoint = null;
 
-                    // Add marker to second point
-                    const marker2 = L.circleMarker(latlng, {
-                        radius: 8,
-                        fillColor: '#f59e0b',
-                        color: 'white',
-                        weight: 2,
-                        fillOpacity: 1
-                    }).addTo(map);
-                    distanceMarkers.push(marker2);
+                    // Remove measuring cursor class from all markers
+                    allPresidiMarkers.forEach(md => {
+                        if (md.marker._icon) {
+                            md.marker._icon.style.cursor = '';
+                        }
+                    });
+                }
 
-                    // Draw line between points
-                    distanceLine = L.polyline([firstMeasurePoint.latlng, latlng], {
-                        color: '#f59e0b',
-                        weight: 3,
-                        dashArray: '10, 5'
-                    }).addTo(map);
+                // Measure distance menu item
+                document.getElementById('menu-measure').addEventListener('click', function () {
+                    if (editingMarker) {
+                        // Clear any previous measurement
+                        clearDistanceMeasurement();
 
-                    // Calculate midpoint for popup
-                    const midpoint = L.latLng(
-                        (firstMeasurePoint.latlng.lat + latlng.lat) / 2,
-                        (firstMeasurePoint.latlng.lng + latlng.lng) / 2
-                    );
+                        // Start measuring
+                        measuringDistance = true;
+                        firstMeasurePoint = {
+                            marker: editingMarker,
+                            latlng: editingMarker.getLatLng(),
+                            nome: editingMarker.presidioData.nome
+                        };
 
-                    const straightDistanceKm = straightDistance.toFixed(2);
-                    const straightDistanceM = (straightDistance * 1000).toFixed(0);
+                        // Visual feedback - change cursor
+                        allPresidiMarkers.forEach(md => {
+                            if (md.marker._icon) {
+                                md.marker._icon.style.cursor = 'crosshair';
+                            }
+                        });
 
-                    // Show initial popup with straight-line distance
-                    const popup = L.popup()
-                        .setLatLng(midpoint)
-                        .setContent(`
+                        // Add marker to first point
+                        const marker1 = L.circleMarker(firstMeasurePoint.latlng, {
+                            radius: 8,
+                            fillColor: '#f59e0b',
+                            color: 'white',
+                            weight: 2,
+                            fillOpacity: 1
+                        }).addTo(map);
+                        distanceMarkers.push(marker1);
+
+                        contextMenu.classList.remove('show');
+                        alert(`Primo punto selezionato: ${firstMeasurePoint.nome}\nClicca su un altro presidio per misurare la distanza.`);
+                    }
+                });
+
+                // Handle click on presidio when measuring distance
+                async function handlePresidioClickForDistance(marker, latlng, nome) {
+                    if (measuringDistance && firstMeasurePoint) {
+                        // Calculate straight-line distance
+                        const straightDistance = calculateDistance(
+                            firstMeasurePoint.latlng.lat,
+                            firstMeasurePoint.latlng.lng,
+                            latlng.lat,
+                            latlng.lng
+                        );
+
+                        // Add marker to second point
+                        const marker2 = L.circleMarker(latlng, {
+                            radius: 8,
+                            fillColor: '#f59e0b',
+                            color: 'white',
+                            weight: 2,
+                            fillOpacity: 1
+                        }).addTo(map);
+                        distanceMarkers.push(marker2);
+
+                        // Draw line between points
+                        distanceLine = L.polyline([firstMeasurePoint.latlng, latlng], {
+                            color: '#f59e0b',
+                            weight: 3,
+                            dashArray: '10, 5'
+                        }).addTo(map);
+
+                        // Calculate midpoint for popup
+                        const midpoint = L.latLng(
+                            (firstMeasurePoint.latlng.lat + latlng.lat) / 2,
+                            (firstMeasurePoint.latlng.lng + latlng.lng) / 2
+                        );
+
+                        const straightDistanceKm = straightDistance.toFixed(2);
+                        const straightDistanceM = (straightDistance * 1000).toFixed(0);
+
+                        // Show initial popup with straight-line distance
+                        const popup = L.popup()
+                            .setLatLng(midpoint)
+                            .setContent(`
                             <div class="popup-title">📏 Distanza misurata</div>
                             <div class="popup-text">
                                 <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
@@ -1783,49 +1788,49 @@
                                 <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
                             </div>
                         `)
-                        .openOn(map);
+                            .openOn(map);
 
-                    // Fetch road distance from OSRM
-                    try {
-                        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${firstMeasurePoint.latlng.lng},${firstMeasurePoint.latlng.lat};${latlng.lng},${latlng.lat}?overview=full&geometries=geojson`;
-                        const response = await fetch(osrmUrl);
-                        const data = await response.json();
+                        // Fetch road distance from OSRM
+                        try {
+                            const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${firstMeasurePoint.latlng.lng},${firstMeasurePoint.latlng.lat};${latlng.lng},${latlng.lat}?overview=full&geometries=geojson`;
+                            const response = await fetch(osrmUrl);
+                            const data = await response.json();
 
-                        if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
-                            const route = data.routes[0];
-                            const roadDistanceKm = (route.distance / 1000).toFixed(2);
-                            const roadDistanceM = route.distance.toFixed(0);
-                            const durationMinutes = Math.round(route.duration / 60);
-                            const durationHours = Math.floor(durationMinutes / 60);
-                            const durationMins = durationMinutes % 60;
+                            if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                                const route = data.routes[0];
+                                const roadDistanceKm = (route.distance / 1000).toFixed(2);
+                                const roadDistanceM = route.distance.toFixed(0);
+                                const durationMinutes = Math.round(route.duration / 60);
+                                const durationHours = Math.floor(durationMinutes / 60);
+                                const durationMins = durationMinutes % 60;
 
-                            let durationText = '';
-                            if (durationHours > 0) {
-                                durationText = `${durationHours}h ${durationMins}min`;
-                            } else {
-                                durationText = `${durationMins} min`;
-                            }
-
-                            // Draw the actual road route
-                            if (route.geometry && route.geometry.coordinates) {
-                                // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
-                                const routeCoords = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
-
-                                // Remove the straight line
-                                if (distanceLine) {
-                                    map.removeLayer(distanceLine);
+                                let durationText = '';
+                                if (durationHours > 0) {
+                                    durationText = `${durationHours}h ${durationMins}min`;
+                                } else {
+                                    durationText = `${durationMins} min`;
                                 }
 
-                                // Draw the road route
-                                distanceLine = L.polyline(routeCoords, {
-                                    color: '#3b82f6',
-                                    weight: 4,
-                                    opacity: 0.7
-                                }).addTo(map);
-                            }
+                                // Draw the actual road route
+                                if (route.geometry && route.geometry.coordinates) {
+                                    // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
+                                    const routeCoords = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
 
-                            // Update popup with road distance and duration
-                            popup.setContent(`
+                                    // Remove the straight line
+                                    if (distanceLine) {
+                                        map.removeLayer(distanceLine);
+                                    }
+
+                                    // Draw the road route
+                                    distanceLine = L.polyline(routeCoords, {
+                                        color: '#3b82f6',
+                                        weight: 4,
+                                        opacity: 0.7
+                                    }).addTo(map);
+                                }
+
+                                // Update popup with road distance and duration
+                                popup.setContent(`
                                 <div class="popup-title">📏 Distanza misurata</div>
                                 <div class="popup-text">
                                     <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
@@ -1838,9 +1843,9 @@
                                     <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
                                 </div>
                             `);
-                        } else {
-                            // No route found
-                            popup.setContent(`
+                            } else {
+                                // No route found
+                                popup.setContent(`
                                 <div class="popup-title">📏 Distanza misurata</div>
                                 <div class="popup-text">
                                     <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
@@ -1852,11 +1857,11 @@
                                     <small style="color: #6b7280;">Percorso stradale non trovato. Clicca sulla mappa per rimuovere la misurazione.</small>
                                 </div>
                             `);
-                        }
-                    } catch (error) {
-                        console.error('Error fetching road distance:', error);
-                        // Update popup with error
-                        popup.setContent(`
+                            }
+                        } catch (error) {
+                            console.error('Error fetching road distance:', error);
+                            // Update popup with error
+                            popup.setContent(`
                             <div class="popup-title">📏 Distanza misurata</div>
                             <div class="popup-text">
                                 <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
@@ -1868,159 +1873,184 @@
                                 <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
                             </div>
                         `);
-                    }
-
-                    // Reset measuring state
-                    measuringDistance = false;
-                    firstMeasurePoint = null;
-
-                    // Reset cursor
-                    allPresidiMarkers.forEach(md => {
-                        if (md.marker._icon) {
-                            md.marker._icon.style.cursor = '';
                         }
-                    });
 
-                    return true; // Indicate that distance was measured
+                        // Reset measuring state
+                        measuringDistance = false;
+                        firstMeasurePoint = null;
+
+                        // Reset cursor
+                        allPresidiMarkers.forEach(md => {
+                            if (md.marker._icon) {
+                                md.marker._icon.style.cursor = '';
+                            }
+                        });
+
+                        return true; // Indicate that distance was measured
+                    }
+                    return false;
                 }
-                return false;
-            }
 
-            // Hide context menu on map click
-            map.on('click', function() {
-                contextMenu.classList.remove('show');
-                // Clear distance measurement when clicking on map
-                if (distanceLine || distanceMarkers.length > 0) {
-                    clearDistanceMeasurement();
-                }
-            });
+                // Hide context menu on map click
+                map.on('click', function () {
+                    contextMenu.classList.remove('show');
+                    // Clear distance measurement when clicking on map
+                    if (distanceLine || distanceMarkers.length > 0) {
+                        clearDistanceMeasurement();
+                    }
+                });
 
-            // Hide context menu on scroll
-            map.on('movestart', function() {
-                contextMenu.classList.remove('show');
-            });
+                // Hide context menu on scroll
+                map.on('movestart', function () {
+                    contextMenu.classList.remove('show');
+                });
 
-            // Button event listeners
-            document.getElementById('btn-save').addEventListener('click', savePresidiVisibility);
-            document.getElementById('btn-reset').addEventListener('click', resetPresidiVisibility);
-            document.getElementById('btn-print').addEventListener('click', function() {
-                printMap();
-            });
+                // Button event listeners
+                document.getElementById('btn-save').addEventListener('click', savePresidiVisibility);
+                document.getElementById('btn-reset').addEventListener('click', resetPresidiVisibility);
+                document.getElementById('btn-print').addEventListener('click', function () {
+                    printMap();
+                });
 
-            // Toggle permanent popup labels
-            document.getElementById('toggle-popup-labels').addEventListener('change', function() {
-                const showLabels = this.checked;
-                const labelTypeSetting = document.getElementById('label-type-setting');
+                // Toggle permanent popup labels
+                document.getElementById('toggle-popup-labels').addEventListener('change', function () {
+                    const showLabels = this.checked;
+                    const labelTypeSetting = document.getElementById('label-type-setting');
 
-                // Show/hide label type options
-                labelTypeSetting.style.display = showLabels ? 'block' : 'none';
+                    // Show/hide label type options
+                    labelTypeSetting.style.display = showLabels ? 'block' : 'none';
 
-                updateAllTooltips();
-            });
-
-            // Update tooltips when zoom level changes
-            map.on('zoomend', function() {
-                updateAllTooltips();
-            });
-
-            // Handle label type change
-            document.querySelectorAll('input[name="label-type"]').forEach(radio => {
-                radio.addEventListener('change', function() {
                     updateAllTooltips();
                 });
-            });
 
-            // Print function
-            function printMap() {
-                // Get all visible presidi
-                const visiblePresidi = allPresidiMarkers.filter(md =>
-                    presidiVisibility[md.nome] !== false
-                );
-
-                if (visiblePresidi.length === 0) {
-                    alert('Nessun presidio visibile da stampare!');
-                    return;
-                }
-
-                // Get selected label type
-                const labelType = document.querySelector('input[name="print-label"]:checked').value;
-
-                // Calculate bounds of visible presidi
-                const bounds = L.latLngBounds(
-                    visiblePresidi.map(md => [md.lat, md.lon])
-                );
-
-                // Store current view
-                const currentCenter = map.getCenter();
-                const currentZoom = map.getZoom();
-
-                // Fit to visible presidi with padding
-                map.fitBounds(bounds, {
-                    padding: [100, 100],
-                    maxZoom: 14
+                // Update tooltips when zoom level changes
+                map.on('zoomend', function () {
+                    updateAllTooltips();
                 });
 
-                // Position labels for visible presidi
-                setTimeout(() => {
-                    visiblePresidi.forEach(markerData => {
-                        const point = map.latLngToContainerPoint([markerData.lat, markerData.lon]);
-                        const markerInfo = presidiLabels[markerData.nome];
-                        if (markerInfo && markerInfo.labelDiv) {
-                            const label = markerInfo.labelDiv;
+                // Handle label type change
+                document.querySelectorAll('input[name="label-type"]').forEach(radio => {
+                    radio.addEventListener('change', function () {
+                        updateAllTooltips();
+                    });
+                });
 
-                            // Update label text based on selection
-                            if (labelType === 'comune') {
-                                // Use comune (which is the quartiere for Messina)
-                                label.textContent = markerInfo.comune || markerInfo.nome;
-                            } else {
-                                // Use nome presidio
-                                label.textContent = markerInfo.nome;
-                            }
+                // Print function
+                function printMap() {
+                    // Get all visible presidi
+                    const visiblePresidi = allPresidiMarkers.filter(md =>
+                        presidiVisibility[md.nome] !== false
+                    );
 
-                            label.style.left = point.x + 'px';
-                            label.style.top = point.y + 'px';
-                        }
+                    if (visiblePresidi.length === 0) {
+                        alert('Nessun presidio visibile da stampare!');
+                        return;
+                    }
+
+                    // Get selected label type
+                    const labelType = document.querySelector('input[name="print-label"]:checked').value;
+
+                    // Calculate bounds of visible presidi
+                    const bounds = L.latLngBounds(
+                        visiblePresidi.map(md => [md.lat, md.lon])
+                    );
+
+                    // Store current view
+                    const currentCenter = map.getCenter();
+                    const currentZoom = map.getZoom();
+
+                    // Fit to visible presidi with padding
+                    map.fitBounds(bounds, {
+                        padding: [100, 100],
+                        maxZoom: 14
                     });
 
-                    // Hide labels for non-visible presidi
-                    allPresidiMarkers.forEach(markerData => {
-                        if (presidiVisibility[markerData.nome] === false) {
+                    // Position labels for visible presidi
+                    setTimeout(() => {
+                        visiblePresidi.forEach(markerData => {
+                            const point = map.latLngToContainerPoint([markerData.lat, markerData.lon]);
                             const markerInfo = presidiLabels[markerData.nome];
                             if (markerInfo && markerInfo.labelDiv) {
-                                markerInfo.labelDiv.style.display = 'none';
+                                const label = markerInfo.labelDiv;
+
+                                // Update label text based on selection
+                                if (labelType === 'comune') {
+                                    // Use comune (which is the quartiere for Messina)
+                                    label.textContent = markerInfo.comune || markerInfo.nome;
+                                } else {
+                                    // Use nome presidio
+                                    label.textContent = markerInfo.nome;
+                                }
+
+                                label.style.left = point.x + 'px';
+                                label.style.top = point.y + 'px';
                             }
-                        }
-                    });
+                        });
 
-                    // Trigger print dialog
-                    setTimeout(() => {
-                        window.print();
-
-                        // Restore view after print
-                        setTimeout(() => {
-                            map.setView(currentCenter, currentZoom);
-                            // Reset label display and text
-                            allPresidiMarkers.forEach(markerData => {
+                        // Hide labels for non-visible presidi
+                        allPresidiMarkers.forEach(markerData => {
+                            if (presidiVisibility[markerData.nome] === false) {
                                 const markerInfo = presidiLabels[markerData.nome];
                                 if (markerInfo && markerInfo.labelDiv) {
-                                    markerInfo.labelDiv.style.display = '';
-                                    // Reset to nome presidio
-                                    markerInfo.labelDiv.textContent = markerInfo.nome;
+                                    markerInfo.labelDiv.style.display = 'none';
                                 }
-                            });
+                            }
+                        });
+
+                        // Trigger print dialog
+                        setTimeout(() => {
+                            window.print();
+
+                            // Restore view after print
+                            setTimeout(() => {
+                                map.setView(currentCenter, currentZoom);
+                                // Reset label display and text
+                                allPresidiMarkers.forEach(markerData => {
+                                    const markerInfo = presidiLabels[markerData.nome];
+                                    if (markerInfo && markerInfo.labelDiv) {
+                                        markerInfo.labelDiv.style.display = '';
+                                        // Reset to nome presidio
+                                        markerInfo.labelDiv.textContent = markerInfo.nome;
+                                    }
+                                });
+                            }, 500);
                         }, 500);
                     }, 500);
-                }, 500);
-            }
+                }
 
-        }).catch(error => {
-            console.error('Errore nel caricamento dei dati:', error);
-            alert('Errore nel caricamento dei dati. Controlla la console.');
-        });
+            }).catch(error => {
+                console.error('Errore nel caricamento dei dati:', error);
+                alert('Errore nel caricamento dei dati. Controlla la console.');
+            });
         }
 
         // Initialize the app
-        initApp();
+        // Check URL params for map provider
+        const urlParams = new URLSearchParams(window.location.search);
+        const useGoogle = urlParams.get('maps') === 'google';
+
+        if (useGoogle) {
+            console.log('Loading Google Maps version...');
+
+            // Load Google Maps API
+            const script = document.createElement('script');
+            // REPLACE THIS WITH YOUR ACTUAL API KEY
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyB6sRhfIC5NTni6ad5OsNsbim-LVK48tU8&libraries=geometry";
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                if (typeof initGoogleApp === 'function') {
+                    initGoogleApp();
+                } else {
+                    console.error('initGoogleApp function not found. Make sure google-app.js is loaded.');
+                }
+            };
+            document.head.appendChild(script);
+        } else {
+            console.log('Loading Leaflet version (default)...');
+            initLeafletApp();
+        }
     </script>
 </body>
+
 </html>
