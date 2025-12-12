@@ -388,6 +388,10 @@
             color: #8b5cf6;
         }
 
+        .context-menu-item.delete {
+            color: #e53e3e;
+        }
+
         .context-menu-item:before {
             content: '';
             width: 16px;
@@ -798,6 +802,49 @@
             box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
         }
 
+        /* Map type buttons */
+        .map-type-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .map-type-btn {
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            background: white;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .map-type-btn:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+            color: #667eea;
+        }
+
+        .map-type-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .map-type-btn.active:hover {
+            background: #5568d3;
+            border-color: #5568d3;
+            color: white;
+        }
+
         .btn-import {
             background: #8b5cf6;
             color: white;
@@ -1066,6 +1113,25 @@
                 </div>
             </div>
 
+            <!-- Map Type Selector -->
+            <div class="settings">
+                <h3>🗺️ Tipo di Mappa</h3>
+                <div class="map-type-buttons">
+                    <button class="map-type-btn active" id="map-type-roadmap" title="Mappa stradale">
+                        🛣️ Stradale
+                    </button>
+                    <button class="map-type-btn" id="map-type-satellite" title="Mappa satellitare">
+                        🛰️ Satellite
+                    </button>
+                    <button class="map-type-btn" id="map-type-hybrid" title="Mappa ibrida (satellite + etichette)">
+                        🌍 Ibrida
+                    </button>
+                    <button class="map-type-btn" id="map-type-terrain" title="Mappa terreno">
+                        ⛰️ Terreno
+                    </button>
+                </div>
+            </div>
+
             <div class="legend">
                 <h3>Legenda</h3>
                 <div id="legend-content"></div>
@@ -1116,6 +1182,7 @@
         <div class="context-menu-item change-icon" id="menu-change-icon">🎨 Cambia icona</div>
         <div class="context-menu-item measure" id="menu-measure">📏 Misura distanza</div>
         <div class="context-menu-item add" id="menu-add-presidio">➕ Aggiungi presidio</div>
+        <div class="context-menu-item delete" id="menu-delete">🗑️ Elimina presidio</div>
     </div>
 
     <!-- Modal for adding custom presidio -->
@@ -1309,11 +1376,76 @@
             // Inizializza mappa
             const map = L.map('map').setView([38.19, 15.25], 10);
 
-        // Aggiungi tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+        // Definizione tile layers
+        const tileLayers = {
+            roadmap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors'
+            }),
+            satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: '© Esri, Maxar, Earthstar Geographics'
+            }),
+            hybrid: L.layerGroup([
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 19
+                }),
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    opacity: 0.4
+                })
+            ]),
+            terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17,
+                attribution: '© OpenTopoMap contributors'
+            })
+        };
+
+        // Carica preferenza salvata o usa roadmap
+        let currentTileLayer = localStorage.getItem('map-type') || 'roadmap';
+        if (!tileLayers[currentTileLayer]) currentTileLayer = 'roadmap';
+        tileLayers[currentTileLayer].addTo(map);
+
+        // Setup pulsanti cambio mappa
+        function setupMapTypeButtons() {
+            const buttons = {
+                'map-type-roadmap': 'roadmap',
+                'map-type-satellite': 'satellite',
+                'map-type-hybrid': 'hybrid',
+                'map-type-terrain': 'terrain'
+            };
+
+            // Imposta pulsante attivo iniziale
+            document.querySelectorAll('.map-type-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = Object.keys(buttons).find(key => buttons[key] === currentTileLayer);
+            if (activeBtn) document.getElementById(activeBtn)?.classList.add('active');
+
+            Object.keys(buttons).forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        const newType = buttons[btnId];
+
+                        // Rimuovi layer corrente
+                        Object.values(tileLayers).forEach(layer => {
+                            if (map.hasLayer(layer)) map.removeLayer(layer);
+                        });
+
+                        // Aggiungi nuovo layer
+                        tileLayers[newType].addTo(map);
+                        currentTileLayer = newType;
+
+                        // Aggiorna pulsanti
+                        document.querySelectorAll('.map-type-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        // Salva preferenza
+                        localStorage.setItem('map-type', newType);
+                    });
+                }
+            });
+        }
+        setupMapTypeButtons();
 
         // Colori per i distretti
         const colors = [
@@ -1341,6 +1473,7 @@
         let measuringDistance = false;
         let firstMeasurePoint = null;
         let distanceLine = null;
+        let roadRouteLine = null;
         let distanceMarkers = [];
 
         // Custom presidi state
@@ -2251,6 +2384,81 @@
                 }
             });
 
+            // Delete presidio menu handler
+            document.getElementById('menu-delete').addEventListener('click', async function() {
+                if (editingMarker) {
+                    const nome = editingMarker.presidioData.nome;
+                    const isCustom = editingMarker.presidioData.isCustom;
+
+                    contextMenu.classList.remove('show');
+
+                    // Conferma eliminazione
+                    if (!confirm(`Sei sicuro di voler eliminare il presidio "${nome}"?`)) {
+                        editingMarker = null;
+                        return;
+                    }
+
+                    if (isCustom) {
+                        // Elimina presidio custom (solo locale)
+                        const index = customPresidi.findIndex(p => p.nome === nome);
+                        if (index > -1) {
+                            customPresidi.splice(index, 1);
+                            saveCustomPresidi();
+                        }
+
+                        // Rimuovi marker dalla mappa
+                        map.removeLayer(editingMarker);
+
+                        // Rimuovi da allPresidiMarkers
+                        const markerIndex = allPresidiMarkers.findIndex(m => m.nome === nome);
+                        if (markerIndex > -1) {
+                            allPresidiMarkers.splice(markerIndex, 1);
+                        }
+
+                        alert(`✓ Presidio custom "${nome}" eliminato`);
+                    } else {
+                        // Elimina presidio dal server
+                        try {
+                            const response = await fetch(BASE_PATH + '/api/delete-presidio', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ nome: nome })
+                            });
+
+                            const result = await response.json();
+
+                            if (result.success) {
+                                // Rimuovi marker dalla mappa
+                                map.removeLayer(editingMarker);
+
+                                // Rimuovi da allPresidiMarkers
+                                const markerIndex = allPresidiMarkers.findIndex(m => m.nome === nome);
+                                if (markerIndex > -1) {
+                                    allPresidiMarkers.splice(markerIndex, 1);
+                                }
+
+                                // Rimuovi da presidiMarkers per distretto
+                                const distretto = editingMarker.presidioData.distretto;
+                                if (distretto && presidiMarkers[distretto]) {
+                                    const distrettoIndex = presidiMarkers[distretto].findIndex(m => m.presidioData.nome === nome);
+                                    if (distrettoIndex > -1) {
+                                        presidiMarkers[distretto].splice(distrettoIndex, 1);
+                                    }
+                                }
+
+                                alert(`✓ Presidio "${nome}" eliminato`);
+                            } else {
+                                alert(`✗ Errore nell'eliminazione: ${result.error}`);
+                            }
+                        } catch (error) {
+                            alert(`✗ Errore nell'eliminazione: ${error.message}`);
+                        }
+                    }
+
+                    editingMarker = null;
+                }
+            });
+
             // Icon selection modal handlers
             const iconModal = document.getElementById('modal-change-icon');
             let selectedIcon = null;
@@ -2320,6 +2528,10 @@
                 if (distanceLine) {
                     map.removeLayer(distanceLine);
                     distanceLine = null;
+                }
+                if (roadRouteLine) {
+                    map.removeLayer(roadRouteLine);
+                    roadRouteLine = null;
                 }
                 distanceMarkers.forEach(marker => map.removeLayer(marker));
                 distanceMarkers = [];
@@ -2424,13 +2636,47 @@
                         `)
                         .openOn(map);
 
-                    // Fetch road distance from OSRM
-                    try {
-                        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${firstMeasurePoint.latlng.lng},${firstMeasurePoint.latlng.lat};${latlng.lng},${latlng.lat}?overview=full&geometries=geojson`;
-                        const response = await fetch(osrmUrl);
-                        const data = await response.json();
+                    // Fetch road distance from OSRM (try multiple servers)
+                    async function fetchRouteFromOSRM() {
+                        const servers = [
+                            'https://router.project-osrm.org',
+                            'https://routing.openstreetmap.de/routed-car'
+                        ];
 
-                        if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                        const startLng = firstMeasurePoint.latlng.lng;
+                        const startLat = firstMeasurePoint.latlng.lat;
+                        const endLng = latlng.lng;
+                        const endLat = latlng.lat;
+
+                        for (const server of servers) {
+                            try {
+                                const osrmUrl = `${server}/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
+                                const response = await fetch(osrmUrl, {
+                                    headers: {
+                                        'Accept': 'application/json'
+                                    }
+                                });
+
+                                if (!response.ok) {
+                                    console.warn(`OSRM server ${server} returned ${response.status}`);
+                                    continue;
+                                }
+
+                                const data = await response.json();
+                                if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                                    return data;
+                                }
+                            } catch (e) {
+                                console.warn(`Failed to fetch from ${server}:`, e.message);
+                            }
+                        }
+                        return null;
+                    }
+
+                    try {
+                        const data = await fetchRouteFromOSRM();
+
+                        if (data && data.routes && data.routes.length > 0) {
                             const route = data.routes[0];
                             const roadDistanceKm = (route.distance / 1000).toFixed(2);
                             const roadDistanceM = route.distance.toFixed(0);
@@ -2445,22 +2691,22 @@
                                 durationText = `${durationMins} min`;
                             }
 
-                            // Draw the actual road route
+                            // Draw the actual road route (keep straight line visible)
                             if (route.geometry && route.geometry.coordinates) {
                                 // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
                                 const routeCoords = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
 
-                                // Remove the straight line
-                                if (distanceLine) {
-                                    map.removeLayer(distanceLine);
-                                }
-
-                                // Draw the road route
-                                distanceLine = L.polyline(routeCoords, {
+                                // Draw the road route (blue solid line)
+                                roadRouteLine = L.polyline(routeCoords, {
                                     color: '#3b82f6',
                                     weight: 4,
-                                    opacity: 0.7
+                                    opacity: 0.8
                                 }).addTo(map);
+
+                                // Bring straight line (orange dashed) to front
+                                if (distanceLine) {
+                                    distanceLine.bringToFront();
+                                }
                             }
 
                             // Update popup with road distance and duration
@@ -2470,15 +2716,16 @@
                                     <strong>Da:</strong> ${firstMeasurePoint.nome}<br>
                                     <strong>A:</strong> ${nome}<br>
                                     <br>
-                                    <strong>🦅 Linea d'aria:</strong> ${straightDistanceKm} km<br>
-                                    <strong>🚗 Distanza stradale:</strong> ${roadDistanceKm} km (${roadDistanceM} m)<br>
+                                    <span style="display:inline-block;width:20px;height:3px;background:#f59e0b;vertical-align:middle;border-top:1px dashed #f59e0b;"></span> <strong>Linea d'aria:</strong> ${straightDistanceKm} km<br>
+                                    <span style="display:inline-block;width:20px;height:3px;background:#3b82f6;vertical-align:middle;"></span> <strong>Percorso stradale:</strong> ${roadDistanceKm} km<br>
                                     <strong>⏱️ Tempo percorrenza:</strong> ${durationText}<br>
                                     <br>
                                     <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
                                 </div>
                             `);
                         } else {
-                            // No route found
+                            // No route found - show estimated road distance (1.4x straight line)
+                            const estimatedRoadKm = (parseFloat(straightDistanceKm) * 1.4).toFixed(2);
                             popup.setContent(`
                                 <div class="popup-title">📏 Distanza misurata</div>
                                 <div class="popup-text">
@@ -2486,15 +2733,16 @@
                                     <strong>A:</strong> ${nome}<br>
                                     <br>
                                     <strong>🦅 Linea d'aria:</strong> ${straightDistanceKm} km<br>
-                                    <strong>🚗 Distanza stradale:</strong> <span style="color: #ef4444;">Non disponibile</span><br>
+                                    <strong>🚗 Distanza stradale:</strong> ~${estimatedRoadKm} km <span style="color: #f59e0b;">(stimata)</span><br>
                                     <br>
-                                    <small style="color: #6b7280;">Percorso stradale non trovato. Clicca sulla mappa per rimuovere la misurazione.</small>
+                                    <small style="color: #6b7280;">Servizio routing non disponibile. Stima basata su fattore 1.4x.<br>Clicca sulla mappa per rimuovere.</small>
                                 </div>
                             `);
                         }
                     } catch (error) {
                         console.error('Error fetching road distance:', error);
-                        // Update popup with error
+                        // Update popup with estimated distance
+                        const estimatedRoadKm = (parseFloat(straightDistanceKm) * 1.4).toFixed(2);
                         popup.setContent(`
                             <div class="popup-title">📏 Distanza misurata</div>
                             <div class="popup-text">
@@ -2502,9 +2750,9 @@
                                 <strong>A:</strong> ${nome}<br>
                                 <br>
                                 <strong>🦅 Linea d'aria:</strong> ${straightDistanceKm} km<br>
-                                <strong>🚗 Distanza stradale:</strong> <span style="color: #ef4444;">Errore calcolo</span><br>
+                                <strong>🚗 Distanza stradale:</strong> ~${estimatedRoadKm} km <span style="color: #f59e0b;">(stimata)</span><br>
                                 <br>
-                                <small style="color: #6b7280;">Clicca sulla mappa per rimuovere la misurazione</small>
+                                <small style="color: #6b7280;">Servizio routing non disponibile. Stima basata su fattore 1.4x.<br>Clicca sulla mappa per rimuovere.</small>
                             </div>
                         `);
                     }

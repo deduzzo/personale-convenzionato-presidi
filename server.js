@@ -94,6 +94,62 @@ function updatePresidioCoordinates(nome, lat, lon) {
     fs.writeFileSync(csvPath, updatedLines.join('\n'));
 }
 
+// Function to delete presidio from CSV
+function deletePresidioFromCSV(nome) {
+    const csvPath = path.join(__dirname, 'data', 'presidi.csv');
+    const content = fs.readFileSync(csvPath, 'utf-8');
+    const lines = content.split('\n');
+    const headers = lines[0].split(',').map(h => h.trim());
+
+    const nomeIndex = headers.indexOf('Nome struttura');
+
+    const updatedLines = [lines[0]]; // Keep header
+
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Parse CSV line
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+
+        for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                values.push(current);
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        values.push(current);
+
+        // Check if this is the presidio to delete
+        const lineNome = values[nomeIndex] ? values[nomeIndex].replace(/^"|"$/g, '') : '';
+
+        // Skip this line if it's the presidio to delete
+        if (lineNome === nome) {
+            continue;
+        }
+
+        // Rebuild line
+        const newLine = values.map(v => {
+            const val = String(v);
+            if (val.includes(',') || val.includes('"')) {
+                return `"${val.replace(/"/g, '""')}"`;
+            }
+            return val;
+        }).join(',');
+
+        updatedLines.push(newLine);
+    }
+
+    fs.writeFileSync(csvPath, updatedLines.join('\n'));
+}
+
 const server = http.createServer((req, res) => {
     console.log(`${req.method} ${req.url}`);
 
@@ -186,6 +242,41 @@ const server = http.createServer((req, res) => {
                 console.log(`✓ Regenerated presidi.geojson (${count} presidi)`);
             } catch (error) {
                 console.error('Error updating presidio:', error);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: error.message }));
+            }
+        });
+        return;
+    }
+
+    // API endpoint to delete presidio
+    if (req.method === 'POST' && req.url === '/api/delete-presidio') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                const { nome } = data;
+
+                if (!nome) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing nome field' }));
+                    return;
+                }
+
+                // Delete from CSV
+                deletePresidioFromCSV(nome);
+
+                // Regenerate presidi.geojson from CSV
+                const count = generatePresidiGeoJSON();
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true }));
+
+                console.log(`✓ Deleted presidio: ${nome}`);
+                console.log(`✓ Regenerated presidi.geojson (${count} presidi)`);
+            } catch (error) {
+                console.error('Error deleting presidio:', error);
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: error.message }));
             }

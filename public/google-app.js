@@ -583,6 +583,46 @@ function setupUIEvents() {
     document.getElementById('btn-save').addEventListener('click', savePresidiVisibility);
     document.getElementById('btn-reset').addEventListener('click', resetPresidiVisibility);
     document.getElementById('btn-print').addEventListener('click', printMap);
+
+    // Map Type Buttons
+    setupMapTypeButtons();
+}
+
+function setupMapTypeButtons() {
+    const mapTypes = {
+        'map-type-roadmap': 'roadmap',
+        'map-type-satellite': 'satellite',
+        'map-type-hybrid': 'hybrid',
+        'map-type-terrain': 'terrain'
+    };
+
+    Object.keys(mapTypes).forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                // Update map type
+                map.setMapTypeId(mapTypes[btnId]);
+
+                // Update active button
+                document.querySelectorAll('.map-type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Save preference
+                localStorage.setItem('map-type', mapTypes[btnId]);
+            });
+        }
+    });
+
+    // Load saved preference
+    const savedMapType = localStorage.getItem('map-type');
+    if (savedMapType && Object.values(mapTypes).includes(savedMapType)) {
+        map.setMapTypeId(savedMapType);
+        document.querySelectorAll('.map-type-btn').forEach(b => b.classList.remove('active'));
+        const activeBtn = Object.keys(mapTypes).find(key => mapTypes[key] === savedMapType);
+        if (activeBtn) {
+            document.getElementById(activeBtn)?.classList.add('active');
+        }
+    }
 }
 
 function handlePresidioClickForDistance(marker, latLng, nome) {

@@ -1364,22 +1364,6 @@
     {
       "type": "Feature",
       "properties": {
-        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Cesarò (ME)",
-        "indirizzo": "Piazzale Papa Giovanni XIII, 1 - Cesarò (ME)",
-        "distretto": "Taormina",
-        "comune": "Cesarò"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          14.713473828974152,
-          37.84429690329457
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Castelmola (ME)",
         "indirizzo": "Via Giosafat, sn- Castelmola (ME)",
         "distretto": "Taormina",
