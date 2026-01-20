@@ -135,13 +135,13 @@
         "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Messina Nord",
         "indirizzo": "Via Risorgimento 22 - Messina (ME)",
         "distretto": "Messina",
-        "comune": "Messina - IV CIRCOSCRIZIONE"
+        "comune": "Messina - V CIRCOSCRIZIONE"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          15.5553406,
-          38.1859649
+          15.541599,
+          38.214053
         ]
       }
     },
@@ -238,6 +238,22 @@
         "coordinates": [
           15.449614,
           38.0419008
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Cesarò (ME)",
+        "indirizzo": "Piazzale Papa Giovanni XIII, 98033 Cesarò (ME)",
+        "distretto": "Taormina",
+        "comune": "Cesarò"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.711782,
+          37.844071
         ]
       }
     },
@@ -740,6 +756,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Montagnareale - Patti (ME)",
+        "indirizzo": "Via Carlo Cattaneo - Patti (ME)",
+        "distretto": "Patti",
+        "comune": "Patti"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.967157,
+          38.1413836
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Librizzi (ME)",
         "indirizzo": "Via Salita Toselli, 98064 Librizzi ME",
         "distretto": "Patti",
@@ -948,6 +980,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Acquedolci Sant’Agata di Militello (ME)",
+        "indirizzo": "Piazza Federico II - Acquedolci (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Acquedolci"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.5906409,
+          38.0569449
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale - Alcara Li Fusi (ME)",
         "indirizzo": "Via Circonvallazione Sud - Alcara Li Fusi (ME)",
         "distretto": "Sant’Agata di Militello",
@@ -1124,6 +1172,22 @@
     {
       "type": "Feature",
       "properties": {
+        "nome": "Presidio Continuità Assistenziale – Mistretta Reitano (ME)",
+        "indirizzo": "Villaggio San Giuseppe, 6 - Reitano (ME)",
+        "distretto": "Mistretta",
+        "comune": "Reitano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.3421219,
+          37.9723661
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "nome": "Presidio Continuità Assistenziale – Castel di Lucio (ME)",
         "indirizzo": "Via Santa Lucia, 1 - Castel di Lucio (ME)",
         "distretto": "Mistretta",
@@ -1246,6 +1310,22 @@
         "coordinates": [
           15.053759847773643,
           37.91729928953275
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Limina - Roccafiorita (ME)",
+        "indirizzo": "Via Leonardo Da Vinci - Limina (ME)",
+        "distretto": "Taormina",
+        "comune": "Limina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.271461,
+          37.941552
         ]
       }
     },
@@ -1412,7 +1492,7 @@
     {
       "type": "Feature",
       "properties": {
-        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica – Santa Domenica Vittoria (ME)",
+        "nome": "Presidio Continuità Assistenziale (ex Guardia Medica) – Santa Domenica Vittoria (ME)",
         "indirizzo": "Piazza Aldo Moro, 1 Santa Domenica Vittoria (ME)",
         "distretto": "Taormina",
         "comune": "Santa Domenica Vittoria"
@@ -1422,6 +1502,230 @@
         "coordinates": [
           14.9620362,
           37.9147943
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Santa Teresa di Riva - Santa Teresa di Riva (ME)",
+        "indirizzo": "Via Lungomare Falcone - Borsellino, Santa Teresa di Riva (ME)",
+        "distretto": "Taormina",
+        "comune": "Santa Teresa di Riva"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.370175,
+          37.947237
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Francavilla di Sicilia - Francavilla di Sicilia (ME)",
+        "indirizzo": "Via Mulini, 1 Francavilla (ME)",
+        "distretto": "Taormina",
+        "comune": "Francavilla di Sicilia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.140684,
+          37.901485
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Novara di Sicilia - Novara di Sicilia (ME)",
+        "indirizzo": "Via Calcagni, 1 Novara di Sicilia (ME)",
+        "distretto": "Barcellona P.G.",
+        "comune": "Novara di Sicilia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.1282,
+          38.01434
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Falcone - Falcone (ME) - Falcone (ME)",
+        "indirizzo": "Via Stazione, Falcone (ME)",
+        "distretto": "Barcellona P.G.",
+        "comune": "Falcone"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.08043,
+          38.118686
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Torregrotta - Torregrotta (ME)",
+        "indirizzo": "Via Giovanni Verga, Torregrotta (ME)",
+        "distretto": "Milazzo",
+        "comune": "Torregrotta"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.35062,
+          38.200324
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Brolo - Brolo (ME)",
+        "indirizzo": "Via Cristoforo Colombo, 2 - Brolo (ME)",
+        "distretto": "Patti",
+        "comune": "Brolo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.829539,
+          38.154972
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE San Piero Patti - San Piero Patti (ME)",
+        "indirizzo": "Via Scaglione - San Piero Patti (ME)",
+        "distretto": "Patti",
+        "comune": "San Piero Patti"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.967912,
+          38.05136
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Santo Stefano di Camastra - Santo Stefano di Camastra (ME)",
+        "indirizzo": "Via Libero Grasso, 1 - Santo Stefano di Camastra (ME)",
+        "distretto": "Mistretta",
+        "comune": "Santo Stefano di Camastra"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.349686,
+          38.014109
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Capo D'Orlando - Capo D'Orlando (ME)",
+        "indirizzo": "Piazza Stazione - Capo d'Orlando (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Capo d'Orlando"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.744891,
+          38.158673
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Tortorici - Tortorici (ME)",
+        "indirizzo": "Viadotto Livatino, Tortorici (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Tortorici"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.824606,
+          38.030431
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "PTE Scaletta Zanclea - Scaletta Zanclea (ME)",
+        "indirizzo": "Via Salita Italia Superiore, Scaletta Zanclea (ME)",
+        "distretto": "Messina",
+        "comune": "Scaletta Zanclea"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.466111,
+          38.051988
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Casa di Comunità di Valdina - Valdina (ME)",
+        "indirizzo": "Via Nazionale, 98040 Valdina (ME)",
+        "distretto": "Milazzo",
+        "comune": "Valdina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.369891,
+          38.193448
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Casa di Comunità di Mistretta - Mistretta (ME)",
+        "indirizzo": "Mistretta (ME)",
+        "distretto": "Mistretta",
+        "comune": "Mistretta"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.37385,
+          37.912624
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Casa di Comunità Sant'Agata di Militello - Sant'Agata di Militello (ME)",
+        "indirizzo": "Sant'Agata di Militello (ME)",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Sant'Agata di Militello"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.633868,
+          38.069407
         ]
       }
     }
