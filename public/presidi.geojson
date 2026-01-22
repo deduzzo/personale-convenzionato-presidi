@@ -1728,6 +1728,230 @@
           38.069407
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Letojanni - Letojanni (ME)",
+        "indirizzo": "Letojanni",
+        "distretto": "Taormina",
+        "comune": "Letojanni"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.305647,
+          37.87993
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Cesarò - Cesarò (ME)",
+        "indirizzo": "Cesarò",
+        "distretto": "Taormina",
+        "comune": "Cesarò"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.717043,
+          37.84498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Trappitello - Trappitello (ME)",
+        "indirizzo": "Trappitello",
+        "distretto": "Taormina",
+        "comune": "Taormina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.239901,
+          37.836614
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Taormina - Taormina (ME)",
+        "indirizzo": "Taormina",
+        "distretto": "Taormina",
+        "comune": "Taormina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.280808,
+          37.852988
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Sant'Agata di Militello - Sant'Agata di Militello (ME)",
+        "indirizzo": "Sant'Agata di Militello",
+        "distretto": "Sant’Agata di Militello",
+        "comune": "Sant'Agata di Militello"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.640557,
+          38.068601
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Patti - Patti (ME)",
+        "indirizzo": "Patti",
+        "distretto": "Patti",
+        "comune": "Patti"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.963576,
+          38.156206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Milazzo - Milazzo (ME)",
+        "indirizzo": "Milazzo",
+        "distretto": "Milazzo",
+        "comune": "Milazzo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.230186,
+          38.206349
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Barcellona P.G. - Barcellona Pozzo di Gotto (ME)",
+        "indirizzo": "Barcellona Pozzo di Gotto",
+        "distretto": "Barcellona P.G.",
+        "comune": "Barcellona Pozzo di Gotto"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.20158,
+          38.144898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Messina Nord - Messina (ME)",
+        "indirizzo": "Messina",
+        "distretto": "Messina",
+        "comune": "Messina - V CIRCOSCRIZIONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.566589,
+          38.224393
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Messina Sud - Messina (ME)",
+        "indirizzo": "Messina",
+        "distretto": "Messina",
+        "comune": "Messina - II CIRCOSCRIZIONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.532362,
+          38.15218
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Policlinico G. Martino - Messina (ME)",
+        "indirizzo": "Messina",
+        "distretto": "Messina",
+        "comune": "Messina - III CIRCOSCRIZIONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.537567,
+          38.163942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ Saponara - Villafranca Tirrena (ME)",
+        "indirizzo": "Saponara",
+        "distretto": "Messina",
+        "comune": "Saponara"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.436678,
+          38.190078
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ AO Papardo - Messina (ME)",
+        "indirizzo": "Messina",
+        "distretto": "Messina",
+        "comune": "Messina - VI CIRCOSCRIZIONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.600121,
+          38.263011
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "ABZ AO Piemonte - Messina (ME)",
+        "indirizzo": "Messina",
+        "distretto": "Messina",
+        "comune": "Messina - III CIRCOSCRIZIONE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.543496,
+          38.182852
+        ]
+      }
     }
   ]
 }
