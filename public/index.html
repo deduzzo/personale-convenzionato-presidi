@@ -642,14 +642,14 @@
 
         /* Comune hover tooltip */
         .comune-hover-tooltip {
-            background: rgba(0, 0, 0, 0.8) !important;
-            border: 2px solid white !important;
-            border-radius: 8px !important;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
+            background: rgba(0, 0, 0, 0.85) !important;
+            border: 1px solid white !important;
+            border-radius: 4px !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
             color: white !important;
-            font-weight: 700 !important;
-            font-size: 18px !important;
-            padding: 12px 20px !important;
+            font-weight: 600 !important;
+            font-size: 12px !important;
+            padding: 4px 8px !important;
             pointer-events: none !important;
         }
 
@@ -1954,6 +1954,23 @@
                 const comune = markerData.comune || '';
                 const nome = markerData.nome || '';
 
+                // Check if user has explicitly changed the label type setting
+                const labelTypeRadio = document.querySelector('input[name="label-type"]:checked');
+                const labelType = labelTypeRadio ? labelTypeRadio.value : 'nome';
+
+                // Check if the setting was explicitly changed by user (not just default)
+                const wasExplicitlyChanged = labelTypeRadio && labelTypeRadio.dataset.userChanged === 'true';
+
+                // If user explicitly chose a preference, always respect it
+                if (wasExplicitlyChanged) {
+                    if (labelType === 'nome') {
+                        return nome;
+                    } else if (labelType === 'comune') {
+                        return comune;
+                    }
+                }
+
+                // Default behavior based on zoom (automatic mode)
                 // At low zoom (< 12), show only comune
                 if (zoom < 12) {
                     return comune;
@@ -3188,6 +3205,10 @@
             // Handle label type change
             document.querySelectorAll('input[name="label-type"]').forEach(radio => {
                 radio.addEventListener('change', function() {
+                    // Mark that user has explicitly changed this setting
+                    document.querySelectorAll('input[name="label-type"]').forEach(r => {
+                        r.dataset.userChanged = 'true';
+                    });
                     updateAllTooltips();
                 });
             });
