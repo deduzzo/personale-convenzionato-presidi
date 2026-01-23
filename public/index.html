@@ -1484,6 +1484,7 @@
         const contextMenu = document.getElementById('context-menu');
         const allPresidiMarkers = []; // Store all presidi markers for visibility control
         const presidiVisibility = {}; // Track visibility state of each presidio
+        const presidiOriginalVisibility = {}; // Track original visibility from file/user choice
         const presidiLabels = {}; // Store labels for print
         const labelConnectorLines = {}; // Store connector lines for labels
         let comuneHoverTooltip = null; // Tooltip for comune hover
@@ -2087,21 +2088,30 @@
                         presidiMarkers[distretto].forEach(marker => {
                             const markerData = allPresidiMarkers.find(md => md.marker === marker);
                             if (markerData) {
-                                presidiVisibility[markerData.nome] = visible;
                                 if (visible) {
-                                    map.addLayer(marker);
-                                    // If permanent labels are enabled and zoom is sufficient, show tooltip
-                                    if (shouldShowTooltips()) {
-                                        updateTooltipContent(marker);
-                                        marker.openTooltip();
+                                    // When showing distretto, restore original visibility state for each presidio
+                                    const shouldShow = presidiOriginalVisibility[markerData.nome] !== false;
+                                    presidiVisibility[markerData.nome] = shouldShow;
+                                    if (shouldShow) {
+                                        map.addLayer(marker);
+                                        // If permanent labels are enabled and zoom is sufficient, show tooltip
+                                        if (shouldShowTooltips()) {
+                                            updateTooltipContent(marker);
+                                            marker.openTooltip();
+                                        }
                                     }
+                                    // Update checkbox in presidi list to reflect original state
+                                    const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                    if (checkbox) checkbox.checked = shouldShow;
                                 } else {
+                                    // When hiding distretto, hide all presidi
+                                    presidiVisibility[markerData.nome] = false;
                                     marker.closeTooltip();
                                     map.removeLayer(marker);
+                                    // Update checkbox in presidi list
+                                    const checkbox = document.getElementById(`presidio-${markerData.id}`);
+                                    if (checkbox) checkbox.checked = false;
                                 }
-                                // Update checkbox in presidi list
-                                const checkbox = document.getElementById(`presidio-${markerData.id}`);
-                                if (checkbox) checkbox.checked = visible;
                             }
                         });
                     }
@@ -2526,6 +2536,9 @@
                     presidiVisibility[nome] = true;
                 }
 
+                // Store original visibility state from file
+                presidiOriginalVisibility[nome] = presidiVisibility[nome];
+
                 // Apply saved visibility state
                 if (presidiVisibility[nome] === false) {
                     map.removeLayer(marker);
@@ -2586,6 +2599,8 @@
                                 checkbox.addEventListener('change', function() {
                                     const visible = this.checked;
                                     presidiVisibility[presidioNome] = visible;
+                                    // Update original visibility when user manually changes it
+                                    presidiOriginalVisibility[presidioNome] = visible;
 
                                     if (visible) {
                                         map.addLayer(presidioMarkerData.marker);
