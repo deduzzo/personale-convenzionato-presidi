@@ -7,7 +7,8 @@
       "Bash(xargs kill:*)",
       "Bash(node /tmp/test-flow.js:*)",
       "Bash(curl:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npm start)"
     ],
     "deny": [],
     "ask": []

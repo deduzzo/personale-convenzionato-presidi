@@ -275,21 +275,8 @@
             color: #4a5568;
         }
 
-        /* Search Bar */
-        .search-island {
-            position: absolute;
-            top: 20px;
-            left: 120px;
-            background: white;
-            padding: 12px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            width: 320px;
-        }
-
+        /* Search Bar - now in sidebar */
         .search-input {
-            width: 100%;
             padding: 10px 12px;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
@@ -636,19 +623,48 @@
 
         /* Permanent tooltip styles */
         .presidio-permanent-tooltip {
-            background: white;
-            border: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #333;
             border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             color: #2d3748;
             font-weight: 600;
             font-size: 12px;
             padding: 4px 8px;
             white-space: nowrap;
+            pointer-events: none;
+            transition: font-size 0.2s ease, opacity 0.2s ease;
         }
 
         .presidio-permanent-tooltip:before {
-            border-top-color: white;
+            border-right-color: #333 !important;
+        }
+
+        /* Comune hover tooltip */
+        .comune-hover-tooltip {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 2px solid white !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
+            color: white !important;
+            font-weight: 700 !important;
+            font-size: 18px !important;
+            padding: 12px 20px !important;
+            pointer-events: none !important;
+        }
+
+        .comune-hover-tooltip:before {
+            display: none !important;
+        }
+
+        /* Connector line for distant labels */
+        .label-connector-line {
+            stroke: #666666;
+            stroke-width: 1;
+            stroke-opacity: 0.5;
+            stroke-dasharray: 4, 4;
+            fill: none;
+            pointer-events: none;
         }
 
         /* Control section */
@@ -1047,7 +1063,6 @@
             }
 
             #sidebar,
-            .search-island,
             .stats-badge,
             .distretti-legend-badge,
             .footer-copyright,
@@ -1085,13 +1100,15 @@
 
     <div id="map-container">
         <div id="map">
-            <!-- Search Island -->
-            <div class="search-island">
-                <input type="text" class="search-input" id="search-input" placeholder="Cerca un comune...">
-                <div class="search-results" id="search-results"></div>
-            </div>
         </div>
         <div id="sidebar">
+            <!-- Search Box -->
+            <div class="search-card" style="margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="font-size: 16px; margin-bottom: 10px; color: #2d3748;">🔍 Cerca</h3>
+                <input type="text" class="search-input" id="search-input" placeholder="Cerca un comune..." style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 14px;">
+                <div class="search-results" id="search-results"></div>
+            </div>
+
             <!-- Settings -->
             <div class="settings">
                 <h3>⚙️ Impostazioni</h3>
@@ -1243,12 +1260,12 @@
     </div>
 
     <!-- Toggle Legend Button -->
-    <button class="toggle-legend-btn" id="toggle-legend-btn" title="Mostra legenda distretti">
+    <button class="toggle-legend-btn visible" id="toggle-legend-btn" title="Mostra legenda distretti">
         📍
     </button>
 
     <!-- Distretti Legend Badge -->
-    <div class="distretti-legend-badge" id="distretti-legend-badge">
+    <div class="distretti-legend-badge hidden" id="distretti-legend-badge">
         <button class="close-btn" id="close-legend-btn" title="Nascondi legenda">×</button>
         <div class="legend-badge-title">📍 ID Distretti per URL</div>
         <div class="distretto-id-item">
@@ -1468,6 +1485,8 @@
         const allPresidiMarkers = []; // Store all presidi markers for visibility control
         const presidiVisibility = {}; // Track visibility state of each presidio
         const presidiLabels = {}; // Store labels for print
+        const labelConnectorLines = {}; // Store connector lines for labels
+        let comuneHoverTooltip = null; // Tooltip for comune hover
 
         // Distance measurement state
         let measuringDistance = false;
@@ -1590,6 +1609,32 @@
                             <p><strong>Comune:</strong> ${comune}</p>
                         `;
                         infoBox.classList.add('show');
+
+                        // Show comune name on map
+                        if (comuneHoverTooltip) {
+                            map.closeTooltip(comuneHoverTooltip);
+                        }
+
+                        // Get center of polygon bounds
+                        const bounds = e.target.getBounds();
+                        const center = bounds.getCenter();
+
+                        comuneHoverTooltip = L.tooltip({
+                            permanent: true,
+                            direction: 'center',
+                            className: 'comune-hover-tooltip',
+                            offset: [0, 0]
+                        })
+                        .setLatLng(center)
+                        .setContent(comune)
+                        .addTo(map);
+                    });
+
+                    layer.on('mousemove', function(e) {
+                        // Update tooltip position to follow mouse
+                        if (comuneHoverTooltip) {
+                            comuneHoverTooltip.setLatLng(e.latlng);
+                        }
                     });
 
                     layer.on('mouseout', function(e) {
@@ -1600,6 +1645,12 @@
                             });
                         }
                         infoBox.classList.remove('show');
+
+                        // Hide comune tooltip
+                        if (comuneHoverTooltip) {
+                            map.removeLayer(comuneHoverTooltip);
+                            comuneHoverTooltip = null;
+                        }
                     });
 
                     layer.on('click', function(e) {
@@ -1656,27 +1707,294 @@
 
             // Helper function to check if tooltips should be shown based on zoom
             function shouldShowTooltips() {
-                const showLabels = document.getElementById('toggle-popup-labels').checked;
-                const currentZoom = map.getZoom();
-                const minZoomForTooltips = 11; // Only show tooltips at zoom level 11 or higher
-                return showLabels && currentZoom >= minZoomForTooltips;
+                // Always show tooltips, but adjust size/opacity based on zoom
+                return true;
+            }
+
+            // Calculate font size based on zoom level
+            function calculateTooltipFontSize(zoom) {
+                if (zoom <= 10) {
+                    return Math.max(8, 6 + zoom * 0.4);
+                } else if (zoom <= 13) {
+                    return 10 + (zoom - 10) * 1;
+                } else {
+                    return Math.min(16, 13 + (zoom - 13) * 0.5);
+                }
+            }
+
+            // Check collision between two bounding boxes
+            function checkCollision(bounds1, bounds2) {
+                if (!bounds1 || !bounds2) return false;
+                const padding = 5;
+                return !(
+                    bounds1.right + padding < bounds2.left ||
+                    bounds1.left - padding > bounds2.right ||
+                    bounds1.bottom + padding < bounds2.top ||
+                    bounds1.top - padding > bounds2.bottom
+                );
+            }
+
+            // Resolve tooltip collisions
+            function resolveTooltipCollisions() {
+                // Get visible markers with tooltips
+                const visibleMarkers = allPresidiMarkers.filter(m =>
+                    presidiVisibility[m.nome] !== false && m.marker.getTooltip()
+                );
+
+                if (visibleMarkers.length < 2) return;
+
+                // Initialize offsets if not exists
+                visibleMarkers.forEach(markerData => {
+                    const marker = markerData.marker;
+                    if (!marker.tooltipCollisionOffset) {
+                        marker.tooltipCollisionOffset = [0, 0];
+                    }
+
+                    // Remove connector line if exists
+                    if (labelConnectorLines[markerData.nome]) {
+                        map.removeLayer(labelConnectorLines[markerData.nome]);
+                        delete labelConnectorLines[markerData.nome];
+                    }
+                });
+
+                // Force redraw
+                setTimeout(() => {
+                    const maxIterations = 3; // Limit iterations
+                    const maxTotalOffset = 50; // Maximum total offset from original position
+
+                    // Reset all collision offsets
+                    visibleMarkers.forEach(m => {
+                        m.marker.tooltipCollisionOffset = [0, 0];
+                    });
+
+                    for (let iteration = 0; iteration < maxIterations; iteration++) {
+                        let hasCollision = false;
+
+                        for (let i = 0; i < visibleMarkers.length; i++) {
+                            const marker1 = visibleMarkers[i].marker;
+                            const tooltip1 = marker1.getTooltip();
+                            if (!tooltip1) continue;
+                            const elem1 = tooltip1.getElement();
+                            if (!elem1) continue;
+
+                            // Remove transform temporarily to get base bounds
+                            const transform1 = elem1.style.transform;
+                            elem1.style.transform = '';
+                            const baseBounds1 = elem1.getBoundingClientRect();
+                            elem1.style.transform = transform1;
+
+                            // Apply current collision offset to bounds
+                            const collOffset1 = marker1.tooltipCollisionOffset;
+                            const bounds1 = {
+                                left: baseBounds1.left + collOffset1[0],
+                                right: baseBounds1.right + collOffset1[0],
+                                top: baseBounds1.top + collOffset1[1],
+                                bottom: baseBounds1.bottom + collOffset1[1],
+                                width: baseBounds1.width,
+                                height: baseBounds1.height
+                            };
+
+                            for (let j = i + 1; j < visibleMarkers.length; j++) {
+                                const marker2 = visibleMarkers[j].marker;
+                                const tooltip2 = marker2.getTooltip();
+                                if (!tooltip2) continue;
+                                const elem2 = tooltip2.getElement();
+                                if (!elem2) continue;
+
+                                // Remove transform temporarily to get base bounds
+                                const transform2 = elem2.style.transform;
+                                elem2.style.transform = '';
+                                const baseBounds2 = elem2.getBoundingClientRect();
+                                elem2.style.transform = transform2;
+
+                                // Apply current collision offset to bounds
+                                const collOffset2 = marker2.tooltipCollisionOffset;
+                                const bounds2 = {
+                                    left: baseBounds2.left + collOffset2[0],
+                                    right: baseBounds2.right + collOffset2[0],
+                                    top: baseBounds2.top + collOffset2[1],
+                                    bottom: baseBounds2.bottom + collOffset2[1],
+                                    width: baseBounds2.width,
+                                    height: baseBounds2.height
+                                };
+
+                                if (checkCollision(bounds1, bounds2)) {
+                                    hasCollision = true;
+
+                                    // Calculate movement direction
+                                    const pos1 = map.latLngToContainerPoint(marker1.getLatLng());
+                                    const pos2 = map.latLngToContainerPoint(marker2.getLatLng());
+                                    const dx = pos2.x - pos1.x;
+                                    const dy = pos2.y - pos1.y;
+
+                                    if (Math.abs(dx) === 0 && Math.abs(dy) === 0) continue;
+
+                                    const overlapX = (bounds1.width + bounds2.width) / 2 - Math.abs(dx);
+                                    const overlapY = (bounds1.height + bounds2.height) / 2 - Math.abs(dy);
+                                    let moveAmount = Math.max(overlapX, overlapY) / 2 + 3;
+
+                                    // Limit maximum movement to avoid labels going too far
+                                    const maxMove = 25; // Maximum pixels to move in one iteration
+                                    moveAmount = Math.min(moveAmount, maxMove);
+
+                                    // Move tooltips apart using collision offsets
+                                    if (Math.abs(dx) > Math.abs(dy)) {
+                                        // Move horizontally
+                                        if (dx > 0) {
+                                            marker1.tooltipCollisionOffset[0] -= moveAmount;
+                                            marker2.tooltipCollisionOffset[0] += moveAmount;
+                                        } else {
+                                            marker1.tooltipCollisionOffset[0] += moveAmount;
+                                            marker2.tooltipCollisionOffset[0] -= moveAmount;
+                                        }
+                                    } else {
+                                        // Move vertically
+                                        if (dy > 0) {
+                                            marker1.tooltipCollisionOffset[1] -= moveAmount;
+                                            marker2.tooltipCollisionOffset[1] += moveAmount;
+                                        } else {
+                                            marker1.tooltipCollisionOffset[1] += moveAmount;
+                                            marker2.tooltipCollisionOffset[1] -= moveAmount;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!hasCollision) break;
+                    }
+
+                    // Apply all collision offsets via CSS transform
+                    visibleMarkers.forEach(markerData => {
+                        const marker = markerData.marker;
+                        const tooltip = marker.getTooltip();
+                        if (!tooltip) return;
+                        const elem = tooltip.getElement();
+                        if (!elem) return;
+
+                        const collisionOffset = marker.tooltipCollisionOffset;
+                        const distance = Math.sqrt(
+                            collisionOffset[0] * collisionOffset[0] +
+                            collisionOffset[1] * collisionOffset[1]
+                        );
+
+                        // Apply transform only if within limits
+                        if (distance <= maxTotalOffset) {
+                            elem.style.transform = `translate(${collisionOffset[0]}px, ${collisionOffset[1]}px)`;
+                        } else {
+                            // Clamp to maximum
+                            const scale = maxTotalOffset / distance;
+                            const clampedX = collisionOffset[0] * scale;
+                            const clampedY = collisionOffset[1] * scale;
+                            elem.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
+                        }
+                    });
+
+                    // Add connector lines for labels that moved far from their markers
+                    visibleMarkers.forEach(markerData => {
+                        const marker = markerData.marker;
+                        const collisionOffset = marker.tooltipCollisionOffset;
+                        const distance = Math.sqrt(
+                            collisionOffset[0] * collisionOffset[0] +
+                            collisionOffset[1] * collisionOffset[1]
+                        );
+
+                        // Show connector line only if moved significantly (>50px)
+                        if (distance > 50) {
+                            const markerLatLng = marker.getLatLng();
+                            const markerPoint = map.latLngToContainerPoint(markerLatLng);
+                            const origOffset = marker.tooltipOriginalOffset;
+                            const labelPoint = {
+                                x: markerPoint.x + origOffset[0] + collisionOffset[0],
+                                y: markerPoint.y + origOffset[1] + collisionOffset[1]
+                            };
+                            const labelLatLng = map.containerPointToLatLng(labelPoint);
+
+                            const line = L.polyline([markerLatLng, labelLatLng], {
+                                color: '#666666',
+                                weight: 1,
+                                opacity: 0.5,
+                                dashArray: '4, 4',
+                                interactive: false
+                            }).addTo(map);
+
+                            labelConnectorLines[markerData.nome] = line;
+                        }
+                    });
+
+                    // Hide some labels at low zoom if too crowded
+                    const currentZoom = map.getZoom();
+                    if (currentZoom < 10 && visibleMarkers.length > 30) {
+                        // At very low zoom, show only every 4th label
+                        visibleMarkers.forEach((markerData, index) => {
+                            if (index % 4 !== 0) {
+                                markerData.marker.closeTooltip();
+                            }
+                        });
+                    } else if (currentZoom < 11 && visibleMarkers.length > 50) {
+                        // At low zoom, show only every 3rd label
+                        visibleMarkers.forEach((markerData, index) => {
+                            if (index % 3 !== 0) {
+                                markerData.marker.closeTooltip();
+                            }
+                        });
+                    } else if (currentZoom < 12 && visibleMarkers.length > 80) {
+                        // At medium zoom with many labels, show every other one
+                        visibleMarkers.forEach((markerData, index) => {
+                            if (index % 2 !== 0) {
+                                markerData.marker.closeTooltip();
+                            }
+                        });
+                    }
+                }, 50);
+            }
+
+            // Helper function to determine label text based on zoom and density
+            function getLabelText(markerData, zoom) {
+                const comune = markerData.comune || '';
+                const nome = markerData.nome || '';
+
+                // At low zoom (< 12), show only comune
+                if (zoom < 12) {
+                    return comune;
+                }
+                // At medium zoom (12-13), show comune if name is too long
+                else if (zoom < 13) {
+                    return nome.length > 30 ? comune : nome;
+                }
+                // At high zoom (13+), always show full name
+                else {
+                    return nome;
+                }
             }
 
             // Helper function to update all tooltips visibility
             function updateAllTooltips() {
-                const showTooltips = shouldShowTooltips();
+                const currentZoom = map.getZoom();
+                const fontSize = calculateTooltipFontSize(currentZoom);
+
                 allPresidiMarkers.forEach(markerData => {
                     const marker = markerData.marker;
                     // Only show tooltip if marker is visible
                     if (presidiVisibility[markerData.nome] !== false) {
-                        if (showTooltips) {
-                            updateTooltipContent(marker);
-                            marker.openTooltip();
-                        } else {
-                            marker.closeTooltip();
+                        // Set appropriate label text based on zoom
+                        const labelText = getLabelText(markerData, currentZoom);
+                        marker.setTooltipContent(labelText);
+                        marker.openTooltip();
+
+                        // Update font size dynamically
+                        const tooltipElement = marker.getTooltip().getElement();
+                        if (tooltipElement) {
+                            tooltipElement.style.fontSize = fontSize + 'px';
+                            tooltipElement.style.opacity = currentZoom < 11 ? '0.7' : '1';
                         }
+                    } else {
+                        marker.closeTooltip();
                     }
                 });
+
+                // Collision detection disabled for now to avoid label drift
+                // setTimeout(() => resolveTooltipCollisions(), 100);
             }
 
             // Check for URL parameter to filter by distretto
@@ -2102,20 +2420,35 @@
                     }
                 });
 
-                // Bind permanent tooltip (initially hidden)
-                // Store both nome and comune for dynamic tooltip content
+                // Bind permanent tooltip (always visible with nome)
                 marker.tooltipContent = {
                     nome: nome,
                     comune: comune
                 };
+
+                // Alternate label direction based on index to reduce overlaps
+                const directions = ['right', 'top', 'bottom', 'left'];
+                const offsets = {
+                    'right': [15, -10],
+                    'top': [0, -15],
+                    'bottom': [0, 15],
+                    'left': [-15, -10]
+                };
+                const direction = directions[index % 4];
+                const offset = offsets[direction];
+
                 marker.bindTooltip(nome, {
                     permanent: true,
-                    direction: 'top',
-                    offset: [0, -10],
+                    direction: direction,
+                    offset: offset,
                     className: 'presidio-permanent-tooltip',
-                    opacity: 0.9
+                    opacity: 0.95
                 });
-                marker.closeTooltip(); // Start with tooltip hidden
+                marker.openTooltip(); // Keep tooltip visible
+
+                // Store original offset
+                marker.tooltipOriginalOffset = offset;
+                marker.tooltipCurrentOffset = offset;
 
                 // Right-click for context menu
                 marker.on('contextmenu', function(e) {
@@ -2831,6 +3164,26 @@
             map.on('zoomend', function() {
                 updateAllTooltips();
             });
+
+            // Implement smooth zoom with wheel
+            let isZooming = false;
+            let currentFractionalZoom = map.getZoom();
+
+            map.getContainer().addEventListener('wheel', function(e) {
+                e.preventDefault();
+
+                if (isZooming) return;
+                isZooming = true;
+
+                const delta = e.deltaY > 0 ? -0.5 : 0.5;
+                currentFractionalZoom = Math.max(8, Math.min(18, currentFractionalZoom + delta));
+
+                map.setZoom(Math.round(currentFractionalZoom), { animate: true });
+
+                setTimeout(() => {
+                    isZooming = false;
+                }, 150);
+            }, { passive: false });
 
             // Handle label type change
             document.querySelectorAll('input[name="label-type"]').forEach(radio => {

@@ -14,6 +14,8 @@ const contextMenu = document.getElementById('context-menu');
 let allPresidiMarkers = []; // Store all presidi markers
 let presidiVisibility = {}; // Track visibility state
 let presidiLabels = {}; // Store labels for print
+let labelOverlays = []; // Store all label overlays for collision detection
+let comuneHoverLabel = null; // Hover label for comune name
 
 // Distance measurement state
 let measuringDistance = false;
@@ -27,6 +29,263 @@ const colors = [
     '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
     '#fa709a', '#fee140', '#30cfd0', '#330867'
 ];
+
+// Custom Hover Label for Comune
+class ComuneHoverLabel extends google.maps.OverlayView {
+    constructor(position, text, map) {
+        super();
+        this.position = position;
+        this.text = text;
+        this.map = map;
+        this.div = null;
+        this.setMap(map);
+    }
+
+    onAdd() {
+        const div = document.createElement('div');
+        div.className = 'comune-hover-label';
+        div.textContent = this.text;
+        div.style.position = 'absolute';
+        div.style.background = 'rgba(0, 0, 0, 0.8)';
+        div.style.color = 'white';
+        div.style.border = '2px solid white';
+        div.style.borderRadius = '8px';
+        div.style.padding = '12px 20px';
+        div.style.fontSize = '18px';
+        div.style.fontWeight = '700';
+        div.style.whiteSpace = 'nowrap';
+        div.style.pointerEvents = 'none';
+        div.style.boxShadow = '0 4px 8px rgba(0,0,0,0.4)';
+        div.style.zIndex = '2000';
+        div.style.transform = 'translate(-50%, -50%)';
+
+        this.div = div;
+        const panes = this.getPanes();
+        panes.overlayLayer.appendChild(div);
+    }
+
+    draw() {
+        if (!this.div) return;
+
+        const overlayProjection = this.getProjection();
+        if (!overlayProjection) return;
+
+        const pos = overlayProjection.fromLatLngToDivPixel(this.position);
+        if (!pos) return;
+
+        this.div.style.left = pos.x + 'px';
+        this.div.style.top = pos.y + 'px';
+    }
+
+    onRemove() {
+        if (this.div) {
+            this.div.parentNode.removeChild(this.div);
+            this.div = null;
+        }
+    }
+
+    updatePosition(position) {
+        this.position = position;
+        this.draw();
+    }
+}
+
+// Custom Label Overlay Class
+class PresidioLabel extends google.maps.OverlayView {
+    constructor(position, text, map) {
+        super();
+        this.position = position;
+        this.text = text;
+        this.map = map;
+        this.div = null;
+        this.visible = true;
+        this.offset = { x: 0, y: 0 }; // For collision avoidance
+        this.baseOffset = { x: 15, y: -10 }; // Base offset from marker
+        this.connectorLine = null; // Polyline to connect label to marker when far
+        this.setMap(map);
+    }
+
+    onAdd() {
+        const div = document.createElement('div');
+        div.className = 'presidio-label-overlay';
+        div.textContent = this.text;
+        div.style.position = 'absolute';
+        div.style.background = 'rgba(255, 255, 255, 0.95)';
+        div.style.border = '1px solid #333';
+        div.style.borderRadius = '4px';
+        div.style.padding = '4px 8px';
+        div.style.fontSize = '12px';
+        div.style.fontWeight = '600';
+        div.style.whiteSpace = 'nowrap';
+        div.style.pointerEvents = 'none';
+        div.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+        div.style.zIndex = '1000';
+        div.style.transition = 'font-size 0.2s ease, opacity 0.2s ease';
+
+        this.div = div;
+        const panes = this.getPanes();
+        panes.overlayLayer.appendChild(div);
+    }
+
+    draw() {
+        if (!this.div) return;
+
+        const overlayProjection = this.getProjection();
+        if (!overlayProjection) return;
+
+        const pos = overlayProjection.fromLatLngToDivPixel(this.position);
+        if (!pos) return;
+
+        // Apply both base offset and collision avoidance offset
+        const totalOffsetX = this.baseOffset.x + this.offset.x;
+        const totalOffsetY = this.baseOffset.y + this.offset.y;
+
+        this.div.style.left = (pos.x + totalOffsetX) + 'px';
+        this.div.style.top = (pos.y + totalOffsetY) + 'px';
+        this.div.style.display = this.visible ? 'block' : 'none';
+
+        // Adjust font size based on zoom
+        const zoom = this.map.getZoom();
+        const fontSize = this.calculateFontSize(zoom);
+        this.div.style.fontSize = fontSize + 'px';
+
+        // Reduce opacity at low zoom levels
+        if (zoom < 11) {
+            this.div.style.opacity = '0.7';
+        } else {
+            this.div.style.opacity = '1';
+        }
+
+        // Show connector line if label is far from marker
+        this.updateConnectorLine();
+    }
+
+    updateConnectorLine() {
+        const distance = Math.sqrt(this.offset.x * this.offset.x + this.offset.y * this.offset.y);
+        const threshold = 40; // pixels - show line if offset > 40px
+
+        if (distance > threshold && this.visible) {
+            // Calculate label center position
+            const overlayProjection = this.getProjection();
+            if (!overlayProjection) return;
+
+            const markerPixel = overlayProjection.fromLatLngToDivPixel(this.position);
+            const labelPixelX = markerPixel.x + this.baseOffset.x + this.offset.x;
+            const labelPixelY = markerPixel.y + this.baseOffset.y + this.offset.y;
+
+            // Convert pixel positions back to LatLng
+            const labelLatLng = overlayProjection.fromDivPixelToLatLng(
+                new google.maps.Point(labelPixelX, labelPixelY)
+            );
+
+            if (!this.connectorLine) {
+                this.connectorLine = new google.maps.Polyline({
+                    path: [this.position, labelLatLng],
+                    geodesic: false,
+                    strokeColor: '#666666',
+                    strokeOpacity: 0.5,
+                    strokeWeight: 1,
+                    icons: [{
+                        icon: {
+                            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                            scale: 2,
+                            strokeColor: '#666666',
+                            strokeOpacity: 0.6
+                        },
+                        offset: '100%'
+                    }, {
+                        icon: {
+                            path: 'M 0,-1 0,1',
+                            strokeOpacity: 0.5,
+                            scale: 2
+                        },
+                        offset: '0',
+                        repeat: '8px'
+                    }],
+                    map: this.map,
+                    zIndex: 999
+                });
+            } else {
+                this.connectorLine.setPath([this.position, labelLatLng]);
+            }
+        } else {
+            // Remove line if label is close enough
+            if (this.connectorLine) {
+                this.connectorLine.setMap(null);
+                this.connectorLine = null;
+            }
+        }
+    }
+
+    calculateFontSize(zoom) {
+        // Scale font size based on zoom level
+        // zoom 8-10: smaller fonts (8-10px)
+        // zoom 11-13: medium fonts (11-13px)
+        // zoom 14+: larger fonts (14-16px)
+        if (zoom <= 10) {
+            return Math.max(8, 6 + zoom * 0.4);
+        } else if (zoom <= 13) {
+            return 10 + (zoom - 10) * 1;
+        } else {
+            return Math.min(16, 13 + (zoom - 13) * 0.5);
+        }
+    }
+
+    onRemove() {
+        if (this.div) {
+            this.div.parentNode.removeChild(this.div);
+            this.div = null;
+        }
+    }
+
+    setVisible(visible) {
+        this.visible = visible;
+        this.draw();
+        // Update connector line visibility
+        if (!visible && this.connectorLine) {
+            this.connectorLine.setMap(null);
+            this.connectorLine = null;
+        } else if (visible) {
+            this.updateConnectorLine();
+        }
+    }
+
+    setOffset(x, y) {
+        this.offset = { x, y };
+        this.draw();
+    }
+
+    getBounds() {
+        if (!this.div) return null;
+        const rect = this.div.getBoundingClientRect();
+        return {
+            left: rect.left,
+            top: rect.top,
+            right: rect.right,
+            bottom: rect.bottom,
+            width: rect.width,
+            height: rect.height
+        };
+    }
+
+    getPixelPosition() {
+        if (!this.div) return null;
+        const overlayProjection = this.getProjection();
+        if (!overlayProjection) return null;
+        return overlayProjection.fromLatLngToDivPixel(this.position);
+    }
+
+    onRemove() {
+        if (this.div) {
+            this.div.parentNode.removeChild(this.div);
+            this.div = null;
+        }
+        if (this.connectorLine) {
+            this.connectorLine.setMap(null);
+            this.connectorLine = null;
+        }
+    }
+}
 
 async function initGoogleApp() {
     await loadConfig();
@@ -62,6 +321,48 @@ async function initGoogleApp() {
 
     // Setup UI Events
     setupUIEvents();
+
+    // Add zoom listener for label management
+    map.addListener('zoom_changed', () => {
+        // Redraw all labels with new size
+        labelOverlays.forEach(label => label.draw());
+        // Re-run collision detection after zoom
+        setTimeout(() => resolveCollisions(), 100);
+    });
+
+    // Add idle listener to resolve collisions after panning
+    map.addListener('idle', () => {
+        resolveCollisions();
+    });
+
+    // Implement smooth zoom with mouse wheel
+    implementSmoothZoom();
+}
+
+function implementSmoothZoom() {
+    // Google Maps doesn't natively support fractional zoom with smooth transitions
+    // We'll use a workaround: intercept scroll events and apply smaller zoom increments
+    const mapDiv = document.getElementById('map');
+
+    let currentFractionalZoom = map.getZoom();
+    let isZooming = false;
+
+    mapDiv.addEventListener('wheel', (e) => {
+        e.preventDefault();
+
+        if (isZooming) return;
+        isZooming = true;
+
+        const delta = e.deltaY > 0 ? -0.5 : 0.5; // Smaller increment (0.5 instead of 1)
+        currentFractionalZoom = Math.max(8, Math.min(18, currentFractionalZoom + delta));
+
+        map.setZoom(Math.round(currentFractionalZoom));
+
+        setTimeout(() => {
+            isZooming = false;
+        }, 150); // Debounce zoom changes
+
+    }, { passive: false });
 }
 
 function loadStats() {
@@ -142,10 +443,17 @@ function processData(detailedData, presidiData) {
             polygon.feature = feature;
 
             // Events
-            polygon.addListener('mouseover', () => {
+            polygon.addListener('mouseover', (e) => {
                 polygon.setOptions({ fillOpacity: 0.8, strokeWeight: 2 });
                 infoBox.innerHTML = `<h3>${distretto}</h3><p><strong>Comune:</strong> ${comune}</p>`;
                 infoBox.classList.add('show');
+
+                // Show comune name on the map
+                if (comuneHoverLabel) {
+                    comuneHoverLabel.setMap(null);
+                }
+                const centerLatLng = getComuneCenter(polygon);
+                comuneHoverLabel = new ComuneHoverLabel(centerLatLng, comune, map);
             });
 
             polygon.addListener('mouseout', () => {
@@ -153,6 +461,19 @@ function processData(detailedData, presidiData) {
                     polygon.setOptions({ fillOpacity: 0.5, strokeWeight: 1 });
                 }
                 infoBox.classList.remove('show');
+
+                // Hide comune label
+                if (comuneHoverLabel) {
+                    comuneHoverLabel.setMap(null);
+                    comuneHoverLabel = null;
+                }
+            });
+
+            polygon.addListener('mousemove', (e) => {
+                // Update label position to follow mouse (optional - you can remove this if you prefer centered label)
+                if (comuneHoverLabel && e.latLng) {
+                    comuneHoverLabel.updatePosition(e.latLng);
+                }
             });
 
             polygon.addListener('click', (e) => {
@@ -200,8 +521,8 @@ function processData(detailedData, presidiData) {
             title: props.nome, // Tooltip
             label: {
                 text: '🏥',
-                fontSize: '24px',
-                className: 'presidio-marker-label' // We might need CSS for this
+                fontSize: '20px',
+                className: 'presidio-marker-label'
             },
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
@@ -216,6 +537,17 @@ function processData(detailedData, presidiData) {
             distretto: props.distretto,
             comune: props.comune
         };
+
+        // Create custom text label overlay
+        const labelOverlay = new PresidioLabel(
+            { lat, lng: lon },
+            props.nome,
+            map
+        );
+        labelOverlays.push(labelOverlay);
+
+        // Store reference for visibility toggling
+        marker.labelOverlay = labelOverlay;
 
         // Click Listener
         marker.addListener('click', (e) => {
@@ -290,6 +622,15 @@ function convertGeoJSONToPaths(geometry) {
         });
     });
     return paths;
+}
+
+function getComuneCenter(polygon) {
+    // Calculate the center of the polygon's bounds
+    const bounds = new google.maps.LatLngBounds();
+    polygon.getPaths().forEach(path => {
+        path.forEach(latLng => bounds.extend(latLng));
+    });
+    return bounds.getCenter();
 }
 
 function populateSidebar(distrettiNames, distrettiData, presidiByComune) {
@@ -427,7 +768,13 @@ function toggleSinglePresidioVisibility(nome, visible) {
     const mData = allPresidiMarkers.find(m => m.nome === nome);
     if (mData) {
         mData.marker.setMap(visible ? map : null);
+        // Toggle label overlay visibility
+        if (mData.marker.labelOverlay) {
+            mData.marker.labelOverlay.setVisible(visible);
+        }
     }
+    // Re-resolve collisions after visibility change
+    setTimeout(() => resolveCollisions(), 100);
 }
 
 function zoomToComune(comune) {
@@ -455,6 +802,121 @@ function fitMapToData(geoJson) {
         });
     });
     map.fitBounds(bounds);
+}
+
+// --- Label Collision Detection & Resolution ---
+
+function checkCollision(bounds1, bounds2) {
+    if (!bounds1 || !bounds2) return false;
+
+    // Add small padding to avoid labels being too close
+    const padding = 5;
+
+    return !(
+        bounds1.right + padding < bounds2.left ||
+        bounds1.left - padding > bounds2.right ||
+        bounds1.bottom + padding < bounds2.top ||
+        bounds1.top - padding > bounds2.bottom
+    );
+}
+
+function resolveCollisions() {
+    // Get only visible labels
+    const visibleLabels = labelOverlays.filter(label => label.visible && label.div);
+
+    if (visibleLabels.length < 2) return;
+
+    // Reset all offsets first
+    visibleLabels.forEach(label => {
+        label.setOffset(0, 0);
+    });
+
+    // Force redraw to get accurate bounds
+    visibleLabels.forEach(label => label.draw());
+
+    // Use setTimeout to ensure DOM has updated
+    setTimeout(() => {
+        const maxIterations = 3; // Limit iterations to avoid infinite loops
+
+        for (let iteration = 0; iteration < maxIterations; iteration++) {
+            let hasCollision = false;
+
+            for (let i = 0; i < visibleLabels.length; i++) {
+                const label1 = visibleLabels[i];
+                const bounds1 = label1.getBounds();
+                if (!bounds1) continue;
+
+                for (let j = i + 1; j < visibleLabels.length; j++) {
+                    const label2 = visibleLabels[j];
+                    const bounds2 = label2.getBounds();
+                    if (!bounds2) continue;
+
+                    if (checkCollision(bounds1, bounds2)) {
+                        hasCollision = true;
+
+                        // Calculate repositioning strategy
+                        const pos1 = label1.getPixelPosition();
+                        const pos2 = label2.getPixelPosition();
+
+                        if (!pos1 || !pos2) continue;
+
+                        // Determine best direction to move labels
+                        const dx = pos2.x - pos1.x;
+                        const dy = pos2.y - pos1.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance === 0) continue;
+
+                        // Calculate offset based on overlap amount
+                        const overlapX = (bounds1.width + bounds2.width) / 2 - Math.abs(dx);
+                        const overlapY = (bounds1.height + bounds2.height) / 2 - Math.abs(dy);
+
+                        // Move labels apart
+                        const moveAmount = Math.max(overlapX, overlapY) / 2 + 5;
+
+                        if (Math.abs(dx) > Math.abs(dy)) {
+                            // Move horizontally
+                            if (dx > 0) {
+                                label1.setOffset(label1.offset.x - moveAmount, label1.offset.y);
+                                label2.setOffset(label2.offset.x + moveAmount, label2.offset.y);
+                            } else {
+                                label1.setOffset(label1.offset.x + moveAmount, label1.offset.y);
+                                label2.setOffset(label2.offset.x - moveAmount, label2.offset.y);
+                            }
+                        } else {
+                            // Move vertically
+                            if (dy > 0) {
+                                label1.setOffset(label1.offset.x, label1.offset.y - moveAmount);
+                                label2.setOffset(label2.offset.x, label2.offset.y + moveAmount);
+                            } else {
+                                label1.setOffset(label1.offset.x, label1.offset.y + moveAmount);
+                                label2.setOffset(label2.offset.x, label2.offset.y - moveAmount);
+                            }
+                        }
+
+                        // Redraw to apply new positions
+                        label1.draw();
+                        label2.draw();
+                    }
+                }
+            }
+
+            // If no collisions found, we're done
+            if (!hasCollision) break;
+        }
+
+        // Final optimization: hide labels that are too crowded at low zoom
+        const zoom = map.getZoom();
+        if (zoom < 11 && visibleLabels.length > 50) {
+            // At low zoom with many labels, hide some to reduce clutter
+            visibleLabels.forEach((label, index) => {
+                // Keep every 3rd label visible
+                if (index % 3 !== 0) {
+                    label.setVisible(false);
+                }
+            });
+        }
+    }, 50);
 }
 
 // --- Interactions & Tools ---
